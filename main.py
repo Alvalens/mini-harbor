@@ -5,8 +5,6 @@ pygame.init()
 pygame.font.init()
 
 
-
-
 if __name__ == '__main__':
     # Set up the screen
     screen = pygame.display.set_mode((800, 600))
