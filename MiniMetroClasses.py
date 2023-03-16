@@ -357,7 +357,7 @@ class Stop(object):
             self.value = max(self.timer.time, 0)/LOSE_DURATION
 
 
-            self.max_value = min(self.max_value, 1.0)
+            self.max_value = 1
             # draw the outer ring
             pygame.gfxdraw.arc(targetSurface,
                             int(self.rect.centerx), int(self.rect.centery),

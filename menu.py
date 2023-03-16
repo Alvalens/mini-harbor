@@ -111,59 +111,61 @@ class StartMenu:
                                 MUSIC = ["assets/audio/Mini Metro - 01 Keep the City Moving.ogg",
                                          "assets/audio/Mini Metro - 02 One Week.ogg",
                                          "assets/audio/Mini Metro - 03 Back to Work.ogg"]
-                                pygame.mixer.music.set_endevent(pygame.USEREVENT)
-                                pygame.mixer.music.load(MUSIC[random.randint(0, 2)])
+                                pygame.mixer.music.set_endevent(
+                                    pygame.USEREVENT)
+                                pygame.mixer.music.load(
+                                    MUSIC[random.randint(0, 2)])
                                 pygame.mixer.music.play()
 
                                 STOP_POLYGONS = [pygame.image.load("assets/stops/circle_dark.png").convert_alpha(),
-                                                pygame.image.load(
-                                                    "assets/stops/triangle_dark.png").convert_alpha(),
-                                                pygame.image.load(
-                                                    "assets/stops/square_dark.png").convert_alpha(),
-                                                pygame.image.load(
-                                                    "assets/stops/diamond_dark.png").convert_alpha(),
-                                                pygame.image.load(
-                                                    "assets/stops/trapezoid_dark.png").convert_alpha(),
-                                                pygame.image.load(
-                                                    "assets/stops/parallelogram_dark.png").convert_alpha(),
-                                                pygame.image.load(
-                                                    "assets/stops/pentagon_dark.png").convert_alpha(),
-                                                pygame.image.load(
-                                                    "assets/stops/hexagon_dark.png").convert_alpha(),
-                                                pygame.image.load("assets/stops/star_dark.png").convert_alpha()]
+                                                 pygame.image.load(
+                                    "assets/stops/triangle_dark.png").convert_alpha(),
+                                    pygame.image.load(
+                                    "assets/stops/square_dark.png").convert_alpha(),
+                                    pygame.image.load(
+                                    "assets/stops/diamond_dark.png").convert_alpha(),
+                                    pygame.image.load(
+                                    "assets/stops/trapezoid_dark.png").convert_alpha(),
+                                    pygame.image.load(
+                                    "assets/stops/parallelogram_dark.png").convert_alpha(),
+                                    pygame.image.load(
+                                    "assets/stops/pentagon_dark.png").convert_alpha(),
+                                    pygame.image.load(
+                                    "assets/stops/hexagon_dark.png").convert_alpha(),
+                                    pygame.image.load("assets/stops/star_dark.png").convert_alpha()]
 
                                 PASSENGER_POLYGONS = [pygame.image.load("assets/passengers/circle_light.png").convert_alpha(),
-                                                    pygame.image.load(
-                                                        "assets/passengers/triangle_light.png").convert_alpha(),
-                                                    pygame.image.load(
-                                                        "assets/passengers/square_light.png").convert_alpha(),
-                                                    pygame.image.load(
-                                                        "assets/passengers/diamond_light.png").convert_alpha(),
-                                                    pygame.image.load(
-                                                        "assets/passengers/trapezoid_light.png").convert_alpha(),
-                                                    pygame.image.load(
-                                                        "assets/passengers/parallelogram_light.png").convert_alpha(),
-                                                    pygame.image.load(
-                                                        "assets/passengers/pentagon_light.png").convert_alpha(),
-                                                    pygame.image.load(
-                                                        "assets/passengers/hexagon_light.png").convert_alpha(),
-                                                    pygame.image.load("assets/passengers/star_light.png").convert_alpha()]
+                                                      pygame.image.load(
+                                    "assets/passengers/triangle_light.png").convert_alpha(),
+                                    pygame.image.load(
+                                    "assets/passengers/square_light.png").convert_alpha(),
+                                    pygame.image.load(
+                                    "assets/passengers/diamond_light.png").convert_alpha(),
+                                    pygame.image.load(
+                                    "assets/passengers/trapezoid_light.png").convert_alpha(),
+                                    pygame.image.load(
+                                    "assets/passengers/parallelogram_light.png").convert_alpha(),
+                                    pygame.image.load(
+                                    "assets/passengers/pentagon_light.png").convert_alpha(),
+                                    pygame.image.load(
+                                    "assets/passengers/hexagon_light.png").convert_alpha(),
+                                    pygame.image.load("assets/passengers/star_light.png").convert_alpha()]
                                 PASSENGER_ICON = pygame.image.load(
                                     "assets/icons/passenger.png").convert_alpha()
 
                                 RIVERS = [pygame.image.load("assets/maps/river1.png").convert_alpha(),
-                                        pygame.image.load(
-                                            "assets/maps/river2.png").convert_alpha(),
-                                        pygame.image.load(
-                                            "assets/maps/river3.png").convert_alpha(),
-                                        pygame.image.load("assets/maps/river4.png").convert_alpha()]
+                                          pygame.image.load(
+                                    "assets/maps/river2.png").convert_alpha(),
+                                    pygame.image.load(
+                                    "assets/maps/river3.png").convert_alpha(),
+                                    pygame.image.load("assets/maps/river4.png").convert_alpha()]
 
                                 ICONS = [pygame.image.load("assets/icons/carriage.png").convert_alpha(),
-                                        pygame.image.load(
-                                            "assets/icons/line.png").convert_alpha(),
-                                        pygame.image.load(
-                                            "assets/icons/train.png").convert_alpha(),
-                                        pygame.image.load("assets/icons/tunnel.png").convert_alpha()]
+                                         pygame.image.load(
+                                    "assets/icons/line.png").convert_alpha(),
+                                    pygame.image.load(
+                                    "assets/icons/train.png").convert_alpha(),
+                                    pygame.image.load("assets/icons/tunnel.png").convert_alpha()]
 
                                 # pick and place a map
                                 river = random.randint(0, 3)
@@ -178,36 +180,36 @@ class StartMenu:
                                     RIVERS[river], (riverX, riverY))
                                 world = Game.World(worldSurface)
                                 validStops = [Game.CIRCLE,
-                                    Game.TRIANGLE, Game.SQUARE]
+                                              Game.TRIANGLE, Game.SQUARE]
 
                                 # scale images
                                 scaledPassengerPolygons = []
                                 for polygon in PASSENGER_POLYGONS:
                                     scaledPassengerPolygons.append(pygame.transform.smoothscale(polygon,
                                                                                                 (world.passengerSize,
-                                                                                                world.passengerSize)))
+                                                                                                 world.passengerSize)))
 
                                 scaledIcons = []
                                 for icon in ICONS:
                                     scaledIcons.append(pygame.transform.smoothscale(icon,
                                                                                     (int(world.stopSize*1.5),
-                                                                                    int(world.stopSize*1.5))))
+                                                                                     int(world.stopSize*1.5))))
 
                                 # point list for drawing trains and carriages
                                 rectPoints = [[[-world.passengerSize*1.5, world.passengerSize],
-                                            [world.passengerSize*1.5,
+                                               [world.passengerSize*1.5,
                                                 world.passengerSize],
-                                            [world.passengerSize*1.5, -
+                                               [world.passengerSize*1.5, -
                                                 world.passengerSize],
-                                            [-world.passengerSize*1.5, -world.passengerSize]],
-                                            [[-world.passengerSize, world.passengerSize/2],
-                                            [0, world.passengerSize/2],
-                                            [world.passengerSize,
-                                                world.passengerSize/2],
-                                            [world.passengerSize, -
-                                                world.passengerSize/2],
-                                            [0, -world.passengerSize/2],
-                                            [-world.passengerSize, -world.passengerSize/2]]]
+                                               [-world.passengerSize*1.5, -world.passengerSize]],
+                                              [[-world.passengerSize, world.passengerSize/2],
+                                               [0, world.passengerSize/2],
+                                               [world.passengerSize,
+                                                  world.passengerSize/2],
+                                               [world.passengerSize, -
+                                                  world.passengerSize/2],
+                                               [0, -world.passengerSize/2],
+                                               [-world.passengerSize, -world.passengerSize/2]]]
 
                                 def calculateCameraOffset(cWidth, cHeight, world):
                                     # calculate the scale and translation operations to move from
@@ -271,30 +273,30 @@ class StartMenu:
                                     return paused
 
                                 newStopTimer = Time.Time(Time.MODE_TIMER,
-                                                        Time.FORMAT_TOTAL_SECONDS,
-                                                        getNewStopTime(world.passengersMoved))
+                                                         Time.FORMAT_TOTAL_SECONDS,
+                                                         getNewStopTime(world.passengersMoved))
                                 newPassengerTimer = Time.Time(Time.MODE_TIMER,
-                                                            Time.FORMAT_TOTAL_SECONDS,
-                                                            getNewPassengerTime(world.passengersMoved))
+                                                              Time.FORMAT_TOTAL_SECONDS,
+                                                              getNewPassengerTime(world.passengersMoved))
                                 passengerMoveTimer = Time.Time(Time.MODE_TIMER,
-                                                            Time.FORMAT_TOTAL_SECONDS,
-                                                            getPassengerMoveTime(world.passengersMoved))
+                                                               Time.FORMAT_TOTAL_SECONDS,
+                                                               getPassengerMoveTime(world.passengersMoved))
                                 switchStopTimer = Time.Time(Time.MODE_TIMER,
                                                             Time.FORMAT_TOTAL_SECONDS,
                                                             getSwitchStopTime(world.passengersMoved))
                                 gainResourcesTimer = Time.Time(Time.MODE_TIMER,
-                                                            Time.FORMAT_TOTAL_SECONDS,
-                                                            Game.RESOURCE_GAIN_DELAY)
+                                                               Time.FORMAT_TOTAL_SECONDS,
+                                                               Game.RESOURCE_GAIN_DELAY)
                                 gameTimer = Time.Time(Time.MODE_STOPWATCH,
-                                                    Time.FORMAT_TOTAL_SECONDS)
+                                                      Time.FORMAT_TOTAL_SECONDS)
                                 scaleDuration = 2
                                 smoothScaleTimer = Time.Time(Time.MODE_TIMER,
-                                                            Time.FORMAT_TOTAL_SECONDS,
-                                                            scaleDuration)
+                                                             Time.FORMAT_TOTAL_SECONDS,
+                                                             scaleDuration)
                                 # also make a list that points to the individual timers
                                 # for operations on all of them
                                 timers = [newStopTimer, newPassengerTimer, passengerMoveTimer,
-                                        switchStopTimer, gainResourcesTimer, gameTimer, smoothScaleTimer]
+                                          switchStopTimer, gainResourcesTimer, gameTimer, smoothScaleTimer]
 
                                 def drawBase():
                                     # draw the background, lines, and trains
@@ -307,10 +309,10 @@ class StartMenu:
                                         display.fill(
                                             Game.COLOURS.get("background"))
                                     display.blit(scaledWorldSurface,
-                                                (-cameraOffset[1][0]*cameraOffset[0][0],
-                                                -cameraOffset[1][1]*cameraOffset[0][1]),
-                                                None,
-                                                pygame.BLEND_MAX)
+                                                 (-cameraOffset[1][0]*cameraOffset[0][0],
+                                                  -cameraOffset[1][1]*cameraOffset[0][1]),
+                                                 None,
+                                                 pygame.BLEND_MAX)
 
                                     for i in range(len(world.lines)):
                                         world.lines[i].draw(
@@ -329,7 +331,7 @@ class StartMenu:
                                             display, rectPoints, world.passengerSize, cameraOffset)
                                     for movingClone in trainsToMove:
                                         movingClone.draw(display, rectPoints,
-                                                        world.passengerSize, cameraOffset)
+                                                         world.passengerSize, cameraOffset)
 
                                     for carriage in world.carriages:
                                         carriage.draw(
@@ -347,63 +349,63 @@ class StartMenu:
                                             if segment.isTunnel:
                                                 numTunnels = numTunnels+1
                                                 segment.drawTunnel(display, 7, cameraOffset,
-                                                                worldSurface, 30/cameraOffset[0][0])
+                                                                   worldSurface, 30/cameraOffset[0][0])
 
                                     world.resources[Game.TUNNEL] = world.totalTunnels-numTunnels
 
                                     for i in range(len(Game.COLOURS.get("lines"))):
                                         indicatorCoords = (int(world.stopSize*(2.5+i)+(i*10)),
-                                                        int(cHeight-world.stopSize*1.5))
+                                                           int(cHeight-world.stopSize*1.5))
                                         if i < len(world.lines):
                                             pygame.draw.circle(display,
-                                                            Game.COLOURS.get(
+                                                               Game.COLOURS.get(
                                                                 "lines")[i],
-                                                            indicatorCoords,
-                                                            world.stopSize/2)
+                                                               indicatorCoords,
+                                                               world.stopSize/2)
                                         elif i < len(world.lines)+world.resources[Game.LINE]:
                                             pygame.draw.circle(display,
-                                                            Game.COLOURS.get(
-                                                                "lines")[i],
-                                                            indicatorCoords,
-                                                            world.stopSize/2,
-                                                            2)
+                                                               Game.COLOURS.get(
+                                                                   "lines")[i],
+                                                               indicatorCoords,
+                                                               world.stopSize/2,
+                                                               2)
                                         else:
                                             pygame.draw.circle(display,
-                                                            Game.COLOURS.get(
-                                                                "whiteOutline"),
-                                                            indicatorCoords,
-                                                            world.stopSize/2,
-                                                            2)
+                                                               Game.COLOURS.get(
+                                                                   "whiteOutline"),
+                                                               indicatorCoords,
+                                                               world.stopSize/2,
+                                                               2)
 
                                     for i in range(len(scaledIcons)):
                                         iconCoords = (int(cWidth                              # start from the right edge
-                                                        # at least 2 icon widths from edge
-                                                        - scaledIcons[i].get_width()*(2+i)
-                                                        # 20 px of space between each icon
-                                                        - (i*20)
-                                                        - scaledIcons[i].get_width()/2),    # center shape at that point
+                                                          # at least 2 icon widths from edge
+                                                          - scaledIcons[i].get_width()*(2+i)
+                                                          # 20 px of space between each icon
+                                                          - (i*20)
+                                                          - scaledIcons[i].get_width()/2),    # center shape at that point
 
-                                                    int(cHeight                             # start from bottom edge
-                                                        # one icon height away from edge
-                                                        - scaledIcons[i].get_height()
-                                                        - scaledIcons[i].get_height()/2))   # center shape at that point
+                                                      int(cHeight                             # start from bottom edge
+                                                          # one icon height away from edge
+                                                          - scaledIcons[i].get_height()
+                                                          - scaledIcons[i].get_height()/2))   # center shape at that point
                                         world.iconHitboxes[i] = pygame.Rect(iconCoords,
                                                                             (scaledIcons[i].get_width(),
-                                                                            scaledIcons[i].get_height()))
+                                                                             scaledIcons[i].get_height()))
                                         resourceText = ubuntuBold30.render(str(world.resources[i]),
-                                                                        1,
-                                                                        Game.COLOURS.get("whiteOutline"))
+                                                                           1,
+                                                                           Game.COLOURS.get("whiteOutline"))
                                         display.blit(resourceText,
-                                                    (iconCoords[0]+scaledIcons[i].get_width()/2-resourceText.get_width()/2,
-                                                    iconCoords[1]-35))
+                                                     (iconCoords[0]+scaledIcons[i].get_width()/2-resourceText.get_width()/2,
+                                                      iconCoords[1]-35))
                                         display.blit(scaledIcons[i],
-                                                    iconCoords)
+                                                     iconCoords)
 
                                     for stop in world.stops:
                                         stop.draw(display,
-                                                stopView,
-                                                world.passengerSize,
-                                                cameraOffset)
+                                                  stopView,
+                                                  world.passengerSize,
+                                                  cameraOffset)
 
                                     if pickingResource:
                                         size = ubuntuLight30.size(
@@ -419,19 +421,19 @@ class StartMenu:
                                             background, (cWidth-background.get_width(), 0))
 
                                         display.blit(ubuntuLight30.render("Received one:",
-                                                                        1,
-                                                                        Game.COLOURS.get("whiteOutline")),
-                                                    (cWidth-size[0]-scaledIcons[resource].get_width(),
-                                                    scaledIcons[resource].get_height()/2-size[1]/2+5))
+                                                                          1,
+                                                                          Game.COLOURS.get("whiteOutline")),
+                                                     (cWidth-size[0]-scaledIcons[resource].get_width(),
+                                                     scaledIcons[resource].get_height()/2-size[1]/2+5))
                                         display.blit(scaledIcons[resource],
-                                                    (cWidth-scaledIcons[resource].get_width()-5,
-                                                    5))
+                                                     (cWidth-scaledIcons[resource].get_width()-5,
+                                                     5))
 
                                         display.blit(ubuntuLight30.render("Pick a resource:",
-                                                                        1,
-                                                                        Game.COLOURS.get("whiteOutline")),
-                                                    (cWidth-width,
-                                                    scaledIcons[resource].get_height()*1.4))
+                                                                          1,
+                                                                          Game.COLOURS.get("whiteOutline")),
+                                                     (cWidth-width,
+                                                     scaledIcons[resource].get_height()*1.4))
                                         for option in options:
                                             display.blit(
                                                 option[1], (option[2][0], option[2][1]))
@@ -439,43 +441,43 @@ class StartMenu:
                                     if window == "end" and not isScaling:
                                         size = ubuntu70.size("Game Over")
                                         display.blit(ubuntu70.render("Game Over",
-                                                                    1,
-                                                                    Game.COLOURS.get("whiteOutline")),
-                                                    (cWidth/2-size[0]/2,
-                                                    40))
+                                                                     1,
+                                                                     Game.COLOURS.get("whiteOutline")),
+                                                     (cWidth/2-size[0]/2,
+                                                     40))
                                         size = ubuntuLight30.size(
                                             "Overcrowding at this stop shut down your subway")
                                         display.blit(ubuntuLight30.render("Overcrowding at this stop shut down your subway",
-                                                                        1,
-                                                                        Game.COLOURS.get("whiteOutline")),
-                                                    (cWidth/2-size[0]/2,
-                                                    120))
+                                                                          1,
+                                                                          Game.COLOURS.get("whiteOutline")),
+                                                     (cWidth/2-size[0]/2,
+                                                     120))
                                         size = ubuntuLight30.size(
                                             str(world.passengersMoved)+" passengers transported")
                                         display.blit(ubuntuLight30.render(str(world.passengersMoved)+" passengers transported",
-                                                                        1,
-                                                                        Game.COLOURS.get("whiteOutline")),
-                                                    (cWidth/2-size[0]/2,
-                                                    cHeight-150))
+                                                                          1,
+                                                                          Game.COLOURS.get("whiteOutline")),
+                                                     (cWidth/2-size[0]/2,
+                                                     cHeight-150))
 
                                     display.blit(PASSENGER_ICON, (10, 8))
                                     display.blit(ubuntuLight30.render(str(world.passengersMoved),
-                                                                    1,
-                                                                    Game.COLOURS.get("whiteOutline")),
-                                                (50, 10))
+                                                                      1,
+                                                                      Game.COLOURS.get("whiteOutline")),
+                                                 (50, 10))
 
                                 cameraOffset = calculateCameraOffset(
                                     cWidth, cHeight, world)
                                 scaledWorldSurface = pygame.transform.scale(worldSurface,
                                                                             (int(wWidth*cameraOffset[0][0]),
-                                                                            int(wHeight*cameraOffset[0][1])))
+                                                                             int(wHeight*cameraOffset[0][1])))
 
                                 stopView = int(
                                     world.stopSize*((cameraOffset[0][0]+cameraOffset[0][1])/2.0))
                                 scaledStopPolygons = []
                                 for polygon in STOP_POLYGONS:
                                     scaledStopPolygons.append(pygame.transform.smoothscale(polygon,
-                                                                                        (stopView,
+                                                                                           (stopView,
                                                                                             stopView)))
 
                                 for shape in range(3):
@@ -490,11 +492,11 @@ class StartMenu:
                                     world.stopSize*((cameraOffset[0][0]+cameraOffset[0][1])/2.0))
                                 for i in range(len(scaledStopPolygons)):
                                     scaledStopPolygons[i] = pygame.transform.smoothscale(STOP_POLYGONS[i],
-                                                                                        (stopView,
-                                                                                        stopView))
+                                                                                         (stopView,
+                                                                                         stopView))
                                 scaledWorldSurface = pygame.transform.scale(worldSurface,
                                                                             (int(wWidth*cameraOffset[0][0]),
-                                                                            int(wHeight*cameraOffset[0][1])))
+                                                                             int(wHeight*cameraOffset[0][1])))
 
                                 window = "game"
                                 running = True
@@ -542,9 +544,9 @@ class StartMenu:
                                                     # segments on the track
                                                     if clickedSegment > -1:
                                                         line.createMouseSegments(clickedSegment,
-                                                                                mouseObject,
-                                                                                line.segments[clickedSegment].firstPoint,
-                                                                                line.segments[clickedSegment].lastPoint)
+                                                                                 mouseObject,
+                                                                                 line.segments[clickedSegment].firstPoint,
+                                                                                 line.segments[clickedSegment].lastPoint)
                                                         segmentToFollow = 0
                                                     else:
                                                         movingLine = -1
@@ -565,7 +567,7 @@ class StartMenu:
                                                 elif clickedIcon == Game.TRAIN and world.resources[Game.TRAIN] > 0:
                                                     mouseWorld = mouseObject.getWorld()
                                                     world.trains.append(Game.Train(*mouseWorld,
-                                                                                speed=world.trainSpeed))
+                                                                                   speed=world.trainSpeed))
                                                     world.resources[Game.TRAIN] = world.resources[Game.TRAIN]-1
                                                 # if the new resource selection is showing
                                                 elif pickingResource:
@@ -587,13 +589,13 @@ class StartMenu:
                                                     # find one new line
                                                     i = 0
                                                     while (i < len(world.stops)
-                                                        and (not world.stops[i].withinRadius(mouseObject.x,
+                                                           and (not world.stops[i].withinRadius(mouseObject.x,
                                                                                                 mouseObject.y,
                                                                                                 Game.ENDPOINT_SEGMENT_DISTANCE))):
                                                         i = i+1
                                                     if i < len(world.stops) and world.resources[Game.LINE] > 0:
                                                         movingLine = world.createNewLine(mouseObject,
-                                                                                        world.stops[i])
+                                                                                         world.stops[i])
                                                         world.resources[Game.LINE] = world.resources[Game.LINE]-1
                                         elif event.type == pygame.MOUSEMOTION:
                                             # move the line around with the mouse
@@ -614,13 +616,13 @@ class StartMenu:
                                                             mouseObject.updateWithWorld(
                                                                 point)
                                                     elif (line.mouseSegments[0].checkOverWater(worldSurface)
-                                                        and not line.mouseSegments[1].checkOverWater(worldSurface)):
+                                                          and not line.mouseSegments[1].checkOverWater(worldSurface)):
                                                         segmentToFollow = 1
                                                     elif (line.mouseSegments[1].checkOverWater(worldSurface)
-                                                        and not line.mouseSegments[0].checkOverWater(worldSurface)):
+                                                          and not line.mouseSegments[0].checkOverWater(worldSurface)):
                                                         segmentToFollow = 0
                                                     elif (line.mouseSegments[0].checkOverWater(worldSurface)
-                                                        and line.mouseSegments[1].checkOverWater(worldSurface)):
+                                                          and line.mouseSegments[1].checkOverWater(worldSurface)):
                                                         point = line.mouseSegments[segmentToFollow].getPointsOverWater(3, worldSurface)[
                                                             0]
                                                         mouseObject.updateWithWorld(
@@ -628,14 +630,14 @@ class StartMenu:
 
                                                     if point == event.pos:
                                                         world.lines[movingLine].processMouseSegments(world.stops,
-                                                                                                    mouseObject,
-                                                                                                    cameraOffset,
-                                                                                                    worldSurface)
+                                                                                                     mouseObject,
+                                                                                                     cameraOffset,
+                                                                                                     worldSurface)
                                                 else:
                                                     world.lines[movingLine].processMouseSegments(world.stops,
-                                                                                                mouseObject,
-                                                                                                cameraOffset,
-                                                                                                worldSurface)
+                                                                                                 mouseObject,
+                                                                                                 cameraOffset,
+                                                                                                 worldSurface)
                                             # if the a train is being clicked and moved, see if it can be
                                             # attached to a line
                                             elif movingTrain != -1:
@@ -650,7 +652,7 @@ class StartMenu:
                                                         movingTrain[0].movingClone.unsnapFromLine(
                                                         )
                                                         movingTrain[0].movingClone.snapToLine(world.lines[segment[0]],
-                                                                                            segment[1])
+                                                                                              segment[1])
                                                     elif movingTrain[1] == "carriage":
                                                         movingTrain[0].movingClone.unsnapFromLine(
                                                         )
@@ -698,9 +700,9 @@ class StartMenu:
                                                     movingLine = -1
                                                     if len(line.mouseSegments) > 1:
                                                         line.tempSegments.insert(line.mouseSegments[0].index+1,
-                                                                                Game.Segment(line.mouseSegments[0].firstPoint,
-                                                                                            line.mouseSegments[1].firstPoint,
-                                                                                            line.mouseSegments[1].index))
+                                                                                 Game.Segment(line.mouseSegments[0].firstPoint,
+                                                                                              line.mouseSegments[1].firstPoint,
+                                                                                              line.mouseSegments[1].index))
                                                     line.update(
                                                         worldSurface, True)
                                                     # if the line has no segments, completely remove
@@ -748,13 +750,13 @@ class StartMenu:
                                         stop = random.randint(0, 99)
                                         if stop < 55:  # 55% chance of making a circle stop
                                             stopInfo = world.addRandomStop(Game.CIRCLE,
-                                                                        scaledStopPolygons)
+                                                                           scaledStopPolygons)
                                         elif stop < 90:  # 90-55 = 35% chance for triangles
                                             stopInfo = world.addRandomStop(Game.TRIANGLE,
-                                                                        scaledStopPolygons)
+                                                                           scaledStopPolygons)
                                         elif stop < 100:  # 100-90 = 10% chance for squares
                                             stopInfo = world.addRandomStop(Game.SQUARE,
-                                                                        scaledStopPolygons)
+                                                                           scaledStopPolygons)
                                         if stopInfo[0]:  # the game area was expanded
                                             # start the animation to move the camera
                                             oldCameraOffset = copy.deepcopy(
@@ -778,8 +780,8 @@ class StartMenu:
                                     # has finished, restart and switch a stop
                                     if switchStopTimer.checkTimer(True):
                                         newShape = world.switchRandomStop(range(Game.SQUARE+1, Game.STAR+1),
-                                                                        validStops,
-                                                                        worldSurface)
+                                                                          validStops,
+                                                                          worldSurface)
                                         # if a shape was switched and the new shape hasn't already
                                         # been generated
                                         if newShape != -1 and newShape not in validStops:
@@ -811,21 +813,21 @@ class StartMenu:
                                             options.remove(
                                                 random.choice(options))
                                         options[0] = [options[0],
-                                                    scaledIcons[options[0]],
-                                                    pygame.Rect(cWidth-scaledIcons[options[0]].get_width()*4,
-                                                                scaledIcons[options[0]].get_height(
-                                                                )*2.3,
-                                                                scaledIcons[options[0]].get_width(
-                                                                ),
-                                                                scaledIcons[options[0]].get_height())]
+                                                      scaledIcons[options[0]],
+                                                      pygame.Rect(cWidth-scaledIcons[options[0]].get_width()*4,
+                                                                  scaledIcons[options[0]].get_height(
+                                                      )*2.3,
+                                            scaledIcons[options[0]].get_width(
+                                                      ),
+                                            scaledIcons[options[0]].get_height())]
                                         options[1] = [options[1],
-                                                    scaledIcons[options[1]],
-                                                    pygame.Rect(cWidth-scaledIcons[options[1]].get_width()*2,
-                                                                scaledIcons[options[1]].get_height(
-                                                                )*2.3,
-                                                                scaledIcons[options[1]].get_width(
-                                                                ),
-                                                                scaledIcons[options[1]].get_height())]
+                                                      scaledIcons[options[1]],
+                                                      pygame.Rect(cWidth-scaledIcons[options[1]].get_width()*2,
+                                                                  scaledIcons[options[1]].get_height(
+                                                      )*2.3,
+                                            scaledIcons[options[1]].get_width(
+                                                      ),
+                                            scaledIcons[options[1]].get_height())]
 
                                     newPassengerTimer.tick()
                                     newPassengerProbability = min(interpolateLinear(
@@ -845,7 +847,7 @@ class StartMenu:
                                         for stop in world.stops:
                                             for train in stop.trains:
                                                 world.passengersMoved = (world.passengersMoved
-                                                                        + stop.processTrain(train, trainsToMove))
+                                                                         + stop.processTrain(train, trainsToMove))
                                             # start counting up with timers on stops if they are overcrowing
                                             if len(stop.passengers) > 6:
                                                 if not stop.usingTimer:
@@ -855,20 +857,20 @@ class StartMenu:
                                                 if stop.timer.timeMode != Time.MODE_STOPWATCH:
                                                     stop.timer.tick()
                                                     stop.timer = Time.Time(Time.MODE_STOPWATCH,
-                                                                        Time.FORMAT_TOTAL_SECONDS,
-                                                                        stop.timer.time)
+                                                                           Time.FORMAT_TOTAL_SECONDS,
+                                                                           stop.timer.time)
                                             # the stop is no longer overcrowding, so start making the timer
                                             # go back down
                                             else:
                                                 if stop.usingTimer and stop.timer.timeMode == Time.MODE_STOPWATCH:
                                                     stop.timer.tick()
                                                     stop.timer = Time.Time(Time.MODE_TIMER,
-                                                                        Time.FORMAT_TOTAL_SECONDS,
-                                                                        stop.timer.time)
+                                                                           Time.FORMAT_TOTAL_SECONDS,
+                                                                           stop.timer.time)
                                                 if stop.timer.checkTimer(False):
                                                     stop.timer = Time.Time(Time.MODE_STOPWATCH,
-                                                                        Time.FORMAT_TOTAL_SECONDS,
-                                                                        0)
+                                                                           Time.FORMAT_TOTAL_SECONDS,
+                                                                           0)
                                                     stop.usingTimer = False
                                                     if stop.timer.isActive:
                                                         stop.timer.toggleActive()
@@ -884,7 +886,7 @@ class StartMenu:
                                                 stopPosition = stop.getPosition()
                                                 newCameraOffset = [[cWidth/150.0,
                                                                     cHeight/150.0],
-                                                                [stopPosition[0]-75,
+                                                                   [stopPosition[0]-75,
                                                                     stopPosition[1]-75]]
                                                 window = "end"
                                                 smoothScaleTimer.restart()
@@ -940,7 +942,7 @@ class StartMenu:
                                             # to take out a carriage:
                                             if (world.carriages[i].head is not None
                                                     and (len(world.carriages[i].findFirst().passengers)
-                                                        <= len(world.carriages[i].findFirst().carriages)*6)):
+                                                         <= len(world.carriages[i].findFirst().carriages)*6)):
                                                 # move it to another line
                                                 if world.carriages[i].movingClone in trainsToMove:
                                                     trainsToMove.remove(
@@ -951,7 +953,7 @@ class StartMenu:
                                                     # destination train
                                                     train = world.carriages[i].movingClone.head
                                                     tail.moveLines(train, len(train.carriages),
-                                                                cameraOffset, world.passengerSize)
+                                                                   cameraOffset, world.passengerSize)
                                                     world.carriages[i].stopMouseMove(
                                                     )
                                                 # remove it
@@ -989,9 +991,9 @@ class StartMenu:
                                         for i in range(len(cameraOffset)):
                                             for j in range(len(cameraOffset[i])):
                                                 cameraOffset[i][j] = interpolateQuadratic(scaleDuration-smoothScaleTimer.time,
-                                                                                        scaleDuration,
-                                                                                        oldCameraOffset[i][j],
-                                                                                        newCameraOffset[i][j])
+                                                                                          scaleDuration,
+                                                                                          oldCameraOffset[i][j],
+                                                                                          newCameraOffset[i][j])
                                         stopView = int(
                                             world.stopSize*((cameraOffset[0][0]+cameraOffset[0][1])/2.0))
                                         newWidth = int(
@@ -1001,13 +1003,13 @@ class StartMenu:
                                         scaledWorldSurface = pygame.Surface(
                                             (newWidth, newHeight))
                                         pygame.transform.scale(worldSurface,
-                                                            (newWidth,
+                                                               (newWidth,
                                                                 newHeight),
-                                                            scaledWorldSurface)
+                                                               scaledWorldSurface)
                                         for i in range(len(scaledStopPolygons)):
                                             scaledStopPolygons[i] = pygame.transform.smoothscale(STOP_POLYGONS[i],
-                                                                                                (stopView,
-                                                                                                stopView))
+                                                                                                 (stopView,
+                                                                                                 stopView))
                                         if smoothScaleTimer.checkTimer(True):
                                             isScaling = False
 
