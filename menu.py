@@ -359,7 +359,7 @@ class StartMenu:
                                         if i < len(world.lines):
                                             pygame.draw.circle(display,
                                                                Game.COLOURS.get(
-                                                                "lines")[i],
+                                                                   "lines")[i],
                                                                indicatorCoords,
                                                                world.stopSize/2)
                                         elif i < len(world.lines)+world.resources[Game.LINE]:

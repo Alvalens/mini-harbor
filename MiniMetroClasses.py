@@ -359,12 +359,14 @@ class Stop(object):
 
             self.max_value = 1
             # draw the outer ring
-            pygame.gfxdraw.arc(targetSurface,
-                            int(self.rect.centerx), int(self.rect.centery),
-                            int(self.rect.width/2),
-                            int(90 - (self.value*360)),
-                            int(90 - ((self.value*360) + (self.max_value*360))))
+            color_value = (255, 0, 0)  # red
+            color = pygame.Color(*color_value)
 
+            # pygame.gfxdraw.arc(0, targetSurface,
+            #                 int(self.rect.centerx), int(self.rect.centery),
+            #                 int(self.rect.width/2),
+            #                 int(90 - (self.value*360)),
+            #                 int(90 - ((self.value*360) + (self.max_value*360))))
 
         for i in range(len(self.passengers)):
             # draw the passenger to the side of the stop, in rows of 6
