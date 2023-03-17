@@ -51,10 +51,9 @@ class Time(object):
         # compare two times
         if int(self.time) > int(other.time):
             return 1
-        elif int(self.time) == int(other.time):
+        if int(self.time) == int(other.time):
             return 0
-        else:
-            return -1
+        return -1
 
     def __add__(self, other):
         # add time2's time to this time
@@ -86,14 +85,13 @@ class Time(object):
         # string, adding a leading 0 if necessary
         if value < 10:
             return "0"+str(value)
-        else:
-            return str(value)
+        return str(value)
 
     def output(self):
         # return a string with the time in its specified format
         if self._displayFormat == FORMAT_TOTAL_SECONDS:
             return str(int(math.floor(self.time)))
-        elif self._displayFormat == FORMAT_HH_MM_SS:
+        if self._displayFormat == FORMAT_HH_MM_SS:
             return (self._convertToString(self.hours)+":"
                     + self._convertToString(self.minutes)+":"
                     + self._convertToString(self.seconds))
@@ -128,8 +126,7 @@ class Time(object):
                     if self.isActive:
                         self.toggleActive()
                 return True
-            else:
-                return False
+            return False
 
     def restart(self, startTime=None):
         # for timers, change the time back to the supplied startTime or

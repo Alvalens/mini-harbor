@@ -285,8 +285,7 @@ class StartMenu:
                                 def getSwitchStopTime(passengersMoved):
                                     if passengersMoved < 400:
                                         return 10000
-                                    else:
-                                        return max(interpolateLinear(passengersMoved-400, 600, 50, 10), 10)
+                                    return max(interpolateLinear(passengersMoved-400, 600, 50, 10), 10)
 
                                 def togglePaused(paused, timers, world):
                                     paused = not paused
@@ -339,14 +338,14 @@ class StartMenu:
                                                  None,
                                                  pygame.BLEND_MAX)
 
-                                    for i in range(len(world.lines)):
-                                        world.lines[i].draw(
+                                    for i, item in enumerate(world.lines):
+                                        item.draw(
                                             display, 10, cameraOffset)
-                                        for childLine in world.lines[i].abandonedChildren:
+                                        for childLine in item.abandonedChildren:
                                             childLine.draw(
                                                 display, 10, cameraOffset)
-                                        if (world.lines[i].segments == []
-                                                and world.lines[i].mouseSegments == []):
+                                        if (item.segments == []
+                                                and item.mouseSegments == []):
                                             world.lines.pop(i)
                                     for train in world.trains:
                                         train.draw(
@@ -402,28 +401,28 @@ class StartMenu:
                                                                world.stopSize/2,
                                                                2)
 
-                                    for i in range(len(scaledIcons)):
+                                    for i, item in enumerate(scaledIcons):
                                         iconCoords = (int(cWidth                              # start from the right edge
                                                           # at least 2 icon widths from edge
-                                                          - scaledIcons[i].get_width()*(2+i)
+                                                          - item.get_width()*(2+i)
                                                           # 20 px of space between each icon
                                                           - (i*20)
-                                                          - scaledIcons[i].get_width()/2),    # center shape at that point
+                                                          - item.get_width()/2),    # center shape at that point
 
                                                       int(cHeight                             # start from bottom edge
                                                           # one icon height away from edge
-                                                          - scaledIcons[i].get_height()
-                                                          - scaledIcons[i].get_height()/2))   # center shape at that point
+                                                          - item.get_height()
+                                                          - item.get_height()/2))   # center shape at that point
                                         world.iconHitboxes[i] = pygame.Rect(iconCoords,
-                                                                            (scaledIcons[i].get_width(),
-                                                                             scaledIcons[i].get_height()))
+                                                                            (item.get_width(),
+                                                                             item.get_height()))
                                         resourceText = ubuntuBold30.render(str(world.resources[i]),
                                                                            1,
                                                                            Game.COLOURS.get("whiteOutline"))
                                         display.blit(resourceText,
-                                                     (iconCoords[0]+scaledIcons[i].get_width()/2-resourceText.get_width()/2,
+                                                     (iconCoords[0]+item.get_width()/2-resourceText.get_width()/2,
                                                       iconCoords[1]-35))
-                                        display.blit(scaledIcons[i],
+                                        display.blit(item,
                                                      iconCoords)
 
                                     for stop in world.stops:
@@ -1013,9 +1012,9 @@ class StartMenu:
                                     if isScaling:
                                         # scale out the game view
                                         smoothScaleTimer.tick()
-                                        for i in range(len(cameraOffset)):
-                                            for j in range(len(cameraOffset[i])):
-                                                cameraOffset[i][j] = interpolateQuadratic(scaleDuration-smoothScaleTimer.time,
+                                        for i, item in enumerate(cameraOffset):
+                                            for j in range(len(item)):
+                                                item[j] = interpolateQuadratic(scaleDuration-smoothScaleTimer.time,
                                                                                           scaleDuration,
                                                                                           oldCameraOffset[i][j],
                                                                                           newCameraOffset[i][j])
