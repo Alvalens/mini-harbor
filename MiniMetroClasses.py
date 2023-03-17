@@ -209,9 +209,9 @@ class World(object):
     def getSegmentFromWorld(self, mouseObject, offset):
         # as opposed to getting a segment from a specific line
         clickedSegments = []
-        for i in range(len(self.lines)):
-            for j in range(len(self.lines[i].segments)):
-                if self.lines[i].segments[j].rect.collidepoint(mouseObject.getView(offset)):
+        for i, _ in enumerate(self.lines):
+            for j, item in enumerate(self.lines[i].segments):
+                if item.rect.collidepoint(mouseObject.getView(offset)):
                     clickedSegments.append([i, j])
         if len(clickedSegments) > 1:
             lowestDistance = [1000000, [-1, -1]]
@@ -235,15 +235,15 @@ class World(object):
             return -1
 
     def getClickedIcon(self, mouseView):
-        for i in range(len(self.iconHitboxes)):
-            if self.iconHitboxes[i].collidepoint(mouseView):
+        for i, item in enumerate(self.iconHitboxes):
+            if item.collidepoint(mouseView):
                 return i
         return -1
 
     def getClickedTrainLine(self, colour):
         # get the line that the clicked train is on
-        for i in range(len(self.lines)):
-            if colour == self.lines[i].BRIGHTER_COLOUR:
+        for i, item in enumerate(self.lines):
+            if colour == item.BRIGHTER_COLOUR:
                 return i
         return -1
 
@@ -368,10 +368,10 @@ class Stop(object):
             #                 int(90 - (self.value*360)),
             #                 int(90 - ((self.value*360) + (self.max_value*360))))
 
-        for i in range(len(self.passengers)):
+        for i, item in enumerate(self.passengers):
             # draw the passenger to the side of the stop, in rows of 6
             # (so if a 7th passenger spawns, it'll appear in another row)
-            self.passengers[i].draw(targetSurface,
+            item.draw(targetSurface,
                                     passengerSize,
                                     stopView[0] + size*1.4 +
                                     (i % 6)*passengerSize,
@@ -424,50 +424,50 @@ class Stop(object):
         return -1
 
     def findValidPassenger(self, train):
-        for i in range(len(self.passengers)):
+        for i, item in enumerate(self.passengers):
             # first, see if the stop it wants to go to
             # is reachable by train without the train needing
             # to reverse direction
-            foundPath = len(self.passengers[i].path) > 0
+            foundPath = len(item.path) > 0
             if (train.direction == 1
-                    and (self.passengers[i].SHAPE in train.line.stopNums[train.segmentNum:]
+                    and (item.SHAPE in train.line.stopNums[train.segmentNum:]
                         or (foundPath
-                            and self.passengers[i].path[1][0] > train.segmentNum
-                            and train in self.passengers[i].path[0][1].trains))):
+                            and item.path[1][0] > train.segmentNum
+                            and train in item.path[0][1].trains))):
                 return i
             elif (train.direction == -1
-                and (self.passengers[i].SHAPE in train.line.stopNums[:train.segmentNum+1]
+                and (item.SHAPE in train.line.stopNums[:train.segmentNum+1]
                     or (foundPath
-                        and self.passengers[i].path[1][0] <= train.segmentNum
-                        and train in self.passengers[i].path[0][1].trains))):
+                        and item.path[1][0] <= train.segmentNum
+                        and train in item.path[0][1].trains))):
                 return i
             # then, check all lines directly accessible to the passenger/stop
             if not foundPath:
                 for line in self.lines:
-                    if self.passengers[i].SHAPE in line.stopNums:
+                    if item.SHAPE in line.stopNums:
                         foundPath = True  # do nothing, wait until the right train comes
             # finally, if all else fails, find a path along the whole network
             if not foundPath:
                 for line in self.lines:
                     path = [[-1, line]]
-                    path = self.findPath(line, self.passengers[i], list(path))
+                    path = self.findPath(line, item, list(path))
                     if path != -1:
-                        self.passengers[i].path = path
+                        item.path = path
                         if (train.direction == 1
-                                and self.passengers[i].path[1][0] > train.segmentNum):
+                                and item.path[1][0] > train.segmentNum):
                             return i
                         elif (train.direction == -1
-                                and self.passengers[i].path[1][0] <= train.segmentNum):
+                                and item.path[1][0] <= train.segmentNum):
                             return i
         return -1
 
     def movePassenger(self, train, shouldUnload):
         # move a single passenger
         index = -1
-        for i in range(len(train.passengers)):
-            if (self.shape == train.passengers[i].SHAPE
-                    or (len(train.passengers[i].path) > 0
-                        and train.passengers[i].path[1][1] in self.lines)):
+        for i, item in enumerate(train.passengers):
+            if (self.shape == item.SHAPE
+                    or (len(item.path) > 0
+                        and item.path[1][1] in self.lines)):
                 index = i
         if index > -1:
             # if a passenger was found that can be moved off the train, move it
@@ -564,8 +564,8 @@ class Line(object):
     def getClickedSegment(self, mouseView, mouseObject):
         # determine which segment of the line is being clicked on
         intersectingSegments = []
-        for i in range(len(self.segments)):
-            if self.segments[i].rect.collidepoint(mouseView):
+        for i, item in enumerate(self.segments):
+            if item.rect.collidepoint(mouseView):
                 intersectingSegments.append(i)
         # if only one approximate rectangle is clicked,
         # pick that segment. if multiple approximate rectangles
@@ -574,11 +574,11 @@ class Line(object):
             # holds the lowest score and the index of
             # the segment with that score
             lowestDistance = [10000000, -1]
-            for i in range(len(intersectingSegments)):
-                distanceScore = (self.segments[intersectingSegments[i]]
+            for i, item in enumerate(intersectingSegments):
+                distanceScore = (self.segments[item]
                                 .getDistanceScore(mouseObject.getWorld()))
                 if distanceScore < lowestDistance[0]:
-                    lowestDistance = [distanceScore, intersectingSegments[i]]
+                    lowestDistance = [distanceScore, item]
             intersectingSegments[0] = lowestDistance[1]
         if len(intersectingSegments) > 0:
             # sometimes the rectangles pygame returns do not cover
@@ -625,9 +625,9 @@ class Line(object):
         if len(self.segments) > 0:
             if self in self.segments[0].firstPoint.lines:
                 self.segments[0].firstPoint.lines.remove(self)
-        for i in range(len(self.segments)):
-            if self in self.segments[i].lastPoint.lines:
-                self.segments[i].lastPoint.lines.remove(self)
+        for i, item in enumerate(self.segments):
+            if self in item.lastPoint.lines:
+                item.lastPoint.lines.remove(self)
         self.transfers = []
 
         if updateTransfers:
@@ -643,13 +643,13 @@ class Line(object):
             self.stopNums = [self.segments[0].firstPoint.shape]
             if self not in self.segments[0].firstPoint.lines:
                 self.segments[0].firstPoint.lines.append(self)
-        for i in range(len(self.segments)):
-            self.segments[i].index = i
+        for i, item in enumerate(self.segments):
+            item.index = i
             self.tempSegments[i].index = i
-            self.segments[i].checkOverWater(worldSurface)
-            self.stopNums.append(self.segments[i].lastPoint.shape)
-            if self not in self.segments[i].lastPoint.lines:
-                self.segments[i].lastPoint.lines.append(self)
+            item.checkOverWater(worldSurface)
+            self.stopNums.append(item.lastPoint.shape)
+            if self not in item.lastPoint.lines:
+                item.lastPoint.lines.append(self)
         # update transfers
         if len(self.segments) > 0:
             for line in self.segments[0].firstPoint.lines:
@@ -657,8 +657,8 @@ class Line(object):
                     self.transfers.append([0, line])
                     if updateTransfers:
                         line.update(worldSurface, False)
-        for i in range(len(self.segments)):
-            for line in self.segments[i].lastPoint.lines:
+        for i, item in enumerate(self.segments):
+            for line in item.lastPoint.lines:
                 if line is not self and [i+1, line] not in self.transfers:
                     self.transfers.append([i+1, line])
                     if updateTransfers:
@@ -684,9 +684,9 @@ class Line(object):
     def find(self, stop, source):
         # see if a stop is within the list source
         segments = []
-        for i in range(len(source)):
-            if (source[i].firstPoint == stop
-                    or source[i].lastPoint == stop):
+        for i, item in enumerate(source):
+            if (item.firstPoint == stop
+                    or item.lastPoint == stop):
                 segments.append(i)
         return segments
 
@@ -1273,13 +1273,13 @@ class Train(object):
         for i in range(len(self.passengers[:6])):
             self.passengers[i].draw(targetSurface, passengerSize, *viewRect[i])
 
-        for i in range(len(self.carriages)):
+        for i, item in enumerate(self.carriages):
             viewRect = copy.deepcopy(rect[1])
             centerView = getViewCoords(
-                self.carriages[i]._x, self.carriages[i]._y, offset)
+                item._x, item._y, offset)
             for j in range(len(viewRect)):
                 viewRect[j] = self.rotatePoint(
-                    viewRect[j], self.carriages[i]._angle)
+                    viewRect[j], item._angle)
                 viewRect[j][0] = viewRect[j][0]+centerView[0]
                 viewRect[j][1] = viewRect[j][1]+centerView[1]
             for j in range(len(self.passengers[(6*(i+1)):(6*(i+2))])):
@@ -1315,8 +1315,8 @@ class Carriage(Train):
         # find the closest train on the line the
         # carriage is on
         lowestDistance = [10000000, -1]
-        for i in range(len(self.line.trains)):
-            distance = findDistance(self.line.trains[i].getPosition(),
+        for i, item in enumerate(self.line.trains):
+            distance = findDistance(item.getPosition(),
                                     self.getPosition())
             if distance < lowestDistance[0]:
                 lowestDistance = [distance, i]
