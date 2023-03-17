@@ -348,18 +348,19 @@ class Stop(object):
             targetSurface.blit(stop, (stopView[0]-size/2, stopView[1]-size/2))
             self.value = max(self.timer.time, 0)/LOSE_DURATION
 
-
-            self.max_value = 1
-            # draw the outer ring
-            color_value = (255, 0, 0)  # red
-            color = pygame.Color(*color_value)
-
-            # pygame.gfxdraw.arc(0, targetSurface,
-            #                 int(self.rect.centerx), int(self.rect.centery),
-            #                 int(self.rect.width/2),
-            #                 int(90 - (self.value*360)),
-            #                 int(90 - ((self.value*360) + (self.max_value*360))))
-
+            # gambar ! if the stop about to be full
+            if self.value > 0.1 and self.value < 0.99:
+                font = pygame.font.SysFont("monospace", 30)
+                label = font.render("!", 1, (255, 45, 45))
+                targetSurface.blit(label,
+                                   (stopView[0]-size/2, stopView[1]-size/2))
+                
+                # pojok kiri atas
+                font = pygame.font.SysFont("monospace", 30)
+                label = font.render("!", 1, (255, 45, 45))
+                targetSurface.blit(label, (0, 0))
+                
+            
         for i, item in enumerate(self.passengers):
             # draw the passenger to the side of the stop, in rows of 6
             # (so if a 7th passenger spawns, it'll appear in another row)

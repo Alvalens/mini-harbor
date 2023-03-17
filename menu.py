@@ -57,12 +57,17 @@ class StartMenu:
     def __init__(self, screen):
         self.screen = screen
         self.screen_width, self.screen_height = screen.get_size()
-        self.title = "Mini Metro"
 
         # Load the font and create a title surface
+        title_font = pygame.font.Font(None, 72)
+        title_font.set_underline(True)
+        title_font.set_bold(True)
+        title_font.set_italic(True)
+        # set outline
+
         self.title_font = pygame.font.Font(None, 72)
         self.title_surface = self.title_font.render(
-            self.title, True, (255, 255, 255))
+            "Mini Metro", True, (255, 255, 255))
 
         # Create the buttons
         self.buttons = []
@@ -85,20 +90,6 @@ class StartMenu:
         # Resize the background image to the same size as the screen
         self.background_image = pygame.transform.scale(
             self.background_image, (self.screen_width, self.screen_height))
-
-    def draw(self):
-        # Draw the background
-        self.screen.blit(self.background_image, (0, 0))
-
-        # Draw the title
-        title_x = self.screen_width // 2 - self.title_surface.get_width() // 2
-        title_y = self.screen_height // 4 - self.title_surface.get_height() // 2
-        self.screen.blit(self.title_surface, (title_x, title_y))
-
-        # Draw the buttons
-        for button in self.buttons:
-            button.draw(self.screen)
-
 
     def run(self):
         # Main loop
@@ -477,8 +468,8 @@ class StartMenu:
                                                      (cWidth/2-size[0]/2,
                                                      120))
                                         size = ubuntuLight30.size(
-                                            str(world.passengersMoved)+" passengers transported")
-                                        display.blit(ubuntuLight30.render(str(world.passengersMoved)+" passengers transported",
+                                            str(world.passengersMoved)+" barang ditransportasi")
+                                        display.blit(ubuntuLight30.render(str(world.passengersMoved)+" barang ditransportasi",
                                                                           1,
                                                                           Game.COLOURS.get("whiteOutline")),
                                                      (cWidth/2-size[0]/2,
@@ -1046,9 +1037,14 @@ class StartMenu:
                                 # Do something when the "Exit" button is clicked
                                 pygame.quit()
                                 exit()
-
-            # Draw the background image
+            
+            # Draw the background
             self.screen.blit(self.background_image, (0, 0))
+            # Draw the title
+            title_x = self.screen_width // 2 - self.title_surface.get_width() // 2
+            title_y = self.screen_height // 4 - self.title_surface.get_height() // 2
+            self.screen.blit(self.title_surface, (title_x, title_y))
+
 
             # Draw the buttons
             for button in self.buttons:
