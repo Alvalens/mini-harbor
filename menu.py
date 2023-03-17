@@ -1,4 +1,3 @@
-import menu
 import random
 import copy
 import pygame
@@ -58,6 +57,14 @@ class StartMenu:
     def __init__(self, screen):
         self.screen = screen
         self.screen_width, self.screen_height = screen.get_size()
+        self.title = "Mini Metro"
+
+        # Load the font and create a title surface
+        self.title_font = pygame.font.Font(None, 72)
+        self.title_surface = self.title_font.render(
+            self.title, True, (255, 255, 255))
+
+        # Create the buttons
         self.buttons = []
         self.buttons.append(Button(
             self.screen_width // 2 - 100,
@@ -74,6 +81,24 @@ class StartMenu:
 
         # Load the background image
         self.background_image = pygame.image.load("assets/bg.jpg").convert()
+
+        # Resize the background image to the same size as the screen
+        self.background_image = pygame.transform.scale(
+            self.background_image, (self.screen_width, self.screen_height))
+
+    def draw(self):
+        # Draw the background
+        self.screen.blit(self.background_image, (0, 0))
+
+        # Draw the title
+        title_x = self.screen_width // 2 - self.title_surface.get_width() // 2
+        title_y = self.screen_height // 4 - self.title_surface.get_height() // 2
+        self.screen.blit(self.title_surface, (title_x, title_y))
+
+        # Draw the buttons
+        for button in self.buttons:
+            button.draw(self.screen)
+
 
     def run(self):
         # Main loop
