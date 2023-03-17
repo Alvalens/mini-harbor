@@ -62,13 +62,13 @@ class StartMenu:
         self.buttons.append(Button(
             self.screen_width // 2 - 100,
             self.screen_height // 2 - 50,
-            200, 50, "Start",
+            200, 50, "Mulai",
             50, (255, 255, 255), (37, 150, 190)
         ))
         self.buttons.append(Button(
             self.screen_width // 2 - 100,
             self.screen_height // 2 + 50,
-            200, 50, "Exit",
+            200, 50, "Keluar",
             50, (255, 255, 255), (255, 0, 0)
         ))
 
@@ -86,7 +86,7 @@ class StartMenu:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     for button in self.buttons:
                         if button.is_clicked(event.pos):
-                            if button.text == "Start":
+                            if button.text == "Mulai":
                                 # camera (display) coordinates
                                 cWidth = 800
                                 cHeight = 600
@@ -151,7 +151,7 @@ class StartMenu:
                                     "assets/passengers/hexagon_light.png").convert_alpha(),
                                     pygame.image.load("assets/passengers/star_light.png").convert_alpha()]
                                 PASSENGER_ICON = pygame.image.load(
-                                    "assets/icons/passenger.png").convert_alpha()
+                                    "assets/icons/box.png").convert_alpha()
 
                                 RIVERS = [pygame.image.load("assets/maps/river1.png").convert_alpha(),
                                           pygame.image.load(
@@ -160,11 +160,11 @@ class StartMenu:
                                     "assets/maps/river3.png").convert_alpha(),
                                     pygame.image.load("assets/maps/river4.png").convert_alpha()]
 
-                                ICONS = [pygame.image.load("assets/icons/carriage.png").convert_alpha(),
+                                ICONS = [pygame.image.load("assets/icons/container.png").convert_alpha(),
                                          pygame.image.load(
-                                    "assets/icons/line.png").convert_alpha(),
+                                    "assets/icons/sea.png").convert_alpha(),
                                     pygame.image.load(
-                                    "assets/icons/train.png").convert_alpha(),
+                                    "assets/icons/boat.png").convert_alpha(),
                                     pygame.image.load("assets/icons/tunnel.png").convert_alpha()]
 
                                 # pick and place a map
@@ -1018,7 +1018,7 @@ class StartMenu:
                                     pygame.display.update()
 
                                 print('Start button clicked')
-                            elif button.text == "Exit":
+                            elif button.text == "Keluar":
                                 # Do something when the "Exit" button is clicked
                                 pygame.quit()
                                 exit()
