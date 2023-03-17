@@ -446,8 +446,8 @@ class StartMenu:
                                                      (cWidth/2-size[0]/2,
                                                      40))
                                         size = ubuntuLight30.size(
-                                            "Overcrowding at this stop shut down your subway")
-                                        display.blit(ubuntuLight30.render("Overcrowding at this stop shut down your subway",
+                                            "Overcrowding at this stop shut down your harbor")
+                                        display.blit(ubuntuLight30.render("Overcrowding at this stop shut down your harbor",
                                                                           1,
                                                                           Game.COLOURS.get("whiteOutline")),
                                                      (cWidth/2-size[0]/2,
