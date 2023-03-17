@@ -1147,7 +1147,7 @@ class Train(object):
         distanceFromLastPoint = findDistance((self.line.segments[self.segmentNum]
                                             .lastPoint.getPosition()),
                                             (self._x, self._y))
-        if (distanceFromFirstPoint <= distanceFromLastPoint):
+        if distanceFromFirstPoint <= distanceFromLastPoint:
             self.direction = -1
             self._segmentDistance = distanceFromLastPoint
             self._angle = self.line.segments[self.segmentNum].angle
