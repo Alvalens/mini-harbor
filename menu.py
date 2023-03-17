@@ -260,8 +260,7 @@ class StartMenu:
                                 def getSwitchStopTime(passengersMoved):
                                     if passengersMoved < 400:
                                         return 10000
-                                    else:
-                                        return max(interpolateLinear(passengersMoved-400, 600, 50, 10), 10)
+                                    return max(interpolateLinear(passengersMoved-400, 600, 50, 10), 10)
 
                                 def togglePaused(paused, timers, world):
                                     paused = not paused

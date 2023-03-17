@@ -132,19 +132,15 @@ class World(object):
                               Time.FORMAT_TOTAL_SECONDS, 0)
             self.stops.append(Stop(x, y, shape, stopSurfaces, timer))
             return False, False
-        # if a stop isn't generated within 15 tries,
-        # try to expand the generation area
-        else:
-            self.validStopDistanceX = self.validStopDistanceX+50
-            if self.validStopDistanceX >= self.width/2:
-                self.validStopDistanceX = self.width/2
-                self.validStopDistanceY = int(self.validStopDistanceX
-                                              * (float(self.height)/self.width))
-                return False, True
-            else:
-                self.validStopDistanceY = int(self.validStopDistanceX
-                                              * (float(self.height)/self.width))
-                return True, False
+        self.validStopDistanceX = self.validStopDistanceX+50
+        if self.validStopDistanceX >= self.width/2:
+            self.validStopDistanceX = self.width/2
+            self.validStopDistanceY = int(self.validStopDistanceX
+                                          * (float(self.height)/self.width))
+            return False, True
+        self.validStopDistanceY = int(self.validStopDistanceX
+                                      * (float(self.height)/self.width))
+        return True, False
 
     def switchRandomStop(self, shapeRange, existingStops, worldSurface):
         """ (int) -> int
@@ -169,11 +165,10 @@ class World(object):
             count = count+1
         if count == 10:
             return -1
-        else:
-            newStop.shape = newShape
-            for line in newStop.lines:
-                line.update(worldSurface, False)
-            return newShape
+        newStop.shape = newShape
+        for line in newStop.lines:
+            line.update(worldSurface, False)
+        return newShape
 
     def createNewLine(self, mouseObject, stop):
         """ (MousePosition, Stop) -> int
@@ -203,8 +198,7 @@ class World(object):
         # the Tuple.index method throws an exception if it is not in it
         if colour in COLOURS.get("lines"):
             return COLOURS.get("lines").index(colour)
-        else:
-            return -1
+        return -1
 
     def getSegmentFromWorld(self, mouseObject, offset):
         # as opposed to getting a segment from a specific line
@@ -221,18 +215,16 @@ class World(object):
                 if distanceScore < lowestDistance[0]:
                     lowestDistance = [distanceScore, segment]
             return lowestDistance[1]
-        elif len(clickedSegments) == 1:
+        if len(clickedSegments) == 1:
             return clickedSegments[0]
-        else:
-            return -1
+        return -1
 
     def getLineByHitbox(self, mouseObject, offset):
         # as opposed to getting the clicked line by colour
         segment = self.getSegmentFromWorld(mouseObject, offset)
         if segment != -1:
             return segment[0]
-        else:
-            return -1
+        return -1
 
     def getClickedIcon(self, mouseView):
         for i, item in enumerate(self.iconHitboxes):
@@ -394,8 +386,7 @@ class Stop(object):
                 return self.movePassenger(train, True)
         if train in trainsToMove or train.movingClone in trainsToMove:
             return self.movePassenger(train, True)
-        else:
-            return self.movePassenger(train, False)
+        return self.movePassenger(train, False)
 
     def isValidTransfer(self, path, transfer):
         # if the transfer's line has already been visited,
@@ -413,14 +404,13 @@ class Stop(object):
             index = currentLine.stopNums.index(passenger.SHAPE)
             path.append([index, currentLine])
             return path
-        else:
-            for transfer in currentLine.transfers:
-                if self.isValidTransfer(path, transfer):
-                    newPath = list(path)
-                    newPath.append(transfer)
-                    foundPath = self.findPath(transfer[1], passenger, newPath)
-                    if foundPath != -1:
-                        return foundPath
+        for transfer in currentLine.transfers:
+            if self.isValidTransfer(path, transfer):
+                newPath = list(path)
+                newPath.append(transfer)
+                foundPath = self.findPath(transfer[1], passenger, newPath)
+                if foundPath != -1:
+                    return foundPath
         return -1
 
     def findValidPassenger(self, train):
@@ -435,7 +425,7 @@ class Stop(object):
                             and item.path[1][0] > train.segmentNum
                             and train in item.path[0][1].trains))):
                 return i
-            elif (train.direction == -1
+            if (train.direction == -1
                 and (item.SHAPE in train.line.stopNums[:train.segmentNum+1]
                     or (foundPath
                         and item.path[1][0] <= train.segmentNum
@@ -456,7 +446,7 @@ class Stop(object):
                         if (train.direction == 1
                                 and item.path[1][0] > train.segmentNum):
                             return i
-                        elif (train.direction == -1
+                        if (train.direction == -1
                                 and item.path[1][0] <= train.segmentNum):
                             return i
         return -1
@@ -477,9 +467,8 @@ class Stop(object):
                     train.passengers[index].path = []
                 self.passengers.append(train.passengers.pop(index))
                 return 0
-            else:
-                train.passengers.pop(index)
-                return 1  # one passenger has been moved
+            train.passengers.pop(index)
+            return 1  # one passenger has been moved
         elif shouldUnload:
             # if the train or carriage should be moved to another line, it
             # can't have any passengers on it, so unload move them off
@@ -585,8 +574,7 @@ class Line(object):
             # the full line, so make sure there is an intersection
             # in the list before returning
             return intersectingSegments[0]
-        else:
-            return -1
+        return -1
 
     def createMouseSegments(self, segment, mouseObject, stop1, stop2):
         self.tempSegments = list(self.segments)
