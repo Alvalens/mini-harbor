@@ -67,7 +67,7 @@ class StartMenu:
 
         self.title_font = pygame.font.Font(None, 72)
         self.title_surface = self.title_font.render(
-            "Mini Metro", True, (255, 255, 255))
+            "Mini Harbor", True, (255, 255, 255))
 
         # Create the buttons
         self.buttons = []
