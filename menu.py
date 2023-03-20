@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 import random
 import copy
 import pygame
@@ -9,6 +10,14 @@ pygame.init()
 pygame.font.init()
 
 
+class Screen(ABC):
+    def __init__(self, screen):
+        self.screen = screen
+        self.screen_width, self.screen_height = screen.get_size()
+
+    @abstractmethod
+    def run(self):
+        pass
 class Button:
     def __init__(self, x, y, w, h, text, font_size, font_color, rect_color):
         self.rect = pygame.Rect(x, y, w, h)
@@ -27,10 +36,19 @@ class Button:
         return self.rect.collidepoint(pos)
 
 
-class LoadingScreen:
+class StartButton(Button):
+    def __init__(self, x, y):
+        super().__init__(x, y, 200, 50, "Mulai", 50, (255, 255, 255), (37, 150, 190))
+
+
+class ExitButton(Button):
+    def __init__(self, x, y):
+        super().__init__(x, y, 200, 50, "Keluar", 50, (255, 255, 255), (255, 0, 0))
+
+
+class LoadingScreen(Screen):
     def __init__(self, screen):
-        self.screen = screen
-        self.screen_width, self.screen_height = screen.get_size()
+        super().__init__(screen)
         self.background_color = (0, 0, 0)
         self.font = pygame.font.SysFont(None, 50)
         self.text = "Tap to Continue"
@@ -53,10 +71,9 @@ class LoadingScreen:
             pygame.display.update()
 
 
-class StartMenu:
+class StartMenu(Screen):
     def __init__(self, screen):
-        self.screen = screen
-        self.screen_width, self.screen_height = screen.get_size()
+        super(StartMenu, self).__init__(screen)
 
         # Load the font and create a title surface
         title_font = pygame.font.Font(None, 72)
@@ -71,17 +88,13 @@ class StartMenu:
 
         # Create the buttons
         self.buttons = []
-        self.buttons.append(Button(
+        self.buttons.append(StartButton(
             self.screen_width // 2 - 100,
-            self.screen_height // 2 - 50,
-            200, 50, "Mulai",
-            50, (255, 255, 255), (37, 150, 190)
+            self.screen_height // 2 - 50
         ))
-        self.buttons.append(Button(
+        self.buttons.append(ExitButton(
             self.screen_width // 2 - 100,
-            self.screen_height // 2 + 50,
-            200, 50, "Keluar",
-            50, (255, 255, 255), (255, 0, 0)
+            self.screen_height // 2 + 50
         ))
 
         # Load the background image
