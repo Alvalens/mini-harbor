@@ -150,60 +150,60 @@ class StartMenu:
                                     "assets/stops/hexagon_dark.png").convert_alpha(),
                                     pygame.image.load("assets/stops/star_dark.png").convert_alpha()]
 
-                                CARGO_POLYGONS = [pygame.image.load("assets/cargos/circle_light.png").convert_alpha(),
+                                PASSENGER_POLYGONS = [pygame.image.load("assets/passengers/circle_light.png").convert_alpha(),
                                                       pygame.image.load(
-                                    "assets/cargos/triangle_light.png").convert_alpha(),
+                                    "assets/passengers/triangle_light.png").convert_alpha(),
                                     pygame.image.load(
-                                    "assets/cargos/square_light.png").convert_alpha(),
+                                    "assets/passengers/square_light.png").convert_alpha(),
                                     pygame.image.load(
-                                    "assets/cargos/diamond_light.png").convert_alpha(),
+                                    "assets/passengers/diamond_light.png").convert_alpha(),
                                     pygame.image.load(
-                                    "assets/cargos/trapezoid_light.png").convert_alpha(),
+                                    "assets/passengers/trapezoid_light.png").convert_alpha(),
                                     pygame.image.load(
-                                    "assets/cargos/parallelogram_light.png").convert_alpha(),
+                                    "assets/passengers/parallelogram_light.png").convert_alpha(),
                                     pygame.image.load(
-                                    "assets/cargos/pentagon_light.png").convert_alpha(),
+                                    "assets/passengers/pentagon_light.png").convert_alpha(),
                                     pygame.image.load(
-                                    "assets/cargos/hexagon_light.png").convert_alpha(),
-                                    pygame.image.load("assets/cargos/star_light.png").convert_alpha()]
-                                CARGO_ICON = pygame.image.load(
-                                    "assets/icons/cargo.png").convert_alpha()
+                                    "assets/passengers/hexagon_light.png").convert_alpha(),
+                                    pygame.image.load("assets/passengers/star_light.png").convert_alpha()]
+                                PASSENGER_ICON = pygame.image.load(
+                                    "assets/icons/box.png").convert_alpha()
 
-                                LANDS = [pygame.image.load("assets/maps/land1.png").convert_alpha(),
+                                RIVERS = [pygame.image.load("assets/maps/river1.png").convert_alpha(),
                                           pygame.image.load(
-                                    "assets/maps/land2.png").convert_alpha(),
+                                    "assets/maps/river2.png").convert_alpha(),
                                     pygame.image.load(
-                                    "assets/maps/land3.png").convert_alpha(),
-                                    pygame.image.load("assets/maps/land4.png").convert_alpha()]
+                                    "assets/maps/river3.png").convert_alpha(),
+                                    pygame.image.load("assets/maps/river4.png").convert_alpha()]
 
                                 ICONS = [pygame.image.load("assets/icons/container.png").convert_alpha(),
                                          pygame.image.load(
-                                    "assets/icons/line.png").convert_alpha(),
+                                    "assets/icons/sea.png").convert_alpha(),
                                     pygame.image.load(
                                     "assets/icons/boat.png").convert_alpha(),
-                                    pygame.image.load("assets/icons/bridge.png").convert_alpha()]
+                                    pygame.image.load("assets/icons/tunnel.png").convert_alpha()]
 
                                 # pick and place a map
-                                land = random.randint(0, 3)
+                                river = random.randint(0, 3)
                                 # top y value
-                                landY = random.randint(wHeight/2-cHeight/3-LANDS[land].get_height(),
-                                                        wHeight/2+cHeight/3-LANDS[land].get_height())
+                                riverY = random.randint(wHeight/2-cHeight/3-RIVERS[river].get_height(),
+                                                        wHeight/2+cHeight/3-RIVERS[river].get_height())
                                 # leftmost x value
                                 # 2000 is the width of the images
-                                landX = random.randint(wWidth-2000, 0)
+                                riverX = random.randint(wWidth-2000, 0)
 
                                 worldSurface.blit(
-                                    LANDS[land], (landX, landY))
+                                    RIVERS[river], (riverX, riverY))
                                 world = Game.World(worldSurface)
                                 validStops = [Game.CIRCLE,
                                               Game.TRIANGLE, Game.SQUARE]
 
                                 # scale images
-                                scaledCargoPolygons = []
-                                for polygon in CARGO_POLYGONS:
-                                    scaledCargoPolygons.append(pygame.transform.smoothscale(polygon,
-                                                                                                (world.cargoSize,
-                                                                                                 world.cargoSize)))
+                                scaledPassengerPolygons = []
+                                for polygon in PASSENGER_POLYGONS:
+                                    scaledPassengerPolygons.append(pygame.transform.smoothscale(polygon,
+                                                                                                (world.passengerSize,
+                                                                                                 world.passengerSize)))
 
                                 scaledIcons = []
                                 for icon in ICONS:
@@ -211,21 +211,21 @@ class StartMenu:
                                                                                     (int(world.stopSize*1.5),
                                                                                      int(world.stopSize*1.5))))
 
-                                # point list for drawing boats and containers
-                                rectPoints = [[[-world.cargoSize*1.5, world.cargoSize],
-                                               [world.cargoSize*1.5,
-                                                world.cargoSize],
-                                               [world.cargoSize*1.5, -
-                                                world.cargoSize],
-                                               [-world.cargoSize*1.5, -world.cargoSize]],
-                                              [[-world.cargoSize, world.cargoSize/2],
-                                               [0, world.cargoSize/2],
-                                               [world.cargoSize,
-                                                  world.cargoSize/2],
-                                               [world.cargoSize, -
-                                                  world.cargoSize/2],
-                                               [0, -world.cargoSize/2],
-                                               [-world.cargoSize, -world.cargoSize/2]]]
+                                # point list for drawing trains and carriages
+                                rectPoints = [[[-world.passengerSize*1.5, world.passengerSize],
+                                               [world.passengerSize*1.5,
+                                                world.passengerSize],
+                                               [world.passengerSize*1.5, -
+                                                world.passengerSize],
+                                               [-world.passengerSize*1.5, -world.passengerSize]],
+                                              [[-world.passengerSize, world.passengerSize/2],
+                                               [0, world.passengerSize/2],
+                                               [world.passengerSize,
+                                                  world.passengerSize/2],
+                                               [world.passengerSize, -
+                                                  world.passengerSize/2],
+                                               [0, -world.passengerSize/2],
+                                               [-world.passengerSize, -world.passengerSize/2]]]
 
                                 def calculateCameraOffset(cWidth, cHeight, world):
                                     # calculate the scale and translation operations to move from
@@ -261,22 +261,22 @@ class StartMenu:
                                         (maxOutput-minOutput)*normalizedTime
                                     return output
 
-                                def getCargoMoveTime(cargosMoved):
-                                    return max(interpolateLinear(cargosMoved, 900, 0.3, 0.07), 0.07)
+                                def getPassengerMoveTime(passengersMoved):
+                                    return max(interpolateLinear(passengersMoved, 900, 0.3, 0.07), 0.07)
 
-                                def getNewStopTime(cargosMoved):
-                                    return max(interpolateQuadratic(cargosMoved, 1000, 10, 2), 2)
+                                def getNewStopTime(passengersMoved):
+                                    return max(interpolateQuadratic(passengersMoved, 1000, 10, 2), 2)
 
-                                def getNewCargoTime(cargosMoved):
-                                    return max(interpolateLinear(cargosMoved, 1000, 3, 1.5), 1.5)
+                                def getNewPassengerTime(passengersMoved):
+                                    return max(interpolateLinear(passengersMoved, 1000, 3, 1.5), 1.5)
 
-                                def getGameTimerTime(cargosMoved):
-                                    return max(interpolateLinear(cargosMoved, 900, 1.0/70, 1.0/160), 1.0/160)
+                                def getGameTimerTime(passengersMoved):
+                                    return max(interpolateLinear(passengersMoved, 900, 1.0/70, 1.0/160), 1.0/160)
 
-                                def getSwitchStopTime(cargosMoved):
-                                    if cargosMoved < 400:
+                                def getSwitchStopTime(passengersMoved):
+                                    if passengersMoved < 400:
                                         return 10000
-                                    return max(interpolateLinear(cargosMoved-400, 600, 50, 10), 10)
+                                    return max(interpolateLinear(passengersMoved-400, 600, 50, 10), 10)
 
                                 def togglePaused(paused, timers, world):
                                     paused = not paused
@@ -289,16 +289,16 @@ class StartMenu:
 
                                 newStopTimer = Time.Time(Time.MODE_TIMER,
                                                          Time.FORMAT_TOTAL_SECONDS,
-                                                         getNewStopTime(world.cargosMoved))
-                                newCargoTimer = Time.Time(Time.MODE_TIMER,
+                                                         getNewStopTime(world.passengersMoved))
+                                newPassengerTimer = Time.Time(Time.MODE_TIMER,
                                                               Time.FORMAT_TOTAL_SECONDS,
-                                                              getNewCargoTime(world.cargosMoved))
-                                cargoMoveTimer = Time.Time(Time.MODE_TIMER,
+                                                              getNewPassengerTime(world.passengersMoved))
+                                passengerMoveTimer = Time.Time(Time.MODE_TIMER,
                                                                Time.FORMAT_TOTAL_SECONDS,
-                                                               getCargoMoveTime(world.cargosMoved))
+                                                               getPassengerMoveTime(world.passengersMoved))
                                 switchStopTimer = Time.Time(Time.MODE_TIMER,
                                                             Time.FORMAT_TOTAL_SECONDS,
-                                                            getSwitchStopTime(world.cargosMoved))
+                                                            getSwitchStopTime(world.passengersMoved))
                                 gainResourcesTimer = Time.Time(Time.MODE_TIMER,
                                                                Time.FORMAT_TOTAL_SECONDS,
                                                                Game.RESOURCE_GAIN_DELAY)
@@ -310,11 +310,11 @@ class StartMenu:
                                                              scaleDuration)
                                 # also make a list that points to the individual timers
                                 # for operations on all of them
-                                timers = [newStopTimer, newCargoTimer, cargoMoveTimer,
+                                timers = [newStopTimer, newPassengerTimer, passengerMoveTimer,
                                           switchStopTimer, gainResourcesTimer, gameTimer, smoothScaleTimer]
 
                                 def drawBase():
-                                    # draw the background, lines, and boats
+                                    # draw the background, lines, and trains
                                     # by drawing the base before the overlay, the event processing loop
                                     # is able to detect clicks correctly as it uses colours to do initial
                                     # detection
@@ -338,35 +338,35 @@ class StartMenu:
                                         if (item.segments == []
                                                 and item.mouseSegments == []):
                                             world.lines.pop(i)
-                                    for boat in world.boats:
-                                        boat.draw(
-                                            display, rectPoints, world.cargoSize, cameraOffset)
-                                    if movingBoat != -1:
-                                        movingBoat[0].movingClone.draw(
-                                            display, rectPoints, world.cargoSize, cameraOffset)
-                                    for movingClone in boatsToMove:
+                                    for train in world.trains:
+                                        train.draw(
+                                            display, rectPoints, world.passengerSize, cameraOffset)
+                                    if movingTrain != -1:
+                                        movingTrain[0].movingClone.draw(
+                                            display, rectPoints, world.passengerSize, cameraOffset)
+                                    for movingClone in trainsToMove:
                                         movingClone.draw(display, rectPoints,
-                                                         world.cargoSize, cameraOffset)
+                                                         world.passengerSize, cameraOffset)
 
-                                    for container in world.containers:
-                                        container.draw(
-                                            display, rectPoints, world.cargoSize, cameraOffset)
+                                    for carriage in world.carriages:
+                                        carriage.draw(
+                                            display, rectPoints, world.passengerSize, cameraOffset)
 
                                 def drawOverlay():
                                     # draw all superimposed elements to the screen
-                                    for boat in world.boats:
-                                        boat.drawAllCargos(display, rectPoints,
-                                                                world.cargoSize, cameraOffset)
+                                    for train in world.trains:
+                                        train.drawAllPassengers(display, rectPoints,
+                                                                world.passengerSize, cameraOffset)
 
-                                    numBridges = 0
+                                    numTunnels = 0
                                     for line in world.lines:
                                         for segment in line.tempSegments:
-                                            if segment.isBridge:
-                                                numBridges = numBridges+1
-                                                segment.drawBridge(display, 7, cameraOffset,
+                                            if segment.isTunnel:
+                                                numTunnels = numTunnels+1
+                                                segment.drawTunnel(display, 7, cameraOffset,
                                                                    worldSurface, 30/cameraOffset[0][0])
 
-                                    world.resources[Game.BRIDGE] = world.totalBridges-numBridges
+                                    world.resources[Game.TUNNEL] = world.totalTunnels-numTunnels
 
                                     for i in range(len(Game.COLOURS.get("lines"))):
                                         indicatorCoords = (int(world.stopSize*(2.5+i)+(i*10)),
@@ -419,7 +419,7 @@ class StartMenu:
                                     for stop in world.stops:
                                         stop.draw(display,
                                                   stopView,
-                                                  world.cargoSize,
+                                                  world.passengerSize,
                                                   cameraOffset)
 
                                     if pickingResource:
@@ -454,7 +454,6 @@ class StartMenu:
                                                 option[1], (option[2][0], option[2][1]))
 
                                     if window == "end" and not isScaling:
-                                        isGameOver = True
                                         size = ubuntu70.size("Game Over")
                                         display.blit(ubuntu70.render("Game Over",
                                                                      1,
@@ -469,26 +468,15 @@ class StartMenu:
                                                      (cWidth/2-size[0]/2,
                                                      120))
                                         size = ubuntuLight30.size(
-                                            str(world.cargosMoved)+" barang ditransportasi")
-                                        display.blit(ubuntuLight30.render(str(world.cargosMoved)+" barang ditransportasi",
+                                            str(world.passengersMoved)+" barang ditransportasi")
+                                        display.blit(ubuntuLight30.render(str(world.passengersMoved)+" barang ditransportasi",
                                                                           1,
                                                                           Game.COLOURS.get("whiteOutline")),
                                                      (cWidth/2-size[0]/2,
-                                                     cHeight-170))
-                                        
-                                        if isGameOver:
-                                            restartButton = pygame.draw.rect(display, Game.COLOURS.get("whiteOutline"), (cWidth/2 - 80, cHeight-100, 160, 50))
-                                            font = pygame.font.Font(None, 30)
-                                            restartText = font.render("Restart", True, (255, 255, 255))
-                                            display.blit(restartText, (cWidth/2 - restartText.get_width()/2, cHeight-80))
-                                            mouse_pos = pygame.mouse.get_pos()
-                                            if restartButton.collidepoint(mouse_pos):
-                                                if pygame.mouse.get_pressed()[0]:
-                                                    isGameOver = False
-                                                    pygame.display.update()
+                                                     cHeight-150))
 
-                                    display.blit(CARGO_ICON, (10, 8))
-                                    display.blit(ubuntuLight30.render(str(world.cargosMoved),
+                                    display.blit(PASSENGER_ICON, (10, 8))
+                                    display.blit(ubuntuLight30.render(str(world.passengersMoved),
                                                                       1,
                                                                       Game.COLOURS.get("whiteOutline")),
                                                  (50, 10))
@@ -532,9 +520,9 @@ class StartMenu:
                                 pickingResource = False  # if the player is choosing a resource
                                 movingLine = -1          # line being edited
                                 clickedIcon = -1         # resource being added
-                                movingBoat = -1         # boat/container being moved
-                                # holding list for boats/containers until they can be legally moved
-                                boatsToMove = []
+                                movingTrain = -1         # train/carriage being moved
+                                # holding list for trains/carriages until they can be legally moved
+                                trainsToMove = []
                                 paused = False
                                 # some hitboxes get generated upon drawing,
                                 # so let them generate before they are used
@@ -557,7 +545,7 @@ class StartMenu:
                                                     display.get_at(event.pos)[:3])
                                                 clickedIcon = world.getClickedIcon(
                                                     event.pos)
-                                                movingBoat = world.getClickedBoatLine(
+                                                movingTrain = world.getClickedTrainLine(
                                                     display.get_at(event.pos)[:3])
                                                 mouseObject = Game.MousePosition(
                                                     event.pos, cameraOffset)
@@ -577,25 +565,25 @@ class StartMenu:
                                                         segmentToFollow = 0
                                                     else:
                                                         movingLine = -1
-                                                # if an existing boat or container was clicked
-                                                elif movingBoat > -1:
-                                                    movingBoat = world.getClickedBoat(
-                                                        event.pos, movingBoat)
-                                                    if movingBoat != -1:
-                                                        movingBoat[0].startMouseMove(
+                                                # if an existing train or carriage was clicked
+                                                elif movingTrain > -1:
+                                                    movingTrain = world.getClickedTrain(
+                                                        event.pos, movingTrain)
+                                                    if movingTrain != -1:
+                                                        movingTrain[0].startMouseMove(
                                                         )
-                                                # if the container icon was clicked to create a new container
-                                                elif clickedIcon == Game.CONTAINER and world.resources[Game.CONTAINER] > 0:
+                                                # if the carriage icon was clicked to create a new carriage
+                                                elif clickedIcon == Game.CARRIAGE and world.resources[Game.CARRIAGE] > 0:
                                                     mouseWorld = mouseObject.getWorld()
-                                                    world.containers.append(Game.Container(
-                                                        *mouseWorld, speed=world.boatSpeed))
-                                                    world.resources[Game.CONTAINER] = world.resources[Game.CONTAINER]-1
-                                                # if the boat icon was clicked to create a new container
-                                                elif clickedIcon == Game.BOAT and world.resources[Game.BOAT] > 0:
+                                                    world.carriages.append(Game.Carriage(
+                                                        *mouseWorld, speed=world.trainSpeed))
+                                                    world.resources[Game.CARRIAGE] = world.resources[Game.CARRIAGE]-1
+                                                # if the train icon was clicked to create a new carriage
+                                                elif clickedIcon == Game.TRAIN and world.resources[Game.TRAIN] > 0:
                                                     mouseWorld = mouseObject.getWorld()
-                                                    world.boats.append(Game.Boat(*mouseWorld,
-                                                                                   speed=world.boatSpeed))
-                                                    world.resources[Game.BOAT] = world.resources[Game.BOAT]-1
+                                                    world.trains.append(Game.Train(*mouseWorld,
+                                                                                   speed=world.trainSpeed))
+                                                    world.resources[Game.TRAIN] = world.resources[Game.TRAIN]-1
                                                 # if the new resource selection is showing
                                                 elif pickingResource:
                                                     for option in options:
@@ -606,8 +594,8 @@ class StartMenu:
                                                                     paused, timers, world)
                                                             world.resources[option[0]
                                                                             ] = world.resources[option[0]]+1
-                                                            if option[0] == Game.BRIDGE:
-                                                                world.totalBridges = world.totalBridges+1
+                                                            if option[0] == Game.TUNNEL:
+                                                                world.totalTunnels = world.totalTunnels+1
                                                 # else try to create a new line
                                                 else:
                                                     clickedIcon = -1
@@ -630,9 +618,9 @@ class StartMenu:
                                                 mouseObject.updateWithView(
                                                     event.pos, cameraOffset)
                                                 line = world.lines[movingLine]
-                                                # if there are enough bridges for the segments being edited
+                                                # if there are enough tunnels for the segments being edited
                                                 # to go over the water, restrict them
-                                                if world.resources[Game.BRIDGE]-len(line.mouseSegments) < 0:
+                                                if world.resources[Game.TUNNEL]-len(line.mouseSegments) < 0:
                                                     for mouseSegment in line.mouseSegments:
                                                         mouseSegment.calculateData()
                                                     point = event.pos
@@ -665,59 +653,59 @@ class StartMenu:
                                                                                                  mouseObject,
                                                                                                  cameraOffset,
                                                                                                  worldSurface)
-                                            # if the a boat is being clicked and moved, see if it can be
+                                            # if the a train is being clicked and moved, see if it can be
                                             # attached to a line
-                                            elif movingBoat != -1:
+                                            elif movingTrain != -1:
                                                 mouseObject.updateWithView(
                                                     event.pos, cameraOffset)
-                                                movingBoat[0].movingClone.updateMouse(
+                                                movingTrain[0].movingClone.updateMouse(
                                                     mouseObject)
                                                 segment = world.getSegmentFromWorld(mouseObject,
                                                                                     cameraOffset)
                                                 if segment != -1:
-                                                    if movingBoat[1] == "boat":
-                                                        movingBoat[0].movingClone.unsnapFromLine(
+                                                    if movingTrain[1] == "train":
+                                                        movingTrain[0].movingClone.unsnapFromLine(
                                                         )
-                                                        movingBoat[0].movingClone.snapToLine(world.lines[segment[0]],
+                                                        movingTrain[0].movingClone.snapToLine(world.lines[segment[0]],
                                                                                               segment[1])
-                                                    elif movingBoat[1] == "container":
-                                                        movingBoat[0].movingClone.unsnapFromLine(
+                                                    elif movingTrain[1] == "carriage":
+                                                        movingTrain[0].movingClone.unsnapFromLine(
                                                         )
-                                                        movingBoat[0].movingClone.snapToLine(
+                                                        movingTrain[0].movingClone.snapToLine(
                                                             world.lines[segment[0]])
                                                 else:
-                                                    movingBoat[0].movingClone.unsnapFromLine(
+                                                    movingTrain[0].movingClone.unsnapFromLine(
                                                     )
-                                            # see if a newly created container can go to a line
-                                            elif clickedIcon == Game.CONTAINER:
+                                            # see if a newly created carriage can go to a line
+                                            elif clickedIcon == Game.CARRIAGE:
                                                 mouseObject.updateWithView(
                                                     event.pos, cameraOffset)
-                                                world.containers[-1].updateMouse(
+                                                world.carriages[-1].updateMouse(
                                                     mouseObject)
                                                 line = world.getLineByHitbox(
                                                     mouseObject, cameraOffset)
                                                 if line != -1:
-                                                    world.containers[-1].unsnapFromLine()
-                                                    world.containers[-1].snapToLine(
+                                                    world.carriages[-1].unsnapFromLine()
+                                                    world.carriages[-1].snapToLine(
                                                         world.lines[line])
                                                 else:
-                                                    world.containers[-1].unsnapFromLine()
-                                            # see if a newly created boat can go to a line
-                                            elif clickedIcon == Game.BOAT:
+                                                    world.carriages[-1].unsnapFromLine()
+                                            # see if a newly created train can go to a line
+                                            elif clickedIcon == Game.TRAIN:
                                                 mouseObject.updateWithView(
                                                     event.pos, cameraOffset)
-                                                world.boats[-1].updateMouse(
+                                                world.trains[-1].updateMouse(
                                                     mouseObject)
                                                 # we have no way of isolating which line was
                                                 # clicked on, so check every rect
                                                 segment = world.getSegmentFromWorld(mouseObject,
                                                                                     cameraOffset)
                                                 if segment != -1:
-                                                    world.boats[-1].unsnapFromLine()
-                                                    world.boats[-1].snapToLine(world.lines[segment[0]],
+                                                    world.trains[-1].unsnapFromLine()
+                                                    world.trains[-1].snapToLine(world.lines[segment[0]],
                                                                                 segment[1])
                                                 else:
-                                                    world.boats[-1].unsnapFromLine()
+                                                    world.trains[-1].unsnapFromLine()
                                         elif event.type == pygame.MOUSEBUTTONUP:
                                             if event.button == 1:
                                                 # commit changes made by the line being edited
@@ -738,34 +726,34 @@ class StartMenu:
                                                         if len(world.lines[i].segments) == 0:
                                                             world.removeLine(
                                                                 i)
-                                                # queue an operation to move the boat
-                                                elif movingBoat != -1:
-                                                    if movingBoat[0].movingClone.isOnSegment:
-                                                        boatsToMove.append(
-                                                            movingBoat[0].movingClone)
+                                                # queue an operation to move the train
+                                                elif movingTrain != -1:
+                                                    if movingTrain[0].movingClone.isOnSegment:
+                                                        trainsToMove.append(
+                                                            movingTrain[0].movingClone)
                                                     elif world.getClickedIcon(event.pos) > -1:
-                                                        boatsToMove.append(
-                                                            movingBoat[0])
+                                                        trainsToMove.append(
+                                                            movingTrain[0])
                                                     else:
-                                                        movingBoat[0].stopMouseMove(
+                                                        movingTrain[0].stopMouseMove(
                                                         )
-                                                    movingBoat = -1
-                                                # create a new container on the line it was placed on
-                                                elif clickedIcon == Game.CONTAINER:
-                                                    if world.containers[-1].isOnSegment:
-                                                        world.containers[-1].placeOnLine(True,
-                                                                                        cameraOffset, world.cargoSize)
+                                                    movingTrain = -1
+                                                # create a new carriage on the line it was placed on
+                                                elif clickedIcon == Game.CARRIAGE:
+                                                    if world.carriages[-1].isOnSegment:
+                                                        world.carriages[-1].placeOnLine(True,
+                                                                                        cameraOffset, world.passengerSize)
                                                     else:
-                                                        world.containers.pop()
-                                                        world.resources[Game.CONTAINER] = world.resources[Game.CONTAINER]+1
+                                                        world.carriages.pop()
+                                                        world.resources[Game.CARRIAGE] = world.resources[Game.CARRIAGE]+1
                                                     clickedIcon = -1
-                                                # create a new boat on the line it was placed on
-                                                elif clickedIcon == Game.BOAT:
-                                                    if world.boats[-1].isOnSegment:
-                                                        world.boats[-1].placeOnLine()
+                                                # create a new train on the line it was placed on
+                                                elif clickedIcon == Game.TRAIN:
+                                                    if world.trains[-1].isOnSegment:
+                                                        world.trains[-1].placeOnLine()
                                                     else:
-                                                        world.boats.pop()
-                                                        world.resources[Game.BOAT] = world.resources[Game.BOAT]+1
+                                                        world.trains.pop()
+                                                        world.resources[Game.TRAIN] = world.resources[Game.TRAIN]+1
                                                     clickedIcon = -1
                                         # elif event.type == pygame.USEREVENT:  # music is done
                                         #     pygame.mixer.music.load(MUSIC[random.randint(0, 2)])
@@ -773,7 +761,7 @@ class StartMenu:
 
                                     newStopTimer.tick()
                                     # if the timer to create a new stop has ended
-                                    if newStopTimer.checkTimer(not doneScaling, getNewStopTime(world.cargosMoved)):
+                                    if newStopTimer.checkTimer(not doneScaling, getNewStopTime(world.passengersMoved)):
                                         stop = random.randint(0, 99)
                                         if stop < 55:  # 55% chance of making a circle stop
                                             stopInfo = world.addRandomStop(Game.CIRCLE,
@@ -812,7 +800,7 @@ class StartMenu:
                                         # if a shape was switched and the new shape hasn't already
                                         # been generated
                                         if newShape != -1 and newShape not in validStops:
-                                            # add the stop to the list of stops that cargos
+                                            # add the stop to the list of stops that passengers
                                             # can go to
                                             validStops.append(newShape)
 
@@ -829,8 +817,8 @@ class StartMenu:
                                             options.remove(Game.LINE)
                                         resource = random.choice(options)
                                         world.resources[resource] = world.resources[resource]+1
-                                        if resource == Game.BRIDGE:
-                                            world.totalBridges = world.totalBridges+1
+                                        if resource == Game.TUNNEL:
+                                            world.totalTunnels = world.totalTunnels+1
                                         pickingResource = True
                                         if world.resources[Game.LINE]+len(world.lines) > 6 and Game.LINE in options:
                                             options.remove(Game.LINE)
@@ -856,27 +844,27 @@ class StartMenu:
                                                       ),
                                             scaledIcons[options[1]].get_height())]
 
-                                    newCargoTimer.tick()
-                                    newCargoProbability = min(interpolateLinear(
-                                        world.cargosMoved, 1200, 30, 50), 50)
-                                    # if the cargo spawn timer has finished,
-                                    # restart it and add some cargos
-                                    if newCargoTimer.checkTimer(True, getNewCargoTime(world.cargosMoved)):
+                                    newPassengerTimer.tick()
+                                    newPassengerProbability = min(interpolateLinear(
+                                        world.passengersMoved, 1200, 30, 50), 50)
+                                    # if the passenger spawn timer has finished,
+                                    # restart it and add some passengers
+                                    if newPassengerTimer.checkTimer(True, getNewPassengerTime(world.passengersMoved)):
                                         for stop in world.stops:
-                                            # random chance for each stop to get a cargo
-                                            if random.randint(0, 99) < newCargoProbability:
-                                                stop.addRandomCargo(validStops,
-                                                                        scaledCargoPolygons)
+                                            # random chance for each stop to get a passenger
+                                            if random.randint(0, 99) < newPassengerProbability:
+                                                stop.addRandomPassenger(validStops,
+                                                                        scaledPassengerPolygons)
 
-                                    cargoMoveTimer.tick()
+                                    passengerMoveTimer.tick()
                                     # timer that synchronizes and adds delay to all movements to/from stops
-                                    if cargoMoveTimer.checkTimer(True, getCargoMoveTime(world.cargosMoved)):
+                                    if passengerMoveTimer.checkTimer(True, getPassengerMoveTime(world.passengersMoved)):
                                         for stop in world.stops:
-                                            for boat in stop.boats:
-                                                world.cargosMoved = (world.cargosMoved
-                                                                         + stop.processBoat(boat, boatsToMove))
+                                            for train in stop.trains:
+                                                world.passengersMoved = (world.passengersMoved
+                                                                         + stop.processTrain(train, trainsToMove))
                                             # start counting up with timers on stops if they are overcrowing
-                                            if len(stop.cargos) > 6:
+                                            if len(stop.passengers) > 6:
                                                 if not stop.usingTimer:
                                                     stop.usingTimer = True
                                                     if not stop.timer.isActive:
@@ -921,92 +909,92 @@ class StartMenu:
                                     gameTimer.tick()
                                     timeElapsed = gameTimer.time
                                     gameTimer.restart(
-                                        timeElapsed % getGameTimerTime(world.cargosMoved))
+                                        timeElapsed % getGameTimerTime(world.passengersMoved))
                                     # run the actual moving elements controlled by the game at a certain speed
                                     # independent of the speed the screen refreshes
                                     # (since the scaling animation is limited by the cpu and
                                     # using multithreading is overkill)
-                                    for tick in range(int(timeElapsed/getGameTimerTime(world.cargosMoved))):
-                                        for i in range(len(world.boats)-1, -1, -1):
-                                            # move boats
-                                            if world.boats[i].canMove:
-                                                world.boats[i].move(
-                                                    cameraOffset, world.cargoSize)
-                                            # if there are no cargos on the boat and the boat
-                                            # is in the list to move boats, move it
-                                            if len(world.boats[i].cargos) == 0:
+                                    for tick in range(int(timeElapsed/getGameTimerTime(world.passengersMoved))):
+                                        for i in range(len(world.trains)-1, -1, -1):
+                                            # move trains
+                                            if world.trains[i].canMove:
+                                                world.trains[i].move(
+                                                    cameraOffset, world.passengerSize)
+                                            # if there are no passengers on the train and the train
+                                            # is in the list to move trains, move it
+                                            if len(world.trains[i].passengers) == 0:
                                                 # if the moving clone is in the list, that means it needs to
                                                 # be moved into another line
-                                                if world.boats[i].movingClone in boatsToMove:
-                                                    boatsToMove.remove(
-                                                        world.boats[i].movingClone)
-                                                    if (world.boats[i].stop is not None
-                                                            and world.boats[i] in world.boats[i].stop.boats):
-                                                        world.boats[i].stop.boats.remove(
-                                                            world.boats[i])
-                                                    world.boats[i] = world.boats[i].moveLines(
-                                                        cameraOffset, world.cargoSize)
-                                                # if the boat itself is in the list, that means it needs
+                                                if world.trains[i].movingClone in trainsToMove:
+                                                    trainsToMove.remove(
+                                                        world.trains[i].movingClone)
+                                                    if (world.trains[i].stop is not None
+                                                            and world.trains[i] in world.trains[i].stop.trains):
+                                                        world.trains[i].stop.trains.remove(
+                                                            world.trains[i])
+                                                    world.trains[i] = world.trains[i].moveLines(
+                                                        cameraOffset, world.passengerSize)
+                                                # if the train itself is in the list, that means it needs
                                                 # to be removed from the world
-                                                elif world.boats[i] in boatsToMove:
-                                                    boatsToMove.remove(
-                                                        world.boats[i])
-                                                    if world.boats[i] in world.boats[i].stop.boats:
-                                                        world.boats[i].stop.boats.remove(
-                                                            world.boats[i])
-                                                    for container in world.boats[i].containers:
-                                                        world.containers.remove(
-                                                            container)
-                                                        world.resources[Game.CONTAINER] = world.resources[Game.CONTAINER]+1
-                                                    world.boats[i].line.boats.remove(
-                                                        world.boats[i])
-                                                    world.boats[i].remove(
+                                                elif world.trains[i] in trainsToMove:
+                                                    trainsToMove.remove(
+                                                        world.trains[i])
+                                                    if world.trains[i] in world.trains[i].stop.trains:
+                                                        world.trains[i].stop.trains.remove(
+                                                            world.trains[i])
+                                                    for carriage in world.trains[i].carriages:
+                                                        world.carriages.remove(
+                                                            carriage)
+                                                        world.resources[Game.CARRIAGE] = world.resources[Game.CARRIAGE]+1
+                                                    world.trains[i].line.trains.remove(
+                                                        world.trains[i])
+                                                    world.trains[i].remove(
                                                     )
-                                                    world.resources[Game.BOAT] = world.resources[Game.BOAT]+1
-                                                    world.boats.pop(i)
-                                        for i in range(len(world.containers)-1, -1, -1):
-                                            # if the number of cargos on the boat is low enough
-                                            # to take out a container:
-                                            if (world.containers[i].head is not None
-                                                    and (len(world.containers[i].findFirst().cargos)
-                                                         <= len(world.containers[i].findFirst().containers)*6)):
+                                                    world.resources[Game.TRAIN] = world.resources[Game.TRAIN]+1
+                                                    world.trains.pop(i)
+                                        for i in range(len(world.carriages)-1, -1, -1):
+                                            # if the number of passengers on the train is low enough
+                                            # to take out a carriage:
+                                            if (world.carriages[i].head is not None
+                                                    and (len(world.carriages[i].findFirst().passengers)
+                                                         <= len(world.carriages[i].findFirst().carriages)*6)):
                                                 # move it to another line
-                                                if world.containers[i].movingClone in boatsToMove:
-                                                    boatsToMove.remove(
-                                                        world.containers[i].movingClone)
-                                                    # find the last container to move off
-                                                    tail = world.containers[i].findLast(
+                                                if world.carriages[i].movingClone in trainsToMove:
+                                                    trainsToMove.remove(
+                                                        world.carriages[i].movingClone)
+                                                    # find the last carriage to move off
+                                                    tail = world.carriages[i].findLast(
                                                     )
-                                                    # destination boat
-                                                    boat = world.containers[i].movingClone.head
-                                                    tail.moveLines(boat, len(boat.containers),
-                                                                   cameraOffset, world.cargoSize)
-                                                    world.containers[i].stopMouseMove(
+                                                    # destination train
+                                                    train = world.carriages[i].movingClone.head
+                                                    tail.moveLines(train, len(train.carriages),
+                                                                   cameraOffset, world.passengerSize)
+                                                    world.carriages[i].stopMouseMove(
                                                     )
                                                 # remove it
-                                                elif world.containers[i] in boatsToMove:
-                                                    boatsToMove.remove(
-                                                        world.containers[i])
-                                                    tail = world.containers[i].findLast(
+                                                elif world.carriages[i] in trainsToMove:
+                                                    trainsToMove.remove(
+                                                        world.carriages[i])
+                                                    tail = world.carriages[i].findLast(
                                                     )
-                                                    world.containers[i].stopMouseMove(
+                                                    world.carriages[i].stopMouseMove(
                                                     )
-                                                    world.containers.remove(
+                                                    world.carriages.remove(
                                                         tail)
-                                                    tail.findFirst().containers.remove(tail)
+                                                    tail.findFirst().carriages.remove(tail)
                                                     tail.remove()
-                                                    world.resources[Game.CONTAINER] = world.resources[Game.CONTAINER]+1
+                                                    world.resources[Game.CARRIAGE] = world.resources[Game.CARRIAGE]+1
 
                                         for line in world.lines:
                                             # remove abandoned segments that are split off lines
-                                            # if there are no boats or containers on them
+                                            # if there are no trains or carriages on them
                                             for i in range(len(line.abandonedChildren)-1, -1, -1):
                                                 isClear = True
-                                                if len(line.abandonedChildren[i].boats) > 0:
+                                                if len(line.abandonedChildren[i].trains) > 0:
                                                     isClear = False
-                                                for boat in line.boats:
-                                                    for container in boat.containers:
-                                                        if container.line == line.abandonedChildren[i]:
+                                                for train in line.trains:
+                                                    for carriage in train.carriages:
+                                                        if carriage.line == line.abandonedChildren[i]:
                                                             isClear = False
                                                 if isClear:
                                                     line.abandonedChildren.pop(
