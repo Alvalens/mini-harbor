@@ -18,6 +18,7 @@ class Screen(ABC):
     @abstractmethod
     def run(self):
         pass
+    
 class Button:
     def __init__(self, x, y, w, h, text, font_size, font_color, rect_color):
         self.rect = pygame.Rect(x, y, w, h)
@@ -40,10 +41,13 @@ class StartButton(Button):
     def __init__(self, x, y):
         super().__init__(x, y, 200, 50, "Mulai", 50, (255, 255, 255), (37, 150, 190))
 
-
 class ExitButton(Button):
     def __init__(self, x, y):
         super().__init__(x, y, 200, 50, "Keluar", 50, (255, 255, 255), (255, 0, 0))
+
+class InfoButton(Button):
+    def __init__(self, x, y):
+        super().__init__(x, y, 200, 50, "Info", 50, (255, 255, 255), (37, 150, 190))
 
 
 class LoadingScreen(Screen):
@@ -74,6 +78,8 @@ class LoadingScreen(Screen):
 class StartMenu(Screen):
     def __init__(self, screen):
         super(StartMenu, self).__init__(screen)
+        self.cHeight = self.screen_height
+        self.cWidth = self.screen_width
 
         # Load the font and create a title surface
         title_font = pygame.font.Font(None, 72)
@@ -117,10 +123,8 @@ class StartMenu(Screen):
                         if button.is_clicked(event.pos):
                             if button.text == "Mulai":
                                 # camera (display) coordinates
-                                cWidth = 800
-                                cHeight = 600
                                 display = pygame.display.set_mode(
-                                    (cWidth, cHeight))
+                                    (self.cWidth, self.cHeight))
                                 # world coordinates
                                 wWidth = 1200
                                 wHeight = 900
@@ -199,8 +203,8 @@ class StartMenu(Screen):
                                 # pick and place a map
                                 river = random.randint(0, 3)
                                 # top y value
-                                riverY = random.randint(wHeight/2-cHeight/3-RIVERS[river].get_height(),
-                                                        wHeight/2+cHeight/3-RIVERS[river].get_height())
+                                riverY = random.randint(wHeight/2-self.cHeight/3-RIVERS[river].get_height(),
+                                                        wHeight/2+self.cHeight/3-RIVERS[river].get_height())
                                 # leftmost x value
                                 # 2000 is the width of the images
                                 riverX = random.randint(wWidth-2000, 0)
@@ -383,7 +387,7 @@ class StartMenu(Screen):
 
                                     for i in range(len(Game.COLOURS.get("lines"))):
                                         indicatorCoords = (int(world.stopSize*(2.5+i)+(i*10)),
-                                                           int(cHeight-world.stopSize*1.5))
+                                                           int(self.cHeight-world.stopSize*1.5))
                                         if i < len(world.lines):
                                             pygame.draw.circle(display,
                                                                Game.COLOURS.get(
@@ -406,14 +410,14 @@ class StartMenu(Screen):
                                                                2)
 
                                     for i, item in enumerate(scaledIcons):
-                                        iconCoords = (int(cWidth                              # start from the right edge
+                                        iconCoords = (int(self.cWidth                              # start from the right edge
                                                           # at least 2 icon widths from edge
                                                           - item.get_width()*(2+i)
                                                           # 20 px of space between each icon
                                                           - (i*20)
                                                           - item.get_width()/2),    # center shape at that point
 
-                                                      int(cHeight                             # start from bottom edge
+                                                      int(self.cHeight                             # start from bottom edge
                                                           # one icon height away from edge
                                                           - item.get_height()
                                                           - item.get_height()/2))   # center shape at that point
@@ -446,21 +450,21 @@ class StartMenu(Screen):
                                                                     pygame.SRCALPHA)
                                         background.fill((0, 0, 0, 150))
                                         display.blit(
-                                            background, (cWidth-background.get_width(), 0))
+                                            background, (self.cWidth-background.get_width(), 0))
 
                                         display.blit(ubuntuLight30.render("Received one:",
                                                                           1,
                                                                           Game.COLOURS.get("whiteOutline")),
-                                                     (cWidth-size[0]-scaledIcons[resource].get_width(),
+                                                     (self.cWidth-size[0]-scaledIcons[resource].get_width(),
                                                      scaledIcons[resource].get_height()/2-size[1]/2+5))
                                         display.blit(scaledIcons[resource],
-                                                     (cWidth-scaledIcons[resource].get_width()-5,
+                                                     (self.cWidth-scaledIcons[resource].get_width()-5,
                                                      5))
 
                                         display.blit(ubuntuLight30.render("Pick a resource:",
                                                                           1,
                                                                           Game.COLOURS.get("whiteOutline")),
-                                                     (cWidth-width,
+                                                     (self.cWidth-width,
                                                      scaledIcons[resource].get_height()*1.4))
                                         for option in options:
                                             display.blit(
@@ -471,22 +475,22 @@ class StartMenu(Screen):
                                         display.blit(ubuntu70.render("Game Over",
                                                                      1,
                                                                      Game.COLOURS.get("whiteOutline")),
-                                                     (cWidth/2-size[0]/2,
+                                                     (self.cWidth/2-size[0]/2,
                                                      40))
                                         size = ubuntuLight30.size(
                                             "Overcrowding at this stop shut down your harbor")
                                         display.blit(ubuntuLight30.render("Overcrowding at this stop shut down your harbor",
                                                                           1,
                                                                           Game.COLOURS.get("whiteOutline")),
-                                                     (cWidth/2-size[0]/2,
+                                                     (self.cWidth/2-size[0]/2,
                                                      120))
                                         size = ubuntuLight30.size(
                                             str(world.passengersMoved)+" barang ditransportasi")
                                         display.blit(ubuntuLight30.render(str(world.passengersMoved)+" barang ditransportasi",
                                                                           1,
                                                                           Game.COLOURS.get("whiteOutline")),
-                                                     (cWidth/2-size[0]/2,
-                                                     cHeight-150))
+                                                     (self.cWidth/2-size[0]/2,
+                                                     self.cHeight-150))
 
                                     display.blit(PASSENGER_ICON, (10, 8))
                                     display.blit(ubuntuLight30.render(str(world.passengersMoved),
@@ -495,7 +499,7 @@ class StartMenu(Screen):
                                                  (50, 10))
 
                                 cameraOffset = calculateCameraOffset(
-                                    cWidth, cHeight, world)
+                                    self.cWidth, self.cHeight, world)
                                 scaledWorldSurface = pygame.transform.scale(worldSurface,
                                                                             (int(wWidth*cameraOffset[0][0]),
                                                                              int(wHeight*cameraOffset[0][1])))
@@ -515,7 +519,7 @@ class StartMenu(Screen):
                                         world.addRandomStop(
                                             shape, scaledStopPolygons)
                                 cameraOffset = calculateCameraOffset(
-                                    cWidth, cHeight, world)
+                                    self.cWidth, self.cHeight, world)
                                 stopView = int(
                                     world.stopSize*((cameraOffset[0][0]+cameraOffset[0][1])/2.0))
                                 for i in range(len(scaledStopPolygons)):
@@ -790,7 +794,7 @@ class StartMenu(Screen):
                                             oldCameraOffset = copy.deepcopy(
                                                 cameraOffset)
                                             newCameraOffset = calculateCameraOffset(
-                                                cWidth, cHeight, world)
+                                                self.cWidth, self.cHeight, world)
                                             isScaling = True
                                             smoothScaleTimer.restart()
                                         # the game area did not expand because it is done expanding
@@ -798,7 +802,7 @@ class StartMenu(Screen):
                                             oldCameraOffset = copy.deepcopy(
                                                 cameraOffset)
                                             newCameraOffset = calculateCameraOffset(
-                                                cWidth, cHeight, world)
+                                                self.cWidth, self.cHeight, world)
                                             isScaling = True
                                             smoothScaleTimer.restart()
                                             doneScaling = True
@@ -842,7 +846,7 @@ class StartMenu(Screen):
                                                 random.choice(options))
                                         options[0] = [options[0],
                                                       scaledIcons[options[0]],
-                                                      pygame.Rect(cWidth-scaledIcons[options[0]].get_width()*4,
+                                                      pygame.Rect(self.cWidth-scaledIcons[options[0]].get_width()*4,
                                                                   scaledIcons[options[0]].get_height(
                                                       )*2.3,
                                             scaledIcons[options[0]].get_width(
@@ -850,7 +854,7 @@ class StartMenu(Screen):
                                             scaledIcons[options[0]].get_height())]
                                         options[1] = [options[1],
                                                       scaledIcons[options[1]],
-                                                      pygame.Rect(cWidth-scaledIcons[options[1]].get_width()*2,
+                                                      pygame.Rect(self.cWidth-scaledIcons[options[1]].get_width()*2,
                                                                   scaledIcons[options[1]].get_height(
                                                       )*2.3,
                                             scaledIcons[options[1]].get_width(
@@ -912,8 +916,8 @@ class StartMenu(Screen):
                                                 oldCameraOffset = copy.deepcopy(
                                                     cameraOffset)
                                                 stopPosition = stop.getPosition()
-                                                newCameraOffset = [[cWidth/150.0,
-                                                                    cHeight/150.0],
+                                                newCameraOffset = [[self.cWidth/150.0,
+                                                                    self.cHeight/150.0],
                                                                    [stopPosition[0]-75,
                                                                     stopPosition[1]-75]]
                                                 window = "end"
@@ -1065,3 +1069,4 @@ class StartMenu(Screen):
 
             # Update the screen
             pygame.display.update()
+
