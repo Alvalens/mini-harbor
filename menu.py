@@ -78,8 +78,8 @@ class LoadingScreen(Screen):
 class StartMenu(Screen):
     def __init__(self, screen):
         super(StartMenu, self).__init__(screen)
-        self.cHeight = self.screen_height
-        self.cWidth = self.screen_width
+        self.wHeight = self.screen_height
+        self.wWidth = self.screen_width
 
         # Load the font and create a title surface
         title_font = pygame.font.Font(None, 72)
@@ -124,7 +124,7 @@ class StartMenu(Screen):
                             if button.text == "Mulai":
                                 # camera (display) coordinates
                                 display = pygame.display.set_mode(
-                                    (self.cWidth, self.cHeight))
+                                    (self.wWidth, self.wHeight))
                                 # world coordinates
                                 wWidth = 1200
                                 wHeight = 900
@@ -203,8 +203,8 @@ class StartMenu(Screen):
                                 # pick and place a map
                                 land = random.randint(0, 3)
                                 # top y value
-                                landY = random.randint(wHeight/2-cHeight/3-LANDS[land].get_height(),
-                                                        wHeight/2+cHeight/3-LANDS[land].get_height())
+                                landY = random.randint(wHeight/2-wHeight/3-LANDS[land].get_height(),
+                                                        wHeight/2+wHeight/3-LANDS[land].get_height())
                                 # leftmost x value
                                 # 2000 is the width of the images
                                 landX = random.randint(wWidth-2000, 0)
@@ -244,11 +244,11 @@ class StartMenu(Screen):
                                                [0, -world.cargoSize/2],
                                                [-world.cargoSize, -world.cargoSize/2]]]
 
-                                def calculateCameraOffset(cWidth, cHeight, world):
+                                def calculateCameraOffset(wWidth, wHeight, world):
                                     # calculate the scale and translation operations to move from
                                     # world coordinates to screen coordinates
-                                    return [[cWidth/float(2*world.validStopDistanceX),
-                                            cHeight/float(2*world.validStopDistanceY)],
+                                    return [[wWidth/float(2*world.validStopDistanceX),
+                                            wHeight/float(2*world.validStopDistanceY)],
                                             [world.width/2-world.validStopDistanceX,
                                             world.height/2-world.validStopDistanceY]]
 
@@ -387,7 +387,7 @@ class StartMenu(Screen):
 
                                     for i in range(len(Game.COLOURS.get("lines"))):
                                         indicatorCoords = (int(world.stopSize*(2.5+i)+(i*10)),
-                                                           int(self.cHeight-world.stopSize*1.5))
+                                                           int(self.wHeight-world.stopSize*1.5))
                                         if i < len(world.lines):
                                             pygame.draw.circle(display,
                                                                Game.COLOURS.get(
@@ -410,14 +410,14 @@ class StartMenu(Screen):
                                                                2)
 
                                     for i, item in enumerate(scaledIcons):
-                                        iconCoords = (int(self.cWidth                              # start from the right edge
+                                        iconCoords = (int(self.wWidth                              # start from the right edge
                                                           # at least 2 icon widths from edge
                                                           - item.get_width()*(2+i)
                                                           # 20 px of space between each icon
                                                           - (i*20)
                                                           - item.get_width()/2),    # center shape at that point
 
-                                                      int(self.cHeight                             # start from bottom edge
+                                                      int(self.wHeight                             # start from bottom edge
                                                           # one icon height away from edge
                                                           - item.get_height()
                                                           - item.get_height()/2))   # center shape at that point
@@ -450,21 +450,21 @@ class StartMenu(Screen):
                                                                     pygame.SRCALPHA)
                                         background.fill((0, 0, 0, 150))
                                         display.blit(
-                                            background, (self.cWidth-background.get_width(), 0))
+                                            background, (self.wWidth-background.get_width(), 0))
 
                                         display.blit(ubuntuLight30.render("Received one:",
                                                                           1,
                                                                           Game.COLOURS.get("whiteOutline")),
-                                                     (self.cWidth-size[0]-scaledIcons[resource].get_width(),
+                                                     (self.wWidth-size[0]-scaledIcons[resource].get_width(),
                                                      scaledIcons[resource].get_height()/2-size[1]/2+5))
                                         display.blit(scaledIcons[resource],
-                                                     (self.cWidth-scaledIcons[resource].get_width()-5,
+                                                     (self.wWidth-scaledIcons[resource].get_width()-5,
                                                      5))
 
                                         display.blit(ubuntuLight30.render("Pick a resource:",
                                                                           1,
                                                                           Game.COLOURS.get("whiteOutline")),
-                                                     (self.cWidth-width,
+                                                     (self.wWidth-width,
                                                      scaledIcons[resource].get_height()*1.4))
                                         for option in options:
                                             display.blit(
@@ -476,28 +476,28 @@ class StartMenu(Screen):
                                         display.blit(ubuntu70.render("Game Over",
                                                                      1,
                                                                      Game.COLOURS.get("whiteOutline")),
-                                                     (self.cWidth/2-size[0]/2,
+                                                     (self.wWidth/2-size[0]/2,
                                                      40))
                                         size = ubuntuLight30.size(
                                             "Overcrowding at this stop shut down your harbor")
                                         display.blit(ubuntuLight30.render("Overcrowding at this stop shut down your harbor",
                                                                           1,
                                                                           Game.COLOURS.get("whiteOutline")),
-                                                     (self.cWidth/2-size[0]/2,
+                                                     (self.wWidth/2-size[0]/2,
                                                      120))
                                         size = ubuntuLight30.size(
                                             str(world.cargosMoved)+" barang ditransportasi")
                                         display.blit(ubuntuLight30.render(str(world.cargosMoved)+" barang ditransportasi",
                                                                           1,
                                                                           Game.COLOURS.get("whiteOutline")),
-                                                     (cWidth/2-size[0]/2,
-                                                     cHeight-170))
+                                                     (wWidth/2-size[0]/2,
+                                                     wHeight-170))
                                         
                                         if isGameOver:
-                                            restartButton = pygame.draw.rect(display, Game.COLOURS.get("whiteOutline"), (cWidth/2 - 80, cHeight-100, 160, 50))
+                                            restartButton = pygame.draw.rect(display, Game.COLOURS.get("whiteOutline"), (wWidth/2 - 80, wHeight-100, 160, 50))
                                             font = pygame.font.Font(None, 30)
                                             restartText = font.render("Restart", True, (255, 255, 255))
-                                            display.blit(restartText, (cWidth/2 - restartText.get_width()/2, cHeight-80))
+                                            display.blit(restartText, (wWidth/2 - restartText.get_width()/2, wHeight-80))
                                             mouse_pos = pygame.mouse.get_pos()
                                             if restartButton.collidepoint(mouse_pos):
                                                 if pygame.mouse.get_pressed()[0]:
@@ -511,7 +511,7 @@ class StartMenu(Screen):
                                                  (50, 10))
 
                                 cameraOffset = calculateCameraOffset(
-                                    self.cWidth, self.cHeight, world)
+                                    self.wWidth, self.wHeight, world)
                                 scaledWorldSurface = pygame.transform.scale(worldSurface,
                                                                             (int(wWidth*cameraOffset[0][0]),
                                                                              int(wHeight*cameraOffset[0][1])))
@@ -531,7 +531,7 @@ class StartMenu(Screen):
                                         world.addRandomStop(
                                             shape, scaledStopPolygons)
                                 cameraOffset = calculateCameraOffset(
-                                    self.cWidth, self.cHeight, world)
+                                    self.wWidth, self.wHeight, world)
                                 stopView = int(
                                     world.stopSize*((cameraOffset[0][0]+cameraOffset[0][1])/2.0))
                                 for i in range(len(scaledStopPolygons)):
@@ -806,7 +806,7 @@ class StartMenu(Screen):
                                             oldCameraOffset = copy.deepcopy(
                                                 cameraOffset)
                                             newCameraOffset = calculateCameraOffset(
-                                                self.cWidth, self.cHeight, world)
+                                                self.wWidth, self.wHeight, world)
                                             isScaling = True
                                             smoothScaleTimer.restart()
                                         # the game area did not expand because it is done expanding
@@ -814,7 +814,7 @@ class StartMenu(Screen):
                                             oldCameraOffset = copy.deepcopy(
                                                 cameraOffset)
                                             newCameraOffset = calculateCameraOffset(
-                                                self.cWidth, self.cHeight, world)
+                                                self.wWidth, self.wHeight, world)
                                             isScaling = True
                                             smoothScaleTimer.restart()
                                             doneScaling = True
@@ -858,7 +858,7 @@ class StartMenu(Screen):
                                                 random.choice(options))
                                         options[0] = [options[0],
                                                       scaledIcons[options[0]],
-                                                      pygame.Rect(self.cWidth-scaledIcons[options[0]].get_width()*4,
+                                                      pygame.Rect(self.wWidth-scaledIcons[options[0]].get_width()*4,
                                                                   scaledIcons[options[0]].get_height(
                                                       )*2.3,
                                             scaledIcons[options[0]].get_width(
@@ -866,7 +866,7 @@ class StartMenu(Screen):
                                             scaledIcons[options[0]].get_height())]
                                         options[1] = [options[1],
                                                       scaledIcons[options[1]],
-                                                      pygame.Rect(self.cWidth-scaledIcons[options[1]].get_width()*2,
+                                                      pygame.Rect(self.wWidth-scaledIcons[options[1]].get_width()*2,
                                                                   scaledIcons[options[1]].get_height(
                                                       )*2.3,
                                             scaledIcons[options[1]].get_width(
@@ -928,8 +928,8 @@ class StartMenu(Screen):
                                                 oldCameraOffset = copy.deepcopy(
                                                     cameraOffset)
                                                 stopPosition = stop.getPosition()
-                                                newCameraOffset = [[self.cWidth/150.0,
-                                                                    self.cHeight/150.0],
+                                                newCameraOffset = [[self.wWidth/150.0,
+                                                                    self.wHeight/150.0],
                                                                    [stopPosition[0]-75,
                                                                     stopPosition[1]-75]]
                                                 window = "end"
