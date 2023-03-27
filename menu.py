@@ -9,7 +9,7 @@ import TimeClass as Time
 pygame.init()
 pygame.font.init()
 
-
+# abc = abstract base class
 class Screen(ABC):
     def __init__(self, screen):
         self.screen = screen
