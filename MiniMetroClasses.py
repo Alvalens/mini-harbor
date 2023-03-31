@@ -354,21 +354,20 @@ class Stop(object):
                 label = font.render("!", 1, (255, 45, 45))
                 targetSurface.blit(label,
                                    (stopView[0]-size/2, stopView[1]-size/2))
-                
+
                 # pojok kiri atas
                 font = pygame.font.SysFont("monospace", 30)
                 label = font.render("!", 1, (255, 45, 45))
                 targetSurface.blit(label, (0, 0))
-                
-            
+
         for i, item in enumerate(self.cargos):
             # draw the cargo to the side of the stop, in rows of 6
             # (so if a 7th cargo spawns, it'll appear in another row)
             item.draw(targetSurface,
-                                    cargoSize,
-                                    stopView[0] + size*1.4 +
-                                    (i % 6)*cargoSize,
-                                    stopView[1] + (i/6)*cargoSize)
+                      cargoSize,
+                      stopView[0] + size*1.4 +
+                      (i % 6)*cargoSize,
+                      stopView[1] + (i/6)*cargoSize)
 
     def addRandomCargo(self, shapes, cargoSurfaces):
         """ (int, list) -> None
@@ -422,15 +421,15 @@ class Stop(object):
             foundPath = len(item.path) > 0
             if (boat.direction == 1
                     and (item.SHAPE in boat.line.stopNums[boat.segmentNum:]
-                        or (foundPath
-                            and item.path[1][0] > boat.segmentNum
-                            and boat in item.path[0][1].boats))):
+                         or (foundPath
+                             and item.path[1][0] > boat.segmentNum
+                             and boat in item.path[0][1].boats))):
                 return i
             if (boat.direction == -1
                 and (item.SHAPE in boat.line.stopNums[:boat.segmentNum+1]
-                    or (foundPath
-                        and item.path[1][0] <= boat.segmentNum
-                        and boat in item.path[0][1].boats))):
+                     or (foundPath
+                         and item.path[1][0] <= boat.segmentNum
+                         and boat in item.path[0][1].boats))):
                 return i
             # then, check all lines directly accessible to the cargo/stop
             if not foundPath:
@@ -500,7 +499,7 @@ class Cargo(object):
         centerX = x - size/2
         centerY = y - size/2
         targetSurface.blit(self._CARGO_SURFACES[self.SHAPE],
-                        (centerX, centerY))
+                           (centerX, centerY))
 
 
 class Line(object):
@@ -512,8 +511,8 @@ class Line(object):
                                 min(self._COLOUR[1]+50, 255),
                                 min(self._COLOUR[2]+50, 255))
         self.DARKER_COLOUR = (max(self._COLOUR[0]-50, 0),
-                            max(self._COLOUR[1]-50, 0),
-                            max(self._COLOUR[2]-50, 0))
+                              max(self._COLOUR[1]-50, 0),
+                              max(self._COLOUR[2]-50, 0))
 
         # holds lines that were split from this parent line
         # and are considered "abandoned". all boats on a
@@ -566,7 +565,7 @@ class Line(object):
             lowestDistance = [10000000, -1]
             for i, item in enumerate(intersectingSegments):
                 distanceScore = (self.segments[item]
-                                .getDistanceScore(mouseObject.getWorld()))
+                                 .getDistanceScore(mouseObject.getWorld()))
                 if distanceScore < lowestDistance[0]:
                     lowestDistance = [distanceScore, item]
             intersectingSegments[0] = lowestDistance[1]
@@ -581,29 +580,29 @@ class Line(object):
         self.tempSegments = list(self.segments)
         if (segment == 0
                 and findDistance(mouseObject.getWorld(),
-                                stop1.getPosition()) < ENDPOINT_SEGMENT_DISTANCE):
+                                 stop1.getPosition()) < ENDPOINT_SEGMENT_DISTANCE):
             self.mouseSegments.append(MouseSegment(stop1,
-                                                mouseObject,
-                                                -len(self.segments),
-                                                "before"))
+                                                   mouseObject,
+                                                   -len(self.segments),
+                                                   "before"))
         elif (segment == len(self.segments)-1
-            and findDistance(mouseObject.getWorld(),
-                            stop2.getPosition()) < ENDPOINT_SEGMENT_DISTANCE):
+              and findDistance(mouseObject.getWorld(),
+                               stop2.getPosition()) < ENDPOINT_SEGMENT_DISTANCE):
             self.mouseSegments.append(MouseSegment(stop2,
-                                                mouseObject,
-                                                segment,
-                                                "after"))
+                                                   mouseObject,
+                                                   segment,
+                                                   "after"))
         else:
             self._abandonSegment(segment)
             self.mouseSegments.append(MouseSegment(stop1,
-                                                mouseObject,
-                                                segment-1,
-                                                "after"))
+                                                   mouseObject,
+                                                   segment-1,
+                                                   "after"))
             self.mouseSegments.append(MouseSegment(stop2,
-                                                mouseObject,
-                                                -len(self.segments) +
-                                                segment+1,
-                                                "before"))
+                                                   mouseObject,
+                                                   -len(self.segments) +
+                                                   segment+1,
+                                                   "before"))
 
     def update(self, worldSurface, updateTransfers):
         # commit changes made during editing and fix values that changed
@@ -691,13 +690,13 @@ class Line(object):
                         # name since we are expanding a tuple into
                         # the function call
                         and stop.withinRadius(*mouseWorld,
-                                            radius=STOP_ADDITION_DISTANCE)):
+                                              radius=STOP_ADDITION_DISTANCE)):
                     # if the mouse segment meets the conditions for adding a stop, add one
                     self._insertSegment(mouseSegment, stop, worldSurface)
                 elif (self.contains(stop)
-                    and (stop not in self._newStops)
-                    and (stop not in self._removedStops)
-                    and stop.withinRadius(*mouseWorld,
+                      and (stop not in self._newStops)
+                      and (stop not in self._removedStops)
+                      and stop.withinRadius(*mouseWorld,
                                             radius=STOP_REMOVAL_DISTANCE)):
                     # same as before but for removing
                     self._removeStop(stop)
@@ -731,8 +730,8 @@ class Line(object):
             self._updateMouseSegment("before", matchedSegments[0], 0)
 
         elif (len(matchedSegments) == 1
-            or (len(matchedSegments) == 2
-                and len(self.mouseSegments) == 1)):
+              or (len(matchedSegments) == 2
+                  and len(self.mouseSegments) == 1)):
             # removing end stops
 
             if (len(matchedSegments) == 2
@@ -765,7 +764,7 @@ class Line(object):
         # corrects the mouse segment after removal of stops
         if direction == "after":
             nextStop = self._findNextActiveStop(
-                range(-len(self.tempSegments)+matchedSegment, 0))
+                list(range(-len(self.tempSegments)+matchedSegment, 0)))
             if nextStop is None:
                 self.mouseSegments[mouseIndex].firstPoint = self.tempSegments[-1].lastPoint
                 self.mouseSegments[mouseIndex].index = 0
@@ -773,7 +772,8 @@ class Line(object):
                 self.mouseSegments[mouseIndex].firstPoint = self.tempSegments[nextStop].firstPoint
                 self.mouseSegments[mouseIndex].index = nextStop
         elif direction == "before":
-            nextStop = self._findNextActiveStop(range(matchedSegment, -1, -1))
+            nextStop = self._findNextActiveStop(
+                list(range(matchedSegment, -1, -1)))
             if nextStop is None:
                 self.mouseSegments[mouseIndex].firstPoint = self.tempSegments[0].firstPoint
                 self.mouseSegments[mouseIndex].index = -1
@@ -785,41 +785,41 @@ class Line(object):
         if len(self.tempSegments) == 0:
             if stop != mouseSegment.firstPoint:
                 segment = Segment(mouseSegment.firstPoint,
-                                stop,
-                                0)
+                                  stop,
+                                  0)
                 segment.checkOverWater(worldSurface)
                 self.tempSegments.append(segment)
                 mouseSegment.index = mouseSegment.index+1
         elif mouseSegment.direction == "before":
             if mouseSegment.index == 0:
                 segment = Segment(stop,
-                                self.tempSegments[-1].lastPoint,
-                                -1)
+                                  self.tempSegments[-1].lastPoint,
+                                  -1)
                 segment.checkOverWater(worldSurface)
                 self.tempSegments.append(segment)
             else:
                 segment = Segment(stop,
-                                self.tempSegments[mouseSegment.index].firstPoint,
-                                mouseSegment.index-1)
+                                  self.tempSegments[mouseSegment.index].firstPoint,
+                                  mouseSegment.index-1)
                 segment.checkOverWater(worldSurface)
                 self.tempSegments.insert(mouseSegment.index,
-                                        segment)
+                                         segment)
             mouseSegment.index = mouseSegment.index-1
         elif mouseSegment.direction == "after":
             if mouseSegment.index == -1:
                 segment = Segment(self.tempSegments[0].firstPoint,
-                                stop,
-                                0)
+                                  stop,
+                                  0)
                 segment.checkOverWater(worldSurface)
                 self.tempSegments.insert(0,
-                                        segment)
+                                         segment)
             else:
                 segment = Segment(self.tempSegments[mouseSegment.index].lastPoint,
-                                stop,
-                                mouseSegment.index+1)
+                                  stop,
+                                  mouseSegment.index+1)
                 segment.checkOverWater(worldSurface)
                 self.tempSegments.insert(mouseSegment.index+1,
-                                        segment)
+                                         segment)
             mouseSegment.index = mouseSegment.index+1
         mouseSegment.firstPoint = stop
         self._newStops.append(stop)
@@ -859,7 +859,7 @@ class Line(object):
             # add the delta of stops to the index
             if (not isOnAbandonedSegment[1]
                     and (self.boats[i].segmentNum > max(mouseIndices)
-                        or self.boats[i].segmentNum > max(abandonedIndices))):
+                         or self.boats[i].segmentNum > max(abandonedIndices))):
                 self.boats[i].segmentNum = self.boats[i].segmentNum+deltaLength
             for container in self.boats[i].containers:
                 if (container.segmentNum > max(mouseIndices)
@@ -879,7 +879,7 @@ class Line(object):
         for i in range(1, len(self._abandonedSegments)):
             index = 0
             while (index < len(abandonedLine.segments)
-                and (abandonedLine.segments[index].index
+                   and (abandonedLine.segments[index].index
                         < self._abandonedSegments[i].index)):
                 index = index+1
             abandonedLine.segments.insert(index, self._abandonedSegments[i])
@@ -907,11 +907,11 @@ class Segment(object):
 
     def calculateData(self):
         self.length = findDistance(self.firstPoint.getPosition(),
-                                self.lastPoint.getPosition())
+                                   self.lastPoint.getPosition())
         self.angle = math.atan2(self.lastPoint.Y-self.firstPoint.Y,
                                 self.lastPoint.X-self.firstPoint.X)
         self.reverseAngle = math.atan2(self.firstPoint.Y-self.lastPoint.Y,
-                                    self.firstPoint.X-self.lastPoint.X)
+                                       self.firstPoint.X-self.lastPoint.X)
 
     def getDistanceScore(self, point):
         # get a score calculated from a point to this segment that
@@ -927,14 +927,14 @@ class Segment(object):
         # endpoint to the point. then, from that, subtract the
         # length of the segment by itself to get the score
         return (findDistance((self.firstPoint.X,
-                            self.firstPoint.Y),
-                            point)
+                              self.firstPoint.Y),
+                             point)
                 + findDistance((self.lastPoint.X,
                                 self.lastPoint.Y),
-                            point)
+                               point)
                 - findDistance((self.firstPoint.X,
                                 self.firstPoint.Y),
-                            (self.lastPoint.X,
+                               (self.lastPoint.X,
                                 self.lastPoint.Y)))
 
     def draw(self, targetSurface, colour, width, offset):
@@ -975,10 +975,10 @@ class Segment(object):
         for step in steps:
             viewCoords = getViewCoords(step[0], step[1], offset)
             pygame.draw.circle(targetSurface,
-                            colour,
-                            (int(viewCoords[0]),
+                               colour,
+                               (int(viewCoords[0]),
                                 int(viewCoords[1])),
-                            width)
+                               width)
 
 
 class MousePosition(object):
@@ -1013,11 +1013,11 @@ class MouseSegment(Segment):
 
     def calculateData(self):
         self.length = findDistance(self.firstPoint.getPosition(),
-                                self.lastPoint.getWorld())
+                                   self.lastPoint.getWorld())
         self.angle = math.atan2(self.lastPoint.y-self.firstPoint.Y,
                                 self.lastPoint.x-self.firstPoint.X)
         self.reverseAngle = math.atan2(self.firstPoint.Y-self.lastPoint.y,
-                                    self.firstPoint.X-self.lastPoint.x)
+                                       self.firstPoint.X-self.lastPoint.x)
 
     def draw(self, targetSurface, colour, offset):
         firstView = getViewCoords(self.firstPoint.X, self.firstPoint.Y, offset)
@@ -1109,7 +1109,7 @@ class Boat(object):
         # snap the y to be on the line at the correct coordinates
         self._y = (math.tan(self._angle)
                    * (self._x-segment.firstPoint.X)
-                + segment.firstPoint.Y)
+                   + segment.firstPoint.Y)
         if self not in self.line.boats:
             self.line.boats.append(self)
 
@@ -1131,11 +1131,11 @@ class Boat(object):
         self.canMove = True
         self._colour = self.line.BRIGHTER_COLOUR
         distanceFromFirstPoint = findDistance((self.line.segments[self.segmentNum]
-                                            .firstPoint.getPosition()),
-                                            (self._x, self._y))
+                                               .firstPoint.getPosition()),
+                                              (self._x, self._y))
         distanceFromLastPoint = findDistance((self.line.segments[self.segmentNum]
-                                            .lastPoint.getPosition()),
-                                            (self._x, self._y))
+                                              .lastPoint.getPosition()),
+                                             (self._x, self._y))
         if distanceFromFirstPoint <= distanceFromLastPoint:
             self.direction = -1
             self._segmentDistance = distanceFromLastPoint
@@ -1149,7 +1149,7 @@ class Boat(object):
         # move off abandoned child back onto main line
         if self.segmentNum < 0:
             segments = self.line.parentLine.find(self.line.segments[0].firstPoint,
-                                                self.line.parentLine.segments)
+                                                 self.line.parentLine.segments)
             if len(segments) > 1:
                 self.segmentNum = min(segments)
             elif len(segments) == 1:
@@ -1165,7 +1165,7 @@ class Boat(object):
                 return
         elif self.segmentNum > len(self.line.segments)-1:
             segments = self.line.parentLine.find(self.line.segments[-1].lastPoint,
-                                                self.line.parentLine.segments)
+                                                 self.line.parentLine.segments)
             if len(segments) > 1:
                 self.segmentNum = max(segments)
             elif len(segments) == 1:
@@ -1390,21 +1390,21 @@ class Container(Boat):
             if self.direction == 1:
                 self._angle = self.line.segments[self.segmentNum].reverseAngle
                 self._x = (self.line.segments[self.segmentNum].firstPoint.X
-                        - (self._segmentDistance*math.cos(self._angle)))
+                           - (self._segmentDistance*math.cos(self._angle)))
                 self._y = (self.line.segments[self.segmentNum].firstPoint.Y
-                        - (self._segmentDistance*math.sin(self._angle)))
+                           - (self._segmentDistance*math.sin(self._angle)))
                 self._segmentDistance = findDistance((self.line.segments[self.segmentNum]
-                                                    .firstPoint.getPosition()),
-                                                    (self._x, self._y))
+                                                      .firstPoint.getPosition()),
+                                                     (self._x, self._y))
             elif self.direction == -1:
                 self._angle = self.line.segments[self.segmentNum].angle
                 self._x = (self.line.segments[self.segmentNum].lastPoint.X
-                        - (self._segmentDistance*math.cos(self._angle)))
+                           - (self._segmentDistance*math.cos(self._angle)))
                 self._y = (self.line.segments[self.segmentNum].lastPoint.Y
-                        - (self._segmentDistance*math.sin(self._angle)))
+                           - (self._segmentDistance*math.sin(self._angle)))
                 self._segmentDistance = findDistance((self.line.segments[self.segmentNum]
-                                                    .lastPoint.getPosition()),
-                                                    (self._x, self._y))
+                                                      .lastPoint.getPosition()),
+                                                     (self._x, self._y))
 
     def move(self, offset, cargoSize):
         if self._segmentDistance >= self.line.segments[self.segmentNum].length:
