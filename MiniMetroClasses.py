@@ -85,13 +85,59 @@ def getViewCoords(x, y, offset):
     return [(x-offset[1][0])*offset[0][0], (y-offset[1][1])*offset[0][1]]
 
 
+class Circle:
+    def __init__(self, worldSurface):
+        self.worldSurface = worldSurface
+        self.color = (255, 255, 255)
+        self.radius = 50
+        self.x = 0
+        self.y = 0
+        self.last_draw_time = 0
+        self.spawn_interval = 5000  # 5 seconds in milliseconds
+        # slow down radius
+        self.slowdown_radius = 60
+        
+
+    def spawn(self):
+        now = pygame.time.get_ticks()
+        time_since_last_draw = now - self.last_draw_time
+
+        # delete the old circle if necessary
+        if time_since_last_draw >= self.spawn_interval:
+            self.worldSurface.fill((0, 0, 0),
+                                   (self.x - self.radius, self.y - self.radius,
+                                    self.radius * 2, self.radius * 2))
+
+        # spawn a new circle if enough time has passed
+        if time_since_last_draw >= self.spawn_interval:
+            # spawn in the middle 60% of the time, otherwise at a random position
+            if random.random() < 0.60:
+                self.x = self.worldSurface.get_width() // 2
+                self.y = self.worldSurface.get_height() // 2
+            else:
+                self.x = random.randint(
+                    self.radius, min(800, self.worldSurface.get_width()) - self.radius)
+                self.y = random.randint(
+                    self.radius, min(600, self.worldSurface.get_height()) - self.radius)
+
+            self.last_draw_time = now
+
+        # draw the circle
+        pygame.draw.circle(self.worldSurface, self.color,
+                           (self.x, self.y), self.radius)
+
+
+
+
+
+
 class World(object):
     def __init__(self, mapSurface, stopSize=30, cargoSize=10):
         self.stops = []
         self.lines = []
         self.boats = []
         self.containers = []
-        self.boatSpeed = 1
+        self.boatSpeed = 5
         self._map = mapSurface
         self.stopSize = stopSize
         self.cargoSize = cargoSize
@@ -106,6 +152,17 @@ class World(object):
         self.iconHitboxes = [None]*4
         self.cargosMoved = 0
 
+    def update_boat_speeds(self, circle):
+        for boat in self.boats:
+            dist = math.sqrt((boat._x - circle.x)**2 + (boat._y - circle.y)**2)
+            if dist <= circle.slowdown_radius:
+                boat._speed = self.boatSpeed / 100  # reduce the speed by half
+            else:
+                boat._speed = self.boatSpeed  # restore the original speed
+            # update the boat's speed 
+            
+            
+                
     def addRandomStop(self, shape, stopSurfaces):
         """ (int, list) -> bool, bool
             Creates a stop of the given shape at a random but valid
@@ -1004,7 +1061,6 @@ class MousePosition(object):
 
     def getView(self, offset):
         return getViewCoords(self.x, self.y, offset)
-
 
 class MouseSegment(Segment):
     def __init__(self, stop1, mouse, index, direction):

@@ -1,10 +1,13 @@
 from abc import ABC, abstractmethod
+import math
 import random
 import copy
 import pygame
 import pygame.gfxdraw
 import MiniMetroClasses as Game
 import TimeClass as Time
+from MiniMetroClasses import Circle
+from MiniMetroClasses import World as world
 
 pygame.init()
 pygame.font.init()
@@ -137,6 +140,12 @@ class StartMenu(Screen):
                                     (wWidth, wHeight))
 
                                 clock = pygame.time.Clock()
+                                circle = Circle(worldSurface)
+                                CHANGE_POSITION_EVENT = pygame.USEREVENT + 1
+                                pygame.time.set_timer(CHANGE_POSITION_EVENT, 5000)  # 5 seconds in milliseconds
+                                
+                                
+
 
                                 # load resources
                                 ubuntuLight30 = pygame.font.Font(
@@ -571,6 +580,12 @@ class StartMenu(Screen):
                                         # if the window's X button is clicked
                                         if event.type == pygame.QUIT:
                                             running = False
+                                        elif event.type == CHANGE_POSITION_EVENT:
+                                            circle.spawn()
+                                            
+                                            # update screen
+                                            pygame.display.update()
+                                            
                                         elif event.type == pygame.KEYDOWN:
                                             # press space to pause the game
                                             if event.key == pygame.K_SPACE and window != "end":
@@ -1064,9 +1079,12 @@ class StartMenu(Screen):
                                                                                                  stopView))
                                         if smoothScaleTimer.checkTimer(True):
                                             isScaling = False
-
+                                            
+                                    if event.type == CHANGE_POSITION_EVENT:
+                                        circle.spawn()
                                     clock.tick(144)
                                     drawOverlay()
+                                    world.update_boat_speeds(circle)
                                     pygame.display.update()
 
                                 print('Start button clicked')
