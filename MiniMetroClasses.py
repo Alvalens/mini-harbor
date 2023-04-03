@@ -105,13 +105,21 @@ class Rainy(Weather):
     def spawn(self, targetSurface, offset):
         now = pygame.time.get_ticks()
         time_since_last_draw = now - self.last_draw_time
+        # chance spawn at the middle is 50%
         # spawn a new circle if enough time has passed
         if time_since_last_draw >= self.spawn_interval:
             # spawn in the middle 40% of the time, otherwise at a random position
-            self.x = random.randint(
-                self.radius, min(800, targetSurface.get_width()) - self.radius)
-            self.y = random.randint(
-                self.radius, min(600, targetSurface.get_height()) - self.radius)
+            if random.random() <= 0.4:
+                    self.x = targetSurface.get_width() // 2
+                    self.y = targetSurface.get_height() // 2
+            else:
+                self.x = random.randint(
+                    self.radius, targetSurface.get_width() - self.radius)
+                self.y = random.randint(
+                    self.radius, targetSurface.get_height() - self.radius)
+
+        # spawn a new circle if enough time has passed
+        if time_since_last_draw >= self.spawn_interval:
             self.last_draw_time = now
 
         # convert the world coordinates of the circle to view coordinates
@@ -120,7 +128,7 @@ class Rainy(Weather):
         pygame.draw.circle(targetSurface, self.color,
                            circleView, self.radius)
 
-class Sunny(Rainy, Weather):
+class Windy(Rainy, Weather):
     def __init__(self, worldSurface):
         super().__init__(worldSurface)
         self.color = (100, 255, 100, 50)
@@ -136,34 +144,30 @@ class Sunny(Rainy, Weather):
         self.sun_x = 0
         self.sun_y = 0
 
-    def spawm(self):
+    def spawn(self, targetSurface, offset):
         now = pygame.time.get_ticks()
         time_since_last_draw = now - self.last_draw_time
         # spawn a new circle if enough time has passed
         if time_since_last_draw >= self.spawn_interval:
-            # spawn in the middle 40% of the time, otherwise at a random position
             self.x = random.randint(
-                self.radius, min(800, self.worldSurface.get_width()) - self.radius)
+                self.radius, min(800, targetSurface.get_width()) - self.radius)
             self.y = random.randint(
-                self.radius, min(600, self.worldSurface.get_height()) - self.radius)
+                self.radius, min(600, targetSurface.get_height()) - self.radius)
             self.last_draw_time = now
 
-        # draw the circle and sun png
-        pygame.draw.circle(self.worldSurface, self.color,
-                        (self.x, self.y), self.radius)
-        sun_x = self.x - self.sun.get_width() / 2
-        sun_y = self.y - self.sun.get_height() / 2
-        self.worldSurface.blit(self.sun, (sun_x, sun_y))
+        # convert the world coordinates of the circle to view coordinates
+        circleView = getViewCoords(self.x, self.y, offset)
+        # draw the circle onto the targetSurface
+        pygame.draw.circle(targetSurface, self.color,
+                           circleView, self.radius)
 
-
-        
 class World(object):
     def __init__(self, mapSurface, stopSize=30, cargoSize=10):
         self.stops = []
         self.lines = []
         self.boats = []
         self.containers = []
-        self.boatSpeed = 5
+        self.boatSpeed = 1
         self._map = mapSurface
         self.stopSize = stopSize
         self.cargoSize = cargoSize

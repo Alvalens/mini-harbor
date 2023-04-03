@@ -8,7 +8,7 @@ import pygame
 import pygame.gfxdraw
 import MiniMetroClasses as Game
 import TimeClass as Time
-from MiniMetroClasses import Rainy, Sunny
+from MiniMetroClasses import Rainy, Windy
 from MiniMetroClasses import World as world
 
 pygame.init()
@@ -143,6 +143,7 @@ class StartMenu(Screen):
                                 
                                 clock = pygame.time.Clock()
                                 rainy = Rainy(worldSurface)
+                                sunny = Windy(worldSurface)
                                 # sunny = Sunny(display)
                                 
                                 # load resources
@@ -358,8 +359,9 @@ class StartMenu(Screen):
                                                  None,
                                                  pygame.BLEND_MAX)
                                     
-                                    
-                                    rainy.spawn(display, cameraOffset)
+                                    weatherl = [rainy, sunny]
+                                    for weather in weatherl:
+                                        weather.spawn(display, cameraOffset)
                                     for i, item in enumerate(world.lines):
                                         item.draw(
                                             display, 10, cameraOffset)
@@ -806,6 +808,7 @@ class StartMenu(Screen):
                                         #     pygame.mixer.music.load(MUSIC[random.randint(0, 2)])
                                         #     pygame.mixer.music.play()
                                     world.update_boat_speeds(rainy)
+                                    world.update_boat_speedup(sunny)
                                     # world.update_boat_speedup(sunny)
                                     # sunny.spawn()
                                     newStopTimer.tick()
