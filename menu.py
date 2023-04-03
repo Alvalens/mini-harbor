@@ -206,7 +206,7 @@ class StartMenu(Screen):
                                     pygame.image.load("assets/icons/bridge.png").convert_alpha()]
 
                                 # pick and place a map
-                                land = random.randint(0, 3)
+                                land = random.randint(3, 3)
                                 # top y value
                                 landY = random.randint(wHeight/2-wHeight/3-LANDS[land].get_height(),
                                                        wHeight/2+wHeight/3-LANDS[land].get_height())

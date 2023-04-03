@@ -17,6 +17,7 @@ pygame.init()
 
 COLOURS = {"background": (16, 51, 158),
            "land": (155, 118, 83),
+        #    "land": (110, 83, 61),
            "blackInside": (45, 45, 45),
            "whiteOutline": (217, 217, 217),
            "lines": ((9, 254, 25),
@@ -57,11 +58,11 @@ def _isValidSpawn(x, y, stops, mapSurface):
     # Returns True or False depending on whether or not the given
     # point (x, y) is a valid stop location on the given map
     if tuple(mapSurface.get_at((x, y))[:3]) == COLOURS.get("land"):
-        return False
+        return True
     for stop in stops:
         if stop.withinRadius(x, y, STOP_DISTANCE):
             return False
-    return True
+    return False
 
 
 def findDistance(point1, point2):
