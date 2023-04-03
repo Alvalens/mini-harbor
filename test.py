@@ -1,3 +1,4 @@
+from re import S
 import pygame
 import random
 
@@ -13,9 +14,10 @@ class Circle:
         self.draw_interval = 10000  # 10 seconds in milliseconds
 
     def spawn(self):
-        self.x = self.screen.get_width() // 2
-        self.y = self.screen.get_height() // 2
-        self.last_draw_time = pygame.time.get_ticks()
+        # random every
+        self.x = random.randint(0, self.screen.get_width())
+        self.y = random.randint(0, self.screen.get_height())
+        
 
     def draw(self):
         now = pygame.time.get_ticks()

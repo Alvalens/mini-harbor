@@ -2,11 +2,13 @@ from abc import ABC, abstractmethod
 import math
 import random
 import copy
+from turtle import circle
+from numpy import disp, rint
 import pygame
 import pygame.gfxdraw
 import MiniMetroClasses as Game
 import TimeClass as Time
-from MiniMetroClasses import Circle
+from MiniMetroClasses import Rainy, Sunny
 from MiniMetroClasses import World as world
 
 pygame.init()
@@ -138,15 +140,11 @@ class StartMenu(Screen):
                                 wHeight = 900
                                 worldSurface = pygame.Surface(
                                     (wWidth, wHeight))
-
+                                
                                 clock = pygame.time.Clock()
-                                circle = Circle(worldSurface)
-                                CHANGE_POSITION_EVENT = pygame.USEREVENT + 1
-                                pygame.time.set_timer(CHANGE_POSITION_EVENT, 5000)  # 5 seconds in milliseconds
+                                rainy = Rainy(worldSurface)
+                                # sunny = Sunny(display)
                                 
-                                
-
-
                                 # load resources
                                 ubuntuLight30 = pygame.font.Font(
                                     "assets/fonts/Ubuntu-Light.ttf", 30)
@@ -359,7 +357,9 @@ class StartMenu(Screen):
                                                   -cameraOffset[1][1]*cameraOffset[0][1]),
                                                  None,
                                                  pygame.BLEND_MAX)
-
+                                    
+                                    
+                                    rainy.spawn(display, cameraOffset)
                                     for i, item in enumerate(world.lines):
                                         item.draw(
                                             display, 10, cameraOffset)
@@ -384,6 +384,7 @@ class StartMenu(Screen):
                                             display, rectPoints, world.cargoSize, cameraOffset)
 
                                 def drawOverlay():
+                                    
                                     # draw all superimposed elements to the screen
                                     for boat in world.boats:
                                         boat.drawAllCargos(display, rectPoints,
@@ -580,12 +581,6 @@ class StartMenu(Screen):
                                         # if the window's X button is clicked
                                         if event.type == pygame.QUIT:
                                             running = False
-                                        elif event.type == CHANGE_POSITION_EVENT:
-                                            circle.spawn()
-                                            
-                                            # update screen
-                                            pygame.display.update()
-                                            
                                         elif event.type == pygame.KEYDOWN:
                                             # press space to pause the game
                                             if event.key == pygame.K_SPACE and window != "end":
@@ -810,7 +805,9 @@ class StartMenu(Screen):
                                         # elif event.type == pygame.USEREVENT:  # music is done
                                         #     pygame.mixer.music.load(MUSIC[random.randint(0, 2)])
                                         #     pygame.mixer.music.play()
-
+                                    world.update_boat_speeds(rainy)
+                                    # world.update_boat_speedup(sunny)
+                                    # sunny.spawn()
                                     newStopTimer.tick()
                                     # if the timer to create a new stop has ended
                                     if newStopTimer.checkTimer(not doneScaling, getNewStopTime(world.cargosMoved)):
@@ -1080,11 +1077,9 @@ class StartMenu(Screen):
                                         if smoothScaleTimer.checkTimer(True):
                                             isScaling = False
                                             
-                                    if event.type == CHANGE_POSITION_EVENT:
-                                        circle.spawn()
-                                    clock.tick(144)
+
+                                    clock.tick(60)
                                     drawOverlay()
-                                    world.update_boat_speeds(circle)
                                     pygame.display.update()
 
                                 print('Start button clicked')
@@ -1092,6 +1087,8 @@ class StartMenu(Screen):
                                 # Do something when the "Exit" button is clicked
                                 pygame.quit()
                                 exit()
+                                
+                            
 
             # Draw the background
             self.screen.blit(self.background_image, (0, 0))
@@ -1103,6 +1100,5 @@ class StartMenu(Screen):
             # Draw the buttons
             for button in self.buttons:
                 button.draw(self.screen)
-
             # Update the screen
             pygame.display.update()
