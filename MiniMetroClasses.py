@@ -7,6 +7,7 @@
 #
 ###################################################################################################
 
+from abc import ABC, abstractmethod
 import random
 import copy
 import math
@@ -85,14 +86,85 @@ def getViewCoords(x, y, offset):
     """
     return [(x-offset[1][0])*offset[0][0], (y-offset[1][1])*offset[0][1]]
 
+class Weather(ABC):
+    
+    @abstractmethod
+    def spawn(self):
+        pass
+    
+class Rainy(Weather):
+    def __init__(self, worldSurface):
+        self.worldSurface = worldSurface
+        self.color = (255, 255, 255, 50)
+        self.radius = 50
+        self.x = 0
+        self.y = 0
+        self.last_draw_time = 0
+        self.spawn_interval = 30000  
+        self.slowdown_radius = 60
+        
+    def spawn(self, targetSurface, offset):
+        now = pygame.time.get_ticks()
+        time_since_last_draw = now - self.last_draw_time
+        # spawn a new circle if enough time has passed
+        if time_since_last_draw >= self.spawn_interval:
+            # spawn in the middle 40% of the time, otherwise at a random position
+            self.x = random.randint(
+                self.radius, min(800, targetSurface.get_width()) - self.radius)
+            self.y = random.randint(
+                self.radius, min(600, targetSurface.get_height()) - self.radius)
+            self.last_draw_time = now
 
+        # convert the world coordinates of the circle to view coordinates
+        circleView = getViewCoords(self.x, self.y, offset)
+        # draw the circle onto the targetSurface
+        pygame.draw.circle(targetSurface, self.color,
+                           circleView, self.radius)
+
+class Sunny(Rainy, Weather):
+    def __init__(self, worldSurface):
+        super().__init__(worldSurface)
+        self.color = (100, 255, 100, 50)
+        self.radius = 60
+        self.x = 0
+        self.y = 0
+        self.last_draw_time = 0
+        self.spawn_interval = 20000  
+        self.speedup_radius = 70
+        self.sun = pygame.image.load("sun.png")
+        self.sun = pygame.transform.scale(self.sun, (100, 100))
+        self.sun.set_alpha(50)
+        self.sun_x = 0
+        self.sun_y = 0
+
+    def spawm(self):
+        now = pygame.time.get_ticks()
+        time_since_last_draw = now - self.last_draw_time
+        # spawn a new circle if enough time has passed
+        if time_since_last_draw >= self.spawn_interval:
+            # spawn in the middle 40% of the time, otherwise at a random position
+            self.x = random.randint(
+                self.radius, min(800, self.worldSurface.get_width()) - self.radius)
+            self.y = random.randint(
+                self.radius, min(600, self.worldSurface.get_height()) - self.radius)
+            self.last_draw_time = now
+
+        # draw the circle and sun png
+        pygame.draw.circle(self.worldSurface, self.color,
+                        (self.x, self.y), self.radius)
+        sun_x = self.x - self.sun.get_width() / 2
+        sun_y = self.y - self.sun.get_height() / 2
+        self.worldSurface.blit(self.sun, (sun_x, sun_y))
+
+
+        
 class World(object):
     def __init__(self, mapSurface, stopSize=30, cargoSize=10):
         self.stops = []
         self.lines = []
         self.boats = []
         self.containers = []
-        self.boatSpeed = 1
+        self.boatSpeed = 5
         self._map = mapSurface
         self.stopSize = stopSize
         self.cargoSize = cargoSize
@@ -107,6 +179,22 @@ class World(object):
         self.iconHitboxes = [None]*4
         self.cargosMoved = 0
 
+    def update_boat_speeds(self, circle):
+        for boat in self.boats:
+            dist = math.sqrt((boat._x - circle.x)**2 + (boat._y - circle.y)**2)
+            if dist <= circle.slowdown_radius:
+                boat._speed = self.boatSpeed / 10  # reduce the speed by half
+            else:
+                boat._speed = self.boatSpeed  # restore the original speed
+            # update the boat's speed 
+    def update_boat_speedup(self, circle):
+        for boat in self.boats:
+            dist = math.sqrt((boat._x - circle.x)
+                                         ** 2 + (boat._y - circle.y)**2)
+            if dist <= circle.speedup_radius:
+                boat._speed = self.boatSpeed * 5
+            
+                
     def addRandomStop(self, shape, stopSurfaces):
         """ (int, list) -> bool, bool
             Creates a stop of the given shape at a random but valid
@@ -1005,7 +1093,6 @@ class MousePosition(object):
 
     def getView(self, offset):
         return getViewCoords(self.x, self.y, offset)
-
 
 class MouseSegment(Segment):
     def __init__(self, stop1, mouse, index, direction):
