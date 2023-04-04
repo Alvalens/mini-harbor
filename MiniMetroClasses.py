@@ -131,7 +131,7 @@ class Rainy(Weather):
 class Windy(Rainy, Weather):
     def __init__(self, worldSurface):
         super().__init__(worldSurface)
-        self.color = (100, 255, 100, 50)
+        self.color = (255, 255, 255)
         self.radius = 60
         self.x = 0
         self.y = 0
@@ -140,7 +140,6 @@ class Windy(Rainy, Weather):
         self.speedup_radius = 70
         self.sun = pygame.image.load("sun.png")
         self.sun = pygame.transform.scale(self.sun, (100, 100))
-        self.sun.set_alpha(50)
         self.sun_x = 0
         self.sun_y = 0
 
@@ -160,6 +159,11 @@ class Windy(Rainy, Weather):
         # draw the circle onto the targetSurface
         pygame.draw.circle(targetSurface, self.color,
                            circleView, self.radius)
+        #draw the sun ihn the middle of the circle
+        self.sun_x = circleView[0] - self.sun.get_width() // 2
+        self.sun_y = circleView[1] - self.sun.get_height() // 2
+        targetSurface.blit(self.sun, (self.sun_x, self.sun_y))
+
 
 class World(object):
     def __init__(self, mapSurface, stopSize=30, cargoSize=10):
