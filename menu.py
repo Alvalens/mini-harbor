@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import math
+from pdb import Restart
 import random
 import copy
 import sys
@@ -121,6 +122,15 @@ class HelpButton(Button):
     def __init__(self, x, y):
         super().__init__(x, y, 200, 50, "Help", 50, (255, 255, 255), (200, 200, 0))
 
+class PlayAgain(Button):
+    def __init__(self, x, y):
+        super().__init__(x, y, 200, 50, "Main Lagi", 50, (255, 255, 255), (37, 150, 190))
+
+    def is_clicked(self, pos):
+        if self.rect.collidepoint(pos):
+            return True
+        else:
+            return False
 
 class LoadingScreen(Screen):
     def __init__(self, screen):
@@ -178,7 +188,6 @@ class StartMenu(Screen):
             self.screen_width // 2 - 100,
             self.screen_height // 2 + 50
         ))
-
         # Load the background image
         self.background_image = pygame.image.load("assets/bg.jpg").convert()
 
@@ -575,6 +584,16 @@ class StartMenu(Screen):
                                                                           Game.COLOURS.get("whiteOutline")),
                                                      (wWidth/2-size[0]/2,
                                                      wHeight-170))
+                                        
+
+                                        Restart = PlayAgain(self.screen_width // 2 - 100,
+                                                            self.screen_height // 2 + 50)
+                                        Restart.draw(display)
+                                        pos = pygame.mouse.get_pos()
+                                        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                                            if Restart.is_clicked(pos):
+                                                self.run()
+
 
                                         if isGameOver:
                                             restartButton = pygame.draw.rect(display, Game.COLOURS.get(
@@ -873,8 +892,9 @@ class StartMenu(Screen):
                                         # elif event.type == pygame.USEREVENT:  # music is done
                                         #     pygame.mixer.music.load(MUSIC[random.randint(0, 2)])
                                         #     pygame.mixer.music.play()
-                                    world.update_boat_speeds(rainy)
-                                    world.update_boat_speedup(sunny)
+                                    world.update_boat_speeds(rainy, 10)
+                                    world.update_boat_speedup(sunny, 5)
+                                    
                                     # world.update_boat_speedup(sunny)
                                     # sunny.spawn()
                                     newStopTimer.tick()
