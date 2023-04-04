@@ -6,7 +6,7 @@ pygame.font.init()
 
 
 #header icon
-pygame.display.set_icon(pygame.image.load('assets/bg.jpg'))
+pygame.display.set_icon(pygame.image.load('assets/harbor_icon.png'))
 
 # main game
 if __name__ == '__main__':

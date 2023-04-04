@@ -234,8 +234,10 @@ class StartMenu(Screen):
                                          "assets/audio/Mini Metro - 03 Back to Work.ogg"]
                                 pygame.mixer.music.set_endevent(
                                     pygame.USEREVENT)
+                                
                                 pygame.mixer.music.load(
                                     MUSIC[random.randint(0, 2)])
+                                
                                 pygame.mixer.music.play()
 
                                 STOP_POLYGONS = [pygame.image.load("assets/stops/circle_dark.png").convert_alpha(),
