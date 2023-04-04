@@ -1,15 +1,19 @@
 from abc import ABC, abstractmethod
 import math
+from pdb import Restart
 import random
 import copy
+import sys
 from turtle import circle
 from numpy import disp, rint
 import pygame
 import pygame.gfxdraw
 import MiniMetroClasses as Game
 import TimeClass as Time
-from MiniMetroClasses import Rainy, Sunny
+from MiniMetroClasses import Rainy, Windy
 from MiniMetroClasses import World as world
+
+
 
 pygame.init()
 pygame.font.init()
@@ -26,8 +30,67 @@ class Screen(ABC):
     def run(self):
         pass
 
+# help screen
 
-class Button:
+
+class Help(Screen):
+    def __init__(self, screen):
+        self.screen = screen
+        self.screen_width, self.screen_height = screen.get_size()
+
+    def run(self):
+        self.screen.fill((0, 0, 0))
+        font = pygame.font.SysFont(None, 24)
+
+        # Read instructions from file
+        with open("assets/simpleInstructions.txt", "r") as file:
+            text = file.read().splitlines()
+
+        wrapped_text = []
+        max_width = 700
+        for line in text:
+            if font.size(line)[0] > max_width:
+                # Wrap text if it exceeds max width
+                words = line.split(" ")
+                wrapped_line = ""
+                for word in words:
+                    if font.size(wrapped_line + word)[0] < max_width:
+                        wrapped_line += word + " "
+                    else:
+                        wrapped_text.append(wrapped_line)
+                        wrapped_line = word + " "
+                wrapped_text.append(wrapped_line)
+            else:
+                wrapped_text.append(line)
+
+        scroll_offset = 0
+        max_scroll_offset = max(0, len(wrapped_text) * 30 - self.screen_height)
+
+        while True:
+            self.screen.fill((0, 0, 0))
+            y_offset = 100 + scroll_offset  # start at top of screen
+            for line in wrapped_text:
+                text_surface = font.render(line, True, (255, 255, 255))
+                text_rect = text_surface.get_rect(
+                    left=50, top=y_offset)  # left-align text
+                self.screen.blit(text_surface, text_rect)
+                y_offset += 30
+
+            pygame.display.flip()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                    return
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
+                    scroll_offset = max(0, scroll_offset + 30)
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
+                    scroll_offset = min(max_scroll_offset, scroll_offset - 30)
+
+
+
+class Button():
     def __init__(self, x, y, w, h, text, font_size, font_color, rect_color):
         self.rect = pygame.Rect(x, y, w, h)
         self.text = text
@@ -55,10 +118,19 @@ class ExitButton(Button):
         super().__init__(x, y, 200, 50, "Keluar", 50, (255, 255, 255), (255, 0, 0))
 
 
-class InfoButton(Button):
+class HelpButton(Button):
     def __init__(self, x, y):
-        super().__init__(x, y, 200, 50, "Info", 50, (255, 255, 255), (37, 150, 190))
+        super().__init__(x, y, 200, 50, "Help", 50, (255, 255, 255), (200, 200, 0))
 
+class PlayAgain(Button):
+    def __init__(self, x, y):
+        super().__init__(x, y, 200, 50, "Main Lagi", 50, (255, 255, 255), (37, 150, 190))
+
+    def is_clicked(self, pos):
+        if self.rect.collidepoint(pos):
+            return True
+        else:
+            return False
 
 class LoadingScreen(Screen):
     def __init__(self, screen):
@@ -110,9 +182,12 @@ class StartMenu(Screen):
         ))
         self.buttons.append(ExitButton(
             self.screen_width // 2 - 100,
+            self.screen_height // 2 + 150
+        ))
+        self.buttons.append(HelpButton(
+            self.screen_width // 2 - 100,
             self.screen_height // 2 + 50
         ))
-
         # Load the background image
         self.background_image = pygame.image.load("assets/bg.jpg").convert()
 
@@ -143,6 +218,7 @@ class StartMenu(Screen):
                                 
                                 clock = pygame.time.Clock()
                                 rainy = Rainy(worldSurface)
+                                sunny = Windy(worldSurface)
                                 # sunny = Sunny(display)
                                 
                                 # load resources
@@ -364,8 +440,9 @@ class StartMenu(Screen):
                                                  None,
                                                  pygame.BLEND_MAX)
                                     
-                                    
-                                    rainy.spawn(display, cameraOffset)
+                                    weatherl = [rainy, sunny]
+                                    for weather in weatherl:
+                                        weather.spawn(display, cameraOffset)
                                     for i, item in enumerate(world.lines):
                                         item.draw(
                                             display, 10, cameraOffset)
@@ -513,6 +590,16 @@ class StartMenu(Screen):
                                                                           Game.COLOURS.get("whiteOutline")),
                                                      (wWidth/2-size[0]/2,
                                                      wHeight-170))
+                                        
+
+                                        Restart = PlayAgain(self.screen_width // 2 - 100,
+                                                            self.screen_height // 2 + 50)
+                                        Restart.draw(display)
+                                        pos = pygame.mouse.get_pos()
+                                        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                                            if Restart.is_clicked(pos):
+                                                self.run()
+
 
                                         if isGameOver:
                                             restartButton = pygame.draw.rect(display, Game.COLOURS.get(
@@ -811,7 +898,9 @@ class StartMenu(Screen):
                                         # elif event.type == pygame.USEREVENT:  # music is done
                                         #     pygame.mixer.music.load(MUSIC[random.randint(0, 2)])
                                         #     pygame.mixer.music.play()
-                                    world.update_boat_speeds(rainy)
+                                    world.update_boat_speeds(rainy, 10)
+                                    world.update_boat_speedup(sunny, 5)
+                                    
                                     # world.update_boat_speedup(sunny)
                                     # sunny.spawn()
                                     newStopTimer.tick()
@@ -1089,10 +1178,15 @@ class StartMenu(Screen):
                                     pygame.display.update()
 
                                 print('Start button clicked')
+                            elif button.text == "Help":
+                                help = Help(self.screen)
+                                help.run()
                             elif button.text == "Keluar":
                                 # Do something when the "Exit" button is clicked
                                 pygame.quit()
                                 exit()
+
+                            
                                 
                             
 

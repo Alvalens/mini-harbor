@@ -5,6 +5,10 @@ pygame.init()
 pygame.font.init()
 
 
+#header icon
+pygame.display.set_icon(pygame.image.load('assets/bg.jpg'))
+
+# main game
 if __name__ == '__main__':
     # Set up the screen
     screen = pygame.display.set_mode((800, 600))
