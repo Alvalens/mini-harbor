@@ -10,7 +10,7 @@ import pygame
 import pygame.gfxdraw
 import MiniMetroClasses as Game
 import TimeClass as Time
-from MiniMetroClasses import Rainy, Windy
+from MiniMetroClasses import Strom, Windy, Rainy
 from MiniMetroClasses import World as world
 
 
@@ -217,10 +217,11 @@ class StartMenu(Screen):
                                     (wWidth, wHeight))
                                 
                                 clock = pygame.time.Clock()
-                                rainy = Rainy(worldSurface)
-                                sunny = Windy(worldSurface)
+                                strom1 = Strom(worldSurface, 50, 60, 25000)
+                                windy2 = Windy(worldSurface, 60, 70, 30000)
+                                windy1 = Windy(worldSurface, 60, 70, 35000)
+                                rainy1  = Rainy(worldSurface, 55, 65, 20000)
                                 # sunny = Sunny(display)
-                                
                                 # load resources
                                 ubuntuLight30 = pygame.font.Font(
                                     "assets/fonts/Ubuntu-Light.ttf", 30)
@@ -434,7 +435,7 @@ class StartMenu(Screen):
                                                  None,
                                                  pygame.BLEND_MAX)
                                     
-                                    weatherl = [rainy, sunny]
+                                    weatherl = [strom1, windy1, rainy1, windy2]
                                     for weather in weatherl:
                                         weather.spawn(display, cameraOffset)
                                     for i, item in enumerate(world.lines):
@@ -892,8 +893,12 @@ class StartMenu(Screen):
                                         # elif event.type == pygame.USEREVENT:  # music is done
                                         #     pygame.mixer.music.load(MUSIC[random.randint(0, 2)])
                                         #     pygame.mixer.music.play()
-                                    world.update_boat_speeds(rainy, 10)
-                                    world.update_boat_speedup(sunny, 5)
+                                        
+                                    # change boats speed 
+                                    world.boat_slow_storm(strom1, 10)
+                                    world.boat_speed_windy(windy2, 5)
+                                    world.boat_speed_windy(windy1, 5)
+                                    world.boat_slow_rain(rainy1, 5)
                                     
                                     # world.update_boat_speedup(sunny)
                                     # sunny.spawn()

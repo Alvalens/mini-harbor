@@ -93,16 +93,16 @@ class Weather(ABC):
         pass
 
 
-class Rainy(Weather):
-    def __init__(self, worldSurface):
+class Strom(Weather):
+    def __init__(self, worldSurface, radius, speed_radius, spawn_interval):
         self.worldSurface = worldSurface
         self.color = (148, 149, 153)
-        self.radius = 50
+        self.radius = radius
         self.x = 0
         self.y = 0
         self.last_draw_time = 0
-        self.spawn_interval = 30000
-        self.slowdown_radius = 60
+        self.spawn_interval = spawn_interval
+        self.speed_radius = speed_radius
         self.strom = pygame.image.load("assets/weather/strom.png")
         self.strom = pygame.transform.scale(self.strom, (100, 100))
         self.strom_x = 0
@@ -139,20 +139,18 @@ class Rainy(Weather):
         targetSurface.blit(self.strom, (self.strom_x, self.strom_y))
 
 
-class Windy(Rainy, Weather):
-    def __init__(self, worldSurface):
-        super().__init__(worldSurface)
+class Windy(Strom, Weather):
+    def __init__(self, worldSurface, radius, speed_radius, spawn_interval):
+        super().__init__(worldSurface, radius, speed_radius, spawn_interval)
         self.color = (255, 255, 255)
-        self.radius = 60
         self.x = 0
         self.y = 0
         self.last_draw_time = 0
-        self.spawn_interval = 20000
-        self.speedup_radius = 70
         self.windy = pygame.image.load("assets/weather/windy.png")
         self.windy = pygame.transform.scale(self.windy, (100, 100))
         self.windy_x = 0
         self.windy_y = 0
+
 
     def spawn(self, targetSurface, offset):
         now = pygame.time.get_ticks()
@@ -175,16 +173,13 @@ class Windy(Rainy, Weather):
         self.windy_y = circleView[1] - self.windy.get_height() // 2
         targetSurface.blit(self.windy, (self.windy_x, self.windy_y))
 
-class LightRain(Rainy, Weather):
-    def __init__(self, worldSurface):
-        super().__init__(worldSurface)
+class Rainy(Strom, Weather):
+    def __init__(self, worldSurface, radius, speed_radius, spawn_interval):
+        super().__init__(worldSurface, radius, speed_radius, spawn_interval)
         self.color = (148, 149, 153)
-        self.radius = 30
         self.x = 0
         self.y = 0
         self.last_draw_time = 0
-        self.spawn_interval = 30000
-        self.slowdown_radius = 40
         self.light_rain = pygame.image.load("assets/weather/rain.png")
         self.light_rain = pygame.transform.scale(self.light_rain, (100, 100))
         self.light_rain_x = 0
@@ -232,22 +227,29 @@ class World(object):
         self.iconHitboxes = [None]*4
         self.cargosMoved = 0
 
-    def update_boat_speeds(self, circle, speed):
+    def boat_slow_storm(self, circle, speed):
         for boat in self.boats:
             dist = math.sqrt((boat._x - circle.x)**2 + (boat._y - circle.y)**2)
-            if dist <= circle.slowdown_radius:
+            if dist <= circle.speed_radius:
                 boat._speed = self.boatSpeed / speed  # reduce the speed by half
             else:
                 boat._speed = self.boatSpeed  # restore the original speed
             # update the boat's speed
 
-    def update_boat_speedup(self, circle, speed):
+    def boat_speed_windy(self, circle, speed):
         for boat in self.boats:
             dist = math.sqrt((boat._x - circle.x)
                              ** 2 + (boat._y - circle.y)**2)
-            if dist <= circle.speedup_radius:
+            if dist <= circle.speed_radius:
                 boat._speed = self.boatSpeed * speed
 
+    def boat_slow_rain(self, circle, speed):
+        for boat in self.boats:
+            dist = math.sqrt((boat._x - circle.x)
+                             ** 2 + (boat._y - circle.y)**2)
+            if dist <= circle.speed_radius:
+                boat._speed = self.boatSpeed / speed
+        
     def addRandomStop(self, shape, stopSurfaces):
         """ (int, list) -> bool, bool
             Creates a stop of the given shape at a random but valid
