@@ -195,6 +195,7 @@ class StartMenu(Screen):
                                     pygame.image.load(
                                     "assets/cargos/hexagon_light.png").convert_alpha(),
                                     pygame.image.load("assets/cargos/star_light.png").convert_alpha()]
+                                
                                 CARGO_ICON = pygame.image.load(
                                     "assets/icons/cargo.png").convert_alpha()
 
@@ -213,19 +214,16 @@ class StartMenu(Screen):
                                     pygame.image.load("assets/icons/bridge.png").convert_alpha()]
 
                                 # pick and place a map
-                                land = random.randint(3, 3)
-                                # top y value
-                                landY = random.randint(wHeight/2-wHeight/3-LANDS[land].get_height(),
-                                                       wHeight/2+wHeight/3-LANDS[land].get_height())
-                                # leftmost x value
-                                # 2000 is the width of the images
-                                landX = random.randint(wWidth-2000, 0)
-
-                                worldSurface.blit(
-                                    LANDS[land], (landX, landY))
-                                world = Game.World(worldSurface)
-                                validStops = [Game.CIRCLE,
-                                              Game.TRIANGLE, Game.SQUARE]
+                                land = random.randint(0, 3)
+                                
+                                map_width, map_height = LANDS[land].get_size()
+                                map_x = (wWidth - map_width) // 2
+                                map_y = (wHeight - map_height) // 2
+                                worldSurface.blit(LANDS[land], (map_x, map_y))
+                                scaled_map = pygame.transform.scale(LANDS[land], (wWidth, wHeight))
+                                world = Game.World(scaled_map)
+                                validStops = [Game.CIRCLE, Game.TRIANGLE, Game.SQUARE]
+                                
 
                                 # scale images
                                 scaledCargoPolygons = []
@@ -349,9 +347,17 @@ class StartMenu(Screen):
                                     # detection
                                     if paused:
                                         display.fill((25, 25, 25))
+                                        # background = pygame.image.load("assets/sea_pause.png")
+                                        # background = pygame.transform.scale(background, (display.get_width(), display.get_height()))
+                                        # display.blit(background, (0, 0))
+                                        
                                     else:
                                         display.fill(
-                                            Game.COLOURS.get("background"))
+                                        Game.COLOURS.get("background"))
+                                        # background = pygame.image.load("assets/sea.png")
+                                        # background = pygame.transform.scale(background, (display.get_width(), display.get_height()))
+                                        # display.blit(background, (0, 0))
+                                        
                                     display.blit(scaledWorldSurface,
                                                  (-cameraOffset[1][0]*cameraOffset[0][0],
                                                   -cameraOffset[1][1]*cameraOffset[0][1]),
