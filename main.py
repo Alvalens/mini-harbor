@@ -7,7 +7,8 @@ pygame.font.init()
 
 #header icon
 pygame.display.set_icon(pygame.image.load('assets/harbor_icon.png'))
-
+#header title
+pygame.display.set_caption('Mini harbor')
 # main game
 if __name__ == '__main__':
     # Set up the screen
