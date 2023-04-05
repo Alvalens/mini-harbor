@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-import math
 import random
 import copy
 import sys
@@ -7,9 +6,10 @@ import pygame
 import pygame.gfxdraw
 import MiniMetroClasses as Game
 import TimeClass as Time
-from MiniMetroClasses import Strom, Windy, Rainy
-from MiniMetroClasses import World as world
+from MiniMetroClasses import Storm, Windy, Rainy
+import sys
 
+#initialize pygame
 pygame.init()
 pygame.font.init()
 
@@ -23,7 +23,8 @@ class Screen(ABC):
     def run(self):
         pass
 
-# help screen
+# help screen class
+# contain game instructions
 class Help(Screen):
     def __init__(self, screen):
         super().__init__(screen)
@@ -78,7 +79,7 @@ class Help(Screen):
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
                     scroll_offset = min(max_scroll_offset, scroll_offset - 30)
 
-
+# button class
 class Button():
     def __init__(self, x, y, w, h, text, font_size, font_color, rect_color):
         self.rect = pygame.Rect(x, y, w, h)
@@ -118,12 +119,15 @@ class PlayAgain(Button):
     def __init__(self, x, y):
         super().__init__(x, y, 200, 50, "Main Menu", 50, (255, 255, 255), (37, 150, 190))
 
-    def is_clicked(self, pos):
+    # override is_clicked method from Button class
+    def is_clicked(self, pos): # check if the button is clicked
         if self.rect.collidepoint(pos):
             return True
         else:
             return False
 
+# loading screen class
+# contain loading screen when the game is started
 class LoadingScreen(Screen):
     def __init__(self, screen):
         super().__init__(screen)
@@ -135,12 +139,12 @@ class LoadingScreen(Screen):
         self.text_rect = self.text_surface.get_rect(
             center=(self.screen_width // 2, self.screen_height // 2))
 
-    def run(self):
+    def run(self): # run the loading screen
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                    exit()
+                    sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     return True
 
@@ -148,7 +152,8 @@ class LoadingScreen(Screen):
             self.screen.blit(self.text_surface, self.text_rect)
             pygame.display.update()
 
-
+# start menu class
+# contain start menu and game initialization when the game is started
 class StartMenu(Screen):
     def __init__(self, screen):
         super(StartMenu, self).__init__(screen)
@@ -161,12 +166,12 @@ class StartMenu(Screen):
         title_font.set_bold(True)
         title_font.set_italic(True)
         
-        # set outline
+        # set title
         self.title_font = pygame.font.Font(None, 72)
         self.title_surface = self.title_font.render(
             "Mini Harbor", True, (255, 255, 255))
 
-        # Create the buttons
+        # Create the buttons for the start menu
         self.buttons = []
         self.buttons.append(StartButton(
             self.screen_width // 2 - 100,
@@ -202,12 +207,12 @@ class StartMenu(Screen):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                    exit()
+                    sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     for button in self.buttons:
                         if button.is_clicked(event.pos):
                             button.on_click()
-                            if button.text == "Mulai":
+                            if button.text == "Mulai": # if start button is clicked then start the game
                                 if self.music_playing:
                                     pygame.mixer.music.stop()
                                 # camera (display) coordinates
@@ -220,7 +225,8 @@ class StartMenu(Screen):
                                     (wWidth, wHeight))
                                 
                                 clock = pygame.time.Clock()
-                                strom1 = Strom(worldSurface, 50, 60, 25000)
+                                # create objects weather
+                                Storm1 = Storm(worldSurface=worldSurface, radius =50, speed_radius = 60, spawn_interval = 25000)
                                 windy2 = Windy(worldSurface, 60, 70, 30000)
                                 windy1 = Windy(worldSurface, 60, 70, 35000)
                                 rainy1  = Rainy(worldSurface, 55, 65, 20000)
@@ -445,10 +451,11 @@ class StartMenu(Screen):
                                                   -cameraOffset[1][1]*cameraOffset[0][1]),
                                                  None,
                                                  pygame.BLEND_MAX)
-                                    
-                                    weatherl = [strom1, windy1, rainy1, windy2]
+                                    # draw the weather
+                                    weatherl = [Storm1, windy1, rainy1, windy2]
                                     for weather in weatherl:
                                         weather.spawn(display, cameraOffset)
+                                        
                                     for i, item in enumerate(world.lines):
                                         item.draw(
                                             display, 10, cameraOffset)
@@ -605,7 +612,6 @@ class StartMenu(Screen):
                                         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                                             if Restart.is_clicked(pos):
                                                 self.run()
-
 
                                         if isGameOver:
                                             restartButton = pygame.draw.rect(display, Game.COLOURS.get(
@@ -905,8 +911,8 @@ class StartMenu(Screen):
                                             pygame.mixer.music.load(MUSIC[random.randint(0, 2)])
                                             pygame.mixer.music.play()
                                         
-                                    # change boats speed 
-                                    world.boat_slow_storm(strom1, 10)
+                                    # change boats speed based on weather
+                                    world.boat_slow_storm(Storm1, 10)
                                     world.boat_speed_windy(windy2, 5)
                                     world.boat_speed_windy(windy1, 5)
                                     world.boat_slow_rain(rainy1, 5)
@@ -1194,7 +1200,7 @@ class StartMenu(Screen):
                             elif button.text == "Keluar":
                                 # Do something when the "Exit" button is clicked
                                 pygame.quit()
-                                exit()
+                                sys.exit()
 
             # Draw the background
             self.screen.blit(self.background_image, (0, 0))
@@ -1202,7 +1208,6 @@ class StartMenu(Screen):
             title_x = self.screen_width // 2 - self.title_surface.get_width() // 2
             title_y = self.screen_height // 4 - self.title_surface.get_height() // 2
             self.screen.blit(self.title_surface, (title_x, title_y))
-
             # Draw the buttons
             for button in self.buttons:
                 button.draw(self.screen)

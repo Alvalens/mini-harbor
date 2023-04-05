@@ -1,12 +1,3 @@
-#########################################################################################
-#
-# TimeClass.py
-# Class for various ways of keeping track of time
-#
-# Kevin Qiao - December 28th, 2018
-#
-#########################################################################################
-
 import time
 import math
 
@@ -21,7 +12,7 @@ MODE_STOPWATCH = 1
 MODE_TIMER = 2
 
 
-class Time(object):
+class Time():
     def __init__(self,
                  timeMode=MODE_CURRENT_TIME,
                  displayFormat=FORMAT_HH_MM_SS,
