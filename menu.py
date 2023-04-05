@@ -91,12 +91,13 @@ class Help(Screen):
 
 
 class Button():
-    def __init__(self, x, y, w, h, text, font_size, font_color, rect_color):
+    def __init__(self, x, y, w, h, text, font_size, font_color, rect_color, border_radius=0):
         self.rect = pygame.Rect(x, y, w, h)
         self.text = text
         self.font = pygame.font.SysFont(None, font_size)
         self.font_color = font_color
         self.rect_color = rect_color
+        self.border_radius = border_radius
 
     def draw(self, surface):
         pygame.draw.rect(surface, self.rect_color, self.rect)
@@ -110,7 +111,7 @@ class Button():
 
 class StartButton(Button):
     def __init__(self, x, y):
-        super().__init__(x, y, 200, 50, "Mulai", 50, (255, 255, 255), (37, 150, 190))
+        super().__init__(x, y, 200, 50, "Mulai", 50, (255, 255, 255), (37, 150, 190), border_radius=10)
 
 
 class ExitButton(Button):
@@ -121,6 +122,7 @@ class ExitButton(Button):
 class HelpButton(Button):
     def __init__(self, x, y):
         super().__init__(x, y, 200, 50, "Help", 50, (255, 255, 255), (200, 200, 0))
+        
 
 class PlayAgain(Button):
     def __init__(self, x, y):
@@ -131,6 +133,7 @@ class PlayAgain(Button):
             return True
         else:
             return False
+        
 
 class LoadingScreen(Screen):
     def __init__(self, screen):
@@ -290,7 +293,7 @@ class StartMenu(Screen):
                                     "assets/icons/line.png").convert_alpha(),
                                     pygame.image.load(
                                     "assets/icons/boat.png").convert_alpha(),
-                                    pygame.image.load("assets/icons/bridge.png").convert_alpha()]
+                                    pygame.image.load("assets/icons/truck.png").convert_alpha()]
 
                                 # pick and place a map
                                 land = random.randint(0, 3)
@@ -476,15 +479,15 @@ class StartMenu(Screen):
                                         boat.drawAllCargos(display, rectPoints,
                                                            world.cargoSize, cameraOffset)
 
-                                    numBridges = 0
+                                    numTrucks = 0
                                     for line in world.lines:
                                         for segment in line.tempSegments:
-                                            if segment.isBridge:
-                                                numBridges = numBridges+1
-                                                segment.drawBridge(display, 7, cameraOffset,
+                                            if segment.isTruck:
+                                                numTrucks = numTrucks+1
+                                                segment.drawTruck(display, 7, cameraOffset,
                                                                    worldSurface, 30/cameraOffset[0][0])
 
-                                    world.resources[Game.BRIDGE] = world.totalBridges-numBridges
+                                    world.resources[Game.TRUCK] = world.totalTrucks-numTrucks
 
                                     for i in range(len(Game.COLOURS.get("lines"))):
                                         indicatorCoords = (int(world.stopSize*(2.5+i)+(i*10)),
@@ -579,24 +582,21 @@ class StartMenu(Screen):
                                                                      Game.COLOURS.get("whiteOutline")),
                                                      (self.wWidth/2-size[0]/2,
                                                      40))
-                                        size = ubuntuLight30.size(
-                                            "Overcrowding at this stop shut down your harbor")
+                                        size = ubuntuLight30.size("Overcrowding at this stop shut down your harbor")
                                         display.blit(ubuntuLight30.render("Overcrowding at this stop shut down your harbor",
                                                                           1,
                                                                           Game.COLOURS.get("whiteOutline")),
                                                      (self.wWidth/2-size[0]/2,
                                                      120))
-                                        size = ubuntuLight30.size(
-                                            str(world.cargosMoved)+" barang ditransportasi")
+                                        size = ubuntuLight30.size(str(world.cargosMoved)+" barang ditransportasi")
                                         display.blit(ubuntuLight30.render(str(world.cargosMoved)+" barang ditransportasi",
                                                                           1,
                                                                           Game.COLOURS.get("whiteOutline")),
-                                                     (wWidth/2-size[0]/2,
-                                                     wHeight-170))
+                                                     (self.wWidth/2-size[0]/2,
+                                                     170))
                                         
-
                                         Restart = PlayAgain(self.screen_width // 2 - 100,
-                                                            self.screen_height // 2 + 50)
+                                                            self.screen_height - 180,)
                                         Restart.draw(display)
                                         pos = pygame.mouse.get_pos()
                                         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -737,8 +737,8 @@ class StartMenu(Screen):
                                                                     paused, timers, world)
                                                             world.resources[option[0]
                                                                             ] = world.resources[option[0]]+1
-                                                            if option[0] == Game.BRIDGE:
-                                                                world.totalBridges = world.totalBridges+1
+                                                            if option[0] == Game.TRUCK:
+                                                                world.totalTrucks = world.totalTrucks+1
                                                 # else try to create a new line
                                                 else:
                                                     clickedIcon = -1
@@ -761,9 +761,9 @@ class StartMenu(Screen):
                                                 mouseObject.updateWithView(
                                                     event.pos, cameraOffset)
                                                 line = world.lines[movingLine]
-                                                # if there are enough bridges for the segments being edited
+                                                # if there are enough Trucks for the segments being edited
                                                 # to go over the water, restrict them
-                                                if world.resources[Game.BRIDGE]-len(line.mouseSegments) < 0:
+                                                if world.resources[Game.TRUCK]-len(line.mouseSegments) < 0:
                                                     for mouseSegment in line.mouseSegments:
                                                         mouseSegment.calculateData()
                                                     point = event.pos
@@ -968,8 +968,8 @@ class StartMenu(Screen):
                                             options.remove(Game.LINE)
                                         resource = random.choice(options)
                                         world.resources[resource] = world.resources[resource]+1
-                                        if resource == Game.BRIDGE:
-                                            world.totalBridges = world.totalBridges+1
+                                        if resource == Game.TRUCK:
+                                            world.totalTrucks = world.totalTrucks+1
                                         pickingResource = True
                                         if world.resources[Game.LINE]+len(world.lines) > 6 and Game.LINE in options:
                                             options.remove(Game.LINE)
