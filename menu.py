@@ -83,7 +83,7 @@ class Help(Screen):
                     sys.exit()
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                     return
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
+                elif event.type == pygame.KEYUP and event.key == pygame.K_UP:
                     scroll_offset = max(0, scroll_offset + 30)
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
                     scroll_offset = min(max_scroll_offset, scroll_offset - 30)
@@ -116,17 +116,17 @@ class StartButton(Button):
 
 class ExitButton(Button):
     def __init__(self, x, y):
-        super().__init__(x, y, 200, 50, "Keluar", 50, (255, 255, 255), (255, 0, 0))
+        super().__init__(x, y, 200, 50, "Keluar", 50, (255, 255, 255), (255, 0, 0), border_radius=10)
 
 
 class HelpButton(Button):
     def __init__(self, x, y):
-        super().__init__(x, y, 200, 50, "Help", 50, (255, 255, 255), (200, 200, 0))
+        super().__init__(x, y, 200, 50, "Help", 50, (255, 255, 255), (200, 200, 0), border_radius=10)
         
 
 class PlayAgain(Button):
     def __init__(self, x, y):
-        super().__init__(x, y, 200, 50, "Main Lagi", 50, (255, 255, 255), (37, 150, 190))
+        super().__init__(x, y, 200, 50, "Main Lagi", 50, (255, 255, 255), (37, 150, 190), border_radius=10)
 
     def is_clicked(self, pos):
         if self.rect.collidepoint(pos):
@@ -293,7 +293,8 @@ class StartMenu(Screen):
                                     "assets/icons/line.png").convert_alpha(),
                                     pygame.image.load(
                                     "assets/icons/boat.png").convert_alpha(),
-                                    pygame.image.load("assets/icons/truck.png").convert_alpha()]
+                                    pygame.image.load(
+                                    "assets/icons/truck.png").convert_alpha()]
 
                                 # pick and place a map
                                 land = random.randint(0, 3)
@@ -322,19 +323,31 @@ class StartMenu(Screen):
 
                                 # point list for drawing boats and containers
                                 rectPoints = [[[-world.cargoSize*1.5, world.cargoSize],
-                                               [world.cargoSize*1.5,
-                                                world.cargoSize],
-                                               [world.cargoSize*1.5, -
-                                                world.cargoSize],
+                                               [world.cargoSize*1.5, world.cargoSize],
+                                               [world.cargoSize*1.5, - world.cargoSize],
                                                [-world.cargoSize*1.5, -world.cargoSize]],
+                                
                                               [[-world.cargoSize, world.cargoSize/2],
                                                [0, world.cargoSize/2],
-                                               [world.cargoSize,
-                                                  world.cargoSize/2],
-                                               [world.cargoSize, -
-                                                  world.cargoSize/2],
+                                               [world.cargoSize, world.cargoSize/2],
+                                               [world.cargoSize, - world.cargoSize/2],
                                                [0, -world.cargoSize/2],
                                                [-world.cargoSize, -world.cargoSize/2]]]
+                                
+                                # rectPoints = [[[world.cargoSize/2, world.cargoSize],
+                                #                 [world.cargoSize*1.5, 0],
+                                #                 [world.cargoSize/2, -world.cargoSize],
+                                #                 [-world.cargoSize*1.5, -world.cargoSize],
+                                #                 [-world.cargoSize*1.5, world.cargoSize],
+                                #                 [world.cargoSize/2, world.cargoSize]],
+                                                
+                                #                 # box
+                                #                 [[-world.cargoSize, world.cargoSize/2],
+                                #                 [0, world.cargoSize/2],
+                                #                 [world.cargoSize, world.cargoSize/2],
+                                #                 [world.cargoSize, - world.cargoSize/2],
+                                #                 [0, -world.cargoSize/2],
+                                #                 [-world.cargoSize, -world.cargoSize/2]]]
 
                                 def calculateCameraOffset(wWidth, wHeight, world):
                                     # calculate the scale and translation operations to move from
@@ -603,21 +616,6 @@ class StartMenu(Screen):
                                             if Restart.is_clicked(pos):
                                                 self.run()
 
-
-                                        if isGameOver:
-                                            restartButton = pygame.draw.rect(display, Game.COLOURS.get(
-                                                "whiteOutline"), (wWidth/2 - 80, wHeight-100, 160, 50))
-                                            font = pygame.font.Font(None, 30)
-                                            restartText = font.render(
-                                                "Restart", True, (255, 255, 255))
-                                            display.blit(
-                                                restartText, (wWidth/2 - restartText.get_width()/2, wHeight-80))
-                                            mouse_pos = pygame.mouse.get_pos()
-                                            if restartButton.collidepoint(mouse_pos):
-                                                if pygame.mouse.get_pressed()[0]:
-                                                    isGameOver = False
-                                                    pygame.display.update()
-
                                     display.blit(CARGO_ICON, (10, 8))
                                     display.blit(ubuntuLight30.render(str(world.cargosMoved),
                                                                       1,
@@ -678,7 +676,7 @@ class StartMenu(Screen):
                                         if event.type == pygame.QUIT:
                                             running = False
                                         elif event.type == pygame.KEYDOWN:
-                                            # press space to pause the game
+                                            # press space to pause the 
                                             if event.key == pygame.K_SPACE and window != "end":
                                                 paused = togglePaused(
                                                     paused, timers, world)
