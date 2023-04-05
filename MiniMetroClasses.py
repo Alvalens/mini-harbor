@@ -50,10 +50,10 @@ def _isValidSpawn(x, y, stops, mapSurface):
     # Returns True or False depending on whether or not the given
     # point (x, y) is a valid stop location on the given map
     if tuple(mapSurface.get_at((x, y))[:3]) == COLOURS.get("land"):
-        for stop in stops:
-            if stop.withinRadius(x, y, STOP_DISTANCE):
-                return False
         return False
+    for stop in stops:
+        if stop.withinRadius(x, y, STOP_DISTANCE):
+            return False
     return True
 
 
