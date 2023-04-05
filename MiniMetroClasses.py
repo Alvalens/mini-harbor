@@ -17,7 +17,7 @@ import TimeClass as Time
 pygame.init()
 
 COLOURS = {"background": (16, 51, 158),
-           "land": (155, 118, 83),
+           "land": (155, 118, 83),  # asli = (155, 118, 83)
         #    "land": (110, 83, 61),
            "blackInside": (45, 45, 45),
            "whiteOutline": (217, 217, 217),
@@ -59,11 +59,12 @@ def _isValidSpawn(x, y, stops, mapSurface):
     # Returns True or False depending on whether or not the given
     # point (x, y) is a valid stop location on the given map
     if tuple(mapSurface.get_at((x, y))[:3]) == COLOURS.get("land"):
-        for stop in stops:
-            if stop.withinRadius(x, y, STOP_DISTANCE):
-                return False
-        return True
-    return False
+        return False
+    # if the color is 16, 51, 158 return False
+    for stop in stops:
+        if stop.withinRadius(x, y, STOP_DISTANCE):
+            return False
+    return True
 
 
 def findDistance(point1, point2):
@@ -104,15 +105,14 @@ class Strom(Weather):
         self.last_draw_time = 0
         self.spawn_interval = spawn_interval
         self.speed_radius = speed_radius
-        self.strom = pygame.image.load("assets/weather/strom.png")
-        self.strom = pygame.transform.scale(self.strom, (100, 100))
-        self.strom_x = 0
-        self.strom_y = 0
+        self.__strom = pygame.image.load("assets/weather/strom.png")
+        self.__strom = pygame.transform.scale(self.__strom, (100, 100))
+        self.__strom_x = 0
+        self.__strom_y = 0
 
     def spawn(self, targetSurface, offset):
         now = pygame.time.get_ticks()
         time_since_last_draw = now - self.last_draw_time
-        # chance spawn at the middle is 50%
         # spawn a new circle if enough time has passed
         if time_since_last_draw >= self.spawn_interval:
             # spawn in the middle 40% of the time, otherwise at a random position
@@ -135,9 +135,9 @@ class Strom(Weather):
         pygame.draw.circle(targetSurface, self.color,
                            circleView, self.radius)
         # draw the strom onto the targetSurface
-        self.strom_x = circleView[0] - 50
-        self.strom_y = circleView[1] - 50
-        targetSurface.blit(self.strom, (self.strom_x, self.strom_y))
+        self.__strom_x = circleView[0] - 50
+        self.__strom_y = circleView[1] - 50
+        targetSurface.blit(self.__strom, (self.__strom_x, self.__strom_y))
 
 
 class Windy(Strom, Weather):
@@ -147,10 +147,10 @@ class Windy(Strom, Weather):
         self.x = 0
         self.y = 0
         self.last_draw_time = 0
-        self.windy = pygame.image.load("assets/weather/windy.png")
-        self.windy = pygame.transform.scale(self.windy, (100, 100))
-        self.windy_x = 0
-        self.windy_y = 0
+        self.__windy = pygame.image.load("assets/weather/windy.png")
+        self.__windy = pygame.transform.scale(self.__windy, (100, 100))
+        self.__windy_x = 0
+        self.__windy_y = 0
 
 
     def spawn(self, targetSurface, offset):
@@ -158,10 +158,17 @@ class Windy(Strom, Weather):
         time_since_last_draw = now - self.last_draw_time
         # spawn a new circle if enough time has passed
         if time_since_last_draw >= self.spawn_interval:
-            self.x = random.randint(
+            # spawn 60% in the middle 
+            if random.random() <= 0.6:
+                self.x = targetSurface.get_width() // 2
+                self.y = targetSurface.get_height() // 2
+            else:
+                self.x = random.randint(
                 self.radius, min(800, targetSurface.get_width()) - self.radius)
-            self.y = random.randint(
+                self.y = random.randint(
                 self.radius, min(600, targetSurface.get_height()) - self.radius)
+        # spawn a new circle if enough time has passed
+        if time_since_last_draw >= self.spawn_interval:
             self.last_draw_time = now
 
         # convert the world coordinates of the circle to view coordinates
@@ -170,9 +177,9 @@ class Windy(Strom, Weather):
         pygame.draw.circle(targetSurface, self.color,
                            circleView, self.radius)
         # draw the windy ihn the middle of the circle
-        self.windy_x = circleView[0] - self.windy.get_width() // 2
-        self.windy_y = circleView[1] - self.windy.get_height() // 2
-        targetSurface.blit(self.windy, (self.windy_x, self.windy_y))
+        self.__windy_x = circleView[0] - self.__windy.get_width() // 2
+        self.__windy_y = circleView[1] - self.__windy.get_height() // 2
+        targetSurface.blit(self.__windy, (self.__windy_x, self.__windy_y))
 
 class Rainy(Strom, Weather):
     def __init__(self, worldSurface, radius, speed_radius, spawn_interval):
@@ -181,10 +188,10 @@ class Rainy(Strom, Weather):
         self.x = 0
         self.y = 0
         self.last_draw_time = 0
-        self.light_rain = pygame.image.load("assets/weather/rain.png")
-        self.light_rain = pygame.transform.scale(self.light_rain, (100, 100))
-        self.light_rain_x = 0
-        self.light_rain_y = 0
+        self.__rainy = pygame.image.load("assets/weather/rain.png")
+        self.__rainy = pygame.transform.scale(self.__rainy, (100, 100))
+        self.__rainy_x = 0
+        self.__rainy_y = 0
 
     def spawn(self, targetSurface, offset):
         now = pygame.time.get_ticks()
@@ -203,9 +210,9 @@ class Rainy(Strom, Weather):
         pygame.draw.circle(targetSurface, self.color,
                            circleView, self.radius)
         # draw the light rain in the middle of the circle
-        self.light_rain_x = circleView[0] - self.light_rain.get_width() // 2
-        self.light_rain_y = circleView[1] - self.light_rain.get_height() // 2
-        targetSurface.blit(self.light_rain, (self.light_rain_x, self.light_rain_y))
+        self.__rainy_x = circleView[0] - self.__rainy.get_width() // 2
+        self.__rainy_y = circleView[1] - self.__rainy.get_height() // 2
+        targetSurface.blit(self.__rainy, (self.__rainy_x, self.__rainy_y))
 
 class World(object):
     def __init__(self, mapSurface, stopSize=30, cargoSize=10):

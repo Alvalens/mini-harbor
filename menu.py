@@ -1,11 +1,8 @@
 from abc import ABC, abstractmethod
 import math
-from pdb import Restart
 import random
 import copy
 import sys
-from turtle import circle
-from numpy import disp, rint
 import pygame
 import pygame.gfxdraw
 import MiniMetroClasses as Game
@@ -13,14 +10,10 @@ import TimeClass as Time
 from MiniMetroClasses import Strom, Windy, Rainy
 from MiniMetroClasses import World as world
 
-
-
 pygame.init()
 pygame.font.init()
 
 # abc = abstract base class
-
-
 class Screen(ABC):
     def __init__(self, screen):
         self.screen = screen
@@ -31,12 +24,9 @@ class Screen(ABC):
         pass
 
 # help screen
-
-
 class Help(Screen):
     def __init__(self, screen):
-        self.screen = screen
-        self.screen_width, self.screen_height = screen.get_size()
+        super().__init__(screen)
 
     def run(self):
         self.screen.fill((0, 0, 0))
@@ -45,7 +35,7 @@ class Help(Screen):
         # Read instructions from file
         with open("assets/simpleInstructions.txt", "r") as file:
             text = file.read().splitlines()
-
+        
         wrapped_text = []
         max_width = 700
         for line in text:
@@ -89,7 +79,6 @@ class Help(Screen):
                     scroll_offset = min(max_scroll_offset, scroll_offset - 30)
 
 
-
 class Button():
     def __init__(self, x, y, w, h, text, font_size, font_color, rect_color):
         self.rect = pygame.Rect(x, y, w, h)
@@ -97,6 +86,7 @@ class Button():
         self.font = pygame.font.SysFont(None, font_size)
         self.font_color = font_color
         self.rect_color = rect_color
+        self.click_sound = pygame.mixer.Sound("assets/audio/btn.mp3")  # Load the click sound
 
     def draw(self, surface):
         pygame.draw.rect(surface, self.rect_color, self.rect)
@@ -106,6 +96,8 @@ class Button():
 
     def is_clicked(self, pos):
         return self.rect.collidepoint(pos)
+    def on_click(self):
+        self.click_sound.play()  # Play the click sound when the button is clicked
 
 
 class StartButton(Button):
@@ -124,7 +116,7 @@ class HelpButton(Button):
 
 class PlayAgain(Button):
     def __init__(self, x, y):
-        super().__init__(x, y, 200, 50, "Main Lagi", 50, (255, 255, 255), (37, 150, 190))
+        super().__init__(x, y, 200, 50, "Main Menu", 50, (255, 255, 255), (37, 150, 190))
 
     def is_clicked(self, pos):
         if self.rect.collidepoint(pos):
@@ -168,8 +160,8 @@ class StartMenu(Screen):
         title_font.set_underline(True)
         title_font.set_bold(True)
         title_font.set_italic(True)
+        
         # set outline
-
         self.title_font = pygame.font.Font(None, 72)
         self.title_surface = self.title_font.render(
             "Mini Harbor", True, (255, 255, 255))
@@ -182,11 +174,11 @@ class StartMenu(Screen):
         ))
         self.buttons.append(ExitButton(
             self.screen_width // 2 - 100,
-            self.screen_height // 2 + 150
+            self.screen_height // 2 + 110
         ))
         self.buttons.append(HelpButton(
             self.screen_width // 2 - 100,
-            self.screen_height // 2 + 50
+            self.screen_height // 2 + 30
         ))
         # Load the background image
         self.background_image = pygame.image.load("assets/bg.jpg").convert()
@@ -194,11 +186,19 @@ class StartMenu(Screen):
         # Resize the background image to the same size as the screen
         self.background_image = pygame.transform.scale(
             self.background_image, (self.screen_width, self.screen_height))
+        
+        #amain menu bgm
+        pygame.mixer.music.load("assets/audio/NOCTIS.mp3")
+        pygame.mixer.music.set_volume(0.5)
+        self.music_playing = False  # Flag to keep track of whether the music is playing
 
     def run(self):
         # Main loop
         while True:
             # Handle events
+            if not pygame.mixer.music.get_busy():
+                # Loop the music indefinitely if it's not already playing
+                pygame.mixer.music.play(-1)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -206,7 +206,10 @@ class StartMenu(Screen):
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     for button in self.buttons:
                         if button.is_clicked(event.pos):
+                            button.on_click()
                             if button.text == "Mulai":
+                                if self.music_playing:
+                                    pygame.mixer.music.stop()
                                 # camera (display) coordinates
                                 display = pygame.display.set_mode(
                                     (self.wWidth, self.wHeight))
@@ -898,9 +901,9 @@ class StartMenu(Screen):
                                                         world.boats.pop()
                                                         world.resources[Game.BOAT] = world.resources[Game.BOAT]+1
                                                     clickedIcon = -1
-                                        # elif event.type == pygame.USEREVENT:  # music is done
-                                        #     pygame.mixer.music.load(MUSIC[random.randint(0, 2)])
-                                        #     pygame.mixer.music.play()
+                                        elif event.type == pygame.USEREVENT:  # music is done
+                                            pygame.mixer.music.load(MUSIC[random.randint(0, 2)])
+                                            pygame.mixer.music.play()
                                         
                                     # change boats speed 
                                     world.boat_slow_storm(strom1, 10)
@@ -1179,7 +1182,7 @@ class StartMenu(Screen):
                                         if smoothScaleTimer.checkTimer(True):
                                             isScaling = False
                                             
-
+                                            
                                     clock.tick(60)
                                     drawOverlay()
                                     pygame.display.update()
@@ -1192,10 +1195,6 @@ class StartMenu(Screen):
                                 # Do something when the "Exit" button is clicked
                                 pygame.quit()
                                 exit()
-
-                            
-                                
-                            
 
             # Draw the background
             self.screen.blit(self.background_image, (0, 0))

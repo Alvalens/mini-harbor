@@ -1,23 +1,24 @@
-Objective: Transport as many passengers as possible.
-Lose Condition: If one stop has 6 waiting passengers for 45 seconds, the game is lost.
+(Gunakan Arrow key up dan down untuk scroll)
+Tujuan: Mengangkut barang sebanyak mungkin hingga permainan kalah.
 
-How to play: Use the tunnels, trains, lines, and carriages given to construct a subway network. The player places the lines, trains, and carriages. Everything else is done by the game
+Kondisi kalah: Jika setidaknya satu perhentian memiliki 6 barang yang menunggu selama 45 detik, maka permainan kalah.
 
-The World:
-Stops and passengers will be generated in the world over time.
+Cara bermain: Pemain memiliki kapal, jalur, kendaraan darat, dan container dalam jumlah terbatas. Yang bisa dilakukan pemain adalah membentuk jalur dan menambahkan kapal dan container ke dalamnya. Segala sesuatu yang lain dikelola oleh permainan. Setiap 90 detik pemain akan mendapatkan satu sumber daya acak, dan dapat memilih di antara dua sumber lainnya.
 
-Movement:
-In general, movement in the game starts with a left click on some element. Then while holding the left mouse down, dragging the element to the desired location. Depending on the element, there will be some sort of visual indication that some movement occurred. Releasing the left mouse button commits the changes made.
+Dunia: Dunia berisi semacam air(laut) dan juga daratan, dan seiring waktu ia menghasilkan perhentian (pelabuhan) di lokasi acak tetapi terkontrol (dari yang paling mungkin hingga yang paling tidak mungkin: lingkaran, segitiga, kotak). barang juga akan muncul seiring waktu (semua bentuk memiliki kemungkinan yang sama).
 
-Lines:
-Creating the line is done by clicking near a stop, and dragging the mouse over stops to connect them. The line can be edited with the mouse as outlined in the movement section; initiating movement near the edges will extend the line, otherwise stops will be inserted. When moving the line around, hovering over a stop on the line will remove it from the line. Lines that cross water use up tunnels.
+Gerakan: Secara umum, gerakan dalam game dimulai dengan klik kiri pada suatu perhentian (pelabuhan). Kemudian sambil menahan mouse kiri, seret jalur ke lokasi / pelabuhan lain yang diinginkan. Tergantung pada elemennya, akan ada semacam indikasi visual bahwa beberapa gerakan telah terjadi. Melepaskan tombol kiri mouse melakukan perubahan yang dilakukan.
+jalur: Membuat jalur dilakukan dengan mengeklik di dekat perhentian, dan menyeret mouse ke perhentian lain untuk menghubungkannya. jalur dapat diedit dengan cara klik pada jalur kemudian diseret ke perhentian atau pelabuhan yang diinginkan; memulai gerakan di dekat tepi akan memperpanjang jalur, jika tidak berhenti akan dimasukkan. Saat memindahkan jalur, mengarahkan kursor ke stop pada jalur akan menghapusnya dari jalur. jalur yang melintasi daratan maka akan menggunakan kendaraan darat.
 
-Trains/Carriages:
-Trains move carriages and passengers, carriages follow trains and hold more passengers. They can be moved as outlined in the movement section. Initiating movement over the icons in the bottom left creates trains/carriages, while ending movement over the icons deletes trains/carriages. There can be a maximum of 4 trains per line and 4 carriages per train. If an existing train/carriage is moved, it must unload its passengers before making the move.
+Kapal: kapal memindahkan container dan barang, container mengikuti kapal dan menampung lebih banyak barang. Mereka dapat dipindahkan sebagaimana diuraikan di bagian gerakan. Memulai pergerakan di atas ikon di kanan bawah dan memasukkannya kedalam jalur akan menambahkan kapal. Maksimal ada 4 kapal per jalur dan 4 container per kapal. Jika kapal atau container yang sudah ada dipindahkan, maka harus menurunkan barangnya sebelum melakukan perpindahan.
 
-The Interface:
-Top left: how many passengers have been moved
-Top right: information and choices about resources
-Bottom left: information about lines used and lines available
-Bottom right: information about resources available, also creates/destroys trains/carriages
-Pressing space pauses the game. Clicking the exit button on the window closes the game. When a stop is overcrowding, a red arc will be drawn around it. Once the arc makes a circle, the game is over.
+Cuaca: Terdapat tiga model cuaca yaitu Thunder storm (yang akan muncul selama 20 detik), Windy(yang akan muncul selama 30 detik), Rainy(yang akan muncul selama 25 detik) dan setiap cuaca akan muncul pada suatu area secara acak.
+
+Tampilan antarmuka:
+Kiri atas: jumlah barang yang dipindahkan
+Kanan atas: informasi dan pilihan tentang sumber daya
+Kiri bawah: informasi tentang jalur yang digunakan dan jalur yang tersedia
+Kanan bawah: informasi tentang sumber daya yang tersedia, juga membuat/menghancurkan kapal/container
+Menekan spasi akan menjeda permainan. Mengklik tombol keluar di jendela menutup permainan. Saat perhentian penuh sesak, busur merah akan ditarik di sekitarnya. Setelah busur membentuk lingkaran, permainan berakhir.
+
+(Esc untuk kembali)

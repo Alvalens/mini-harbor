@@ -4,7 +4,6 @@ import menu
 pygame.init()
 pygame.font.init()
 
-
 #header icon
 pygame.display.set_icon(pygame.image.load('assets/harbor_icon.png'))
 #header title
