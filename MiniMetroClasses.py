@@ -42,7 +42,7 @@ STAR = 8
 CONTAINER = 0
 LINE = 1
 BOAT = 2
-BRIDGE = 3
+TRUCK = 3
 
 # units are in world pixels
 STOP_REMOVAL_DISTANCE = 10  # distance mouse must be to a stop to remove it from a line
@@ -62,8 +62,8 @@ def _isValidSpawn(x, y, stops, mapSurface):
         for stop in stops:
             if stop.withinRadius(x, y, STOP_DISTANCE):
                 return False
-        return True
-    return False
+        return False
+    return True
 
 
 def findDistance(point1, point2):
@@ -224,7 +224,7 @@ class World(object):
                                       * (float(self.height)/self.width))
         # give the player some starting equipment
         self.resources = [1, 2, 3, 3]
-        self.totalBridges = self.resources[BRIDGE]
+        self.totalTrucks = self.resources[TRUCK]
         self.iconHitboxes = [None]*4
         self.cargosMoved = 0
 
@@ -1046,7 +1046,7 @@ class Segment(object):
         # bounding box (for collision detection)
         self.rect = None
         self.isAbandoned = False
-        self.isBridge = False
+        self.isTruck = False
         self.index = index
         self.calculateData()
 
@@ -1092,9 +1092,9 @@ class Segment(object):
         # check a few points on the segment to see if they are over water
         for step in self.getPointsAlongSegment(20):
             if worldSurface.get_at((int(step[0]), int(step[1]))) == COLOURS.get("land"):
-                self.isBridge = True
+                self.isTruck = True
                 return True
-        self.isBridge = False
+        self.isTruck = False
         return False
 
     def getPointsAlongSegment(self, interval):
@@ -1114,7 +1114,7 @@ class Segment(object):
                 points.pop(i)
         return points
 
-    def drawBridge(self, targetSurface, width, offset, worldSurface, interval):
+    def drawTruck(self, targetSurface, width, offset, worldSurface, interval):
         colour = COLOURS.get("land")
         steps = self.getPointsOverWater(interval, worldSurface)
         for step in steps:
