@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 import random
 import copy
 import sys
+from numpy import ones_like
 import pygame
 import pygame.gfxdraw
 import MiniMetroClasses as Game
@@ -124,6 +125,7 @@ class PlayAgain(Button):
     # override is_clicked method from Button class
     def is_clicked(self, pos): # check if the button is clicked
         if self.rect.collidepoint(pos):
+            self.click_sound.play()
             return True
         else:
             return False
@@ -556,7 +558,7 @@ class StartMenu(Screen):
                                         size = ubuntuLight30.size(
                                             "Received one:  ")
                                         width = ubuntuLight30.size(
-                                            "Pick a resource: ")[0]
+                                            "Pilih resource: ")[0]
 
                                         background = pygame.Surface((size[0]+5+scaledIcons[0].get_width(),
                                                                     int(scaledIcons[0].get_height()*3.3+10)),
@@ -574,7 +576,7 @@ class StartMenu(Screen):
                                                      (self.wWidth-scaledIcons[resource].get_width()-5,
                                                      5))
 
-                                        display.blit(ubuntuLight30.render("Pick a resource:",
+                                        display.blit(ubuntuLight30.render("Pilih resource:",
                                                                           1,
                                                                           Game.COLOURS.get("whiteOutline")),
                                                      (self.wWidth-width,
@@ -584,47 +586,33 @@ class StartMenu(Screen):
                                                 option[1], (option[2][0], option[2][1]))
 
                                     if window == "end" and not isScaling:
-                                        isGameOver = True
                                         size = ubuntu70.size("Game Over")
                                         display.blit(ubuntu70.render("Game Over",
                                                                      1,
                                                                      Game.COLOURS.get("whiteOutline")),
                                                      (self.wWidth/2-size[0]/2,
                                                      40))
-                                        size = ubuntuLight30.size("Overcrowding at this stop shut down your harbor")
-                                        display.blit(ubuntuLight30.render("Overcrowding at this stop shut down your harbor",
+                                        size = ubuntuLight30.size("Pelabuhanmu penuh coy! :(")
+                                        display.blit(ubuntuLight30.render("Pelabuhanmu penuh coy! :(",
                                                                           1,
                                                                           Game.COLOURS.get("whiteOutline")),
                                                      (self.wWidth/2-size[0]/2,
                                                      120))
-                                        size = ubuntuLight30.size(str(world.cargosMoved)+" barang ditransportasi")
-                                        display.blit(ubuntuLight30.render(str(world.cargosMoved)+" barang ditransportasi",
+                                        size = ubuntuLight30.size(str(world.cargosMoved)+" barang berhasil ditransportasi")
+                                        display.blit(ubuntuLight30.render(str(world.cargosMoved)+" barang berhasil ditransportasi",
                                                                           1,
                                                                           Game.COLOURS.get("whiteOutline")),
                                                      (self.wWidth/2-size[0]/2,
                                                      170))
-                                        
+                                        #restart button
                                         Restart = PlayAgain(self.screen_width // 2 - 100,
                                                             self.screen_height - 180,)
                                         Restart.draw(display)
                                         pos = pygame.mouse.get_pos()
                                         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                                             if Restart.is_clicked(pos):
+                                                Restart.on_click()
                                                 self.run()
-
-                                        if isGameOver:
-                                            restartButton = pygame.draw.rect(display, Game.COLOURS.get(
-                                                "whiteOutline"), (wWidth/2 - 80, wHeight-100, 160, 50))
-                                            font = pygame.font.Font(None, 30)
-                                            restartText = font.render(
-                                                "Restart", True, (255, 255, 255))
-                                            display.blit(
-                                                restartText, (wWidth/2 - restartText.get_width()/2, wHeight-80))
-                                            mouse_pos = pygame.mouse.get_pos()
-                                            if restartButton.collidepoint(mouse_pos):
-                                                if pygame.mouse.get_pressed()[0]:
-                                                    isGameOver = False
-                                                    pygame.display.update()
 
                                     display.blit(CARGO_ICON, (10, 8))
                                     display.blit(ubuntuLight30.render(str(world.cargosMoved),
@@ -1063,7 +1051,7 @@ class StartMenu(Screen):
                                                                    [stopPosition[0]-75,
                                                                     stopPosition[1]-75]]
                                                 window = "end"
-                                                smoothScaleTimer.restart()
+                                                smoothScaleTimer.restart()                                       
 
                                     gameTimer.tick()
                                     timeElapsed = gameTimer.time

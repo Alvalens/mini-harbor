@@ -11,7 +11,7 @@ COLOURS = {"background": (16, 51, 158),
            "land": (155, 118, 83),  # asli = (155, 118, 83)
         #    "land": (110, 83, 61),
            "blackInside": (45, 45, 45),
-           "whiteOutline": (217, 217, 217),
+           "whiteOutline": (255, 255, 255),
            "lines": ((9, 254, 25),
                      (230, 80, 40),
                      (254, 201, 9),
@@ -163,7 +163,7 @@ class Rainy(Weather):
         self.__rainy_y = circleView[1] - self.__rainy.get_height() // 2
         targetSurface.blit(self.__rainy, (self.__rainy_x, self.__rainy_y))
 
-
+#spawn after 1 minutes
 class Storm(Rainy, Windy):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -175,14 +175,27 @@ class Storm(Rainy, Windy):
         self.__strom = pygame.transform.scale(self.__strom, (100, 100))
         self.__strom_x = 0
         self.__strom_y = 0
+        self.first_minute_passed = False
+        self.warning_displayed = False
+        self.warning_time = None
 
-
-    def spawn(self, targetSurface, offset): # override spawn method from Rainy and Windy
+    def spawn(self, targetSurface, offset):
         now = pygame.time.get_ticks()
+        #print(now)
+
+        if not self.first_minute_passed:
+            # spawn after first minute has passed
+            if now >= 60000:
+                self.first_minute_passed = True
+                self.warning_displayed = False
+                self.warning_time = None
+            else:
+                return
+
         time_since_last_draw = now - self.last_draw_time
-        # spawn a new circle if enough time has passed
+
         if time_since_last_draw >= self.spawn_interval:
-            # spawn in the middle 40% of the time, otherwise at a random position
+            # 40% spawn in the middle
             if random.random() <= 0.4:
                 self.x = targetSurface.get_width() // 2
                 self.y = targetSurface.get_height() // 2
@@ -192,20 +205,30 @@ class Storm(Rainy, Windy):
                 self.y = random.randint(
                     self.radius, targetSurface.get_height() - self.radius)
 
-        # spawn a new circle if enough time has passed
-        if time_since_last_draw >= self.spawn_interval:
             self.last_draw_time = now
 
-        # convert the world coordinates of the circle to view coordinates
         circleView = getViewCoords(self.x, self.y, offset)
-        # draw the circle onto the targetSurface
         pygame.draw.circle(targetSurface, self.color,
                            circleView, self.radius)
-        # draw the strom onto the targetSurface
+
         self.__strom_x = circleView[0] - 50
         self.__strom_y = circleView[1] - 50
         targetSurface.blit(self.__strom, (self.__strom_x, self.__strom_y))
-        
+
+        # display warning message for 5 seconds
+        if not self.warning_displayed and now >= 60000:
+            self.warning_displayed = True
+            self.warning_time = now + 5000
+
+        if self.warning_time is not None and now <= self.warning_time:
+            font = pygame.font.SysFont(None, 40)
+            text = font.render(
+                "Warning: Bad weather ahead!", True, (255, 0, 0))
+            text_rect = text.get_rect(
+                center=(targetSurface.get_width() // 2, 50))
+            targetSurface.blit(text, text_rect)
+
+
 class World(object):
     def __init__(self, mapSurface, stopSize=30, cargoSize=10):
         self.stops = []
@@ -432,6 +455,7 @@ class Stop(object):
         self.timer.toggleActive()
         self.boats = []  # boats stopped at the stop
         self.lines = []  # lines that pass through this stop
+        
 
     def __eq__(self, other):
         # overrided definition of Stop == Stop
@@ -498,7 +522,6 @@ class Stop(object):
                 label = font.render("!", 1, (255, 45, 45))
                 targetSurface.blit(label,
                                    (stopView[0]-size/2, stopView[1]-size/2))
-
                 # pojok kiri atas
                 font = pygame.font.SysFont("monospace", 30)
                 label = font.render("!", 1, (255, 45, 45))
