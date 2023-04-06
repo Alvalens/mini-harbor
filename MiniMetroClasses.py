@@ -102,7 +102,6 @@ class Windy(Weather):
         self.__windy_x = 0
         self.__windy_y = 0
 
-
     def spawn(self, targetSurface, offset):
         now = pygame.time.get_ticks()
         time_since_last_draw = now - self.last_draw_time
@@ -181,10 +180,9 @@ class Storm(Rainy, Windy):
         self.warning_time = None
         self.game_start_time = datetime.now()
 
+    #override spawn method from Rainy and Windy
     def spawn(self, targetSurface, offset):
         now = datetime.now()
-        # print(now)
-
         if not self.first_minute_passed:
             # spawn after first minute has passed
             if now - self.game_start_time >= timedelta(seconds=60):

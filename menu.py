@@ -206,7 +206,7 @@ class StartMenu(Screen):
                 # Loop the music indefinitely if it's not already playing
                 pygame.mixer.music.load("assets/audio/NOCTIS.mp3")
                 pygame.mixer.music.set_volume(0.5)
-                pygame.mixer.music.play(-1)
+                pygame.mixer.music.play()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -674,6 +674,7 @@ class StartMenu(Screen):
                                         # if the window's X button is clicked
                                         if event.type == pygame.QUIT:
                                             running = False
+                                            sys.exit()
                                         elif event.type == pygame.KEYDOWN:
                                             # press space to pause the game
                                             if event.key == pygame.K_SPACE and window != "end":
@@ -732,6 +733,7 @@ class StartMenu(Screen):
                                                             if paused:
                                                                 paused = togglePaused(
                                                                     paused, timers, world)
+                                                                window = "game"
                                                             world.resources[option[0]
                                                                             ] = world.resources[option[0]]+1
                                                             if option[0] == Game.TRUCK:
@@ -898,7 +900,14 @@ class StartMenu(Screen):
                                         elif event.type == pygame.USEREVENT:  # music is done
                                             pygame.mixer.music.load(MUSIC[random.randint(0, 2)])
                                             pygame.mixer.music.play()
-                                        
+                                    if paused and window != "end" and window != "res":
+                                        back = PlayAgain(self.screen_width // 2 - 100, self.screen_height // 2 - 200,)
+                                        back.draw(display)
+                                        pos = pygame.mouse.get_pos()
+                                        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                                            if back.is_clicked(pos):
+                                                pygame.mixer.music.stop()
+                                                self.run()
                                     # change boats speed based on weather
                                     world.boat_slow_storm(Storm1, 10)
                                     world.boat_speed_windy(windy2, 5)
@@ -960,6 +969,7 @@ class StartMenu(Screen):
                                         if not paused:
                                             paused = togglePaused(
                                                 paused, timers, world)
+                                            window = 'res'
                                         options = [0, 1, 2, 3]
                                         if world.resources[Game.LINE]+len(world.lines) > 6:
                                             options.remove(Game.LINE)
@@ -1181,7 +1191,6 @@ class StartMenu(Screen):
                                     drawOverlay()
                                     pygame.display.update()
 
-                                print('Start button clicked')
                             elif button.text == "Help":
                                 help = Help(self.screen)
                                 help.run()
