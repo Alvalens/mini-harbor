@@ -5,6 +5,7 @@ import math
 import pygame
 import pygame.gfxdraw
 import TimeClass as Time
+from datetime import datetime, timedelta
 pygame.init()
 
 COLOURS = {"background": (16, 51, 158),
@@ -170,7 +171,7 @@ class Storm(Rainy, Windy):
         self.color = (148, 149, 153)
         self.x = 0
         self.y = 0
-        self.last_draw_time = 0
+        self.last_draw_time = datetime.min
         self.__strom = pygame.image.load("assets/weather/strom.png")
         self.__strom = pygame.transform.scale(self.__strom, (100, 100))
         self.__strom_x = 0
@@ -178,14 +179,15 @@ class Storm(Rainy, Windy):
         self.first_minute_passed = False
         self.warning_displayed = False
         self.warning_time = None
+        self.game_start_time = datetime.now()
 
     def spawn(self, targetSurface, offset):
-        now = pygame.time.get_ticks()
-        #print(now)
+        now = datetime.now()
+        # print(now)
 
         if not self.first_minute_passed:
             # spawn after first minute has passed
-            if now >= 60000:
+            if now - self.game_start_time >= timedelta(seconds=60):
                 self.first_minute_passed = True
                 self.warning_displayed = False
                 self.warning_time = None
@@ -194,7 +196,7 @@ class Storm(Rainy, Windy):
 
         time_since_last_draw = now - self.last_draw_time
 
-        if time_since_last_draw >= self.spawn_interval:
+        if time_since_last_draw >= timedelta(milliseconds=self.spawn_interval):
             # 40% spawn in the middle
             if random.random() <= 0.4:
                 self.x = targetSurface.get_width() // 2
@@ -216,9 +218,9 @@ class Storm(Rainy, Windy):
         targetSurface.blit(self.__strom, (self.__strom_x, self.__strom_y))
 
         # display warning message for 5 seconds
-        if not self.warning_displayed and now >= 60000:
+        if not self.warning_displayed and now - self.game_start_time >= timedelta(seconds=60):
             self.warning_displayed = True
-            self.warning_time = now + 5000
+            self.warning_time = now + timedelta(seconds=5)
 
         if self.warning_time is not None and now <= self.warning_time:
             font = pygame.font.SysFont(None, 40)
@@ -227,8 +229,6 @@ class Storm(Rainy, Windy):
             text_rect = text.get_rect(
                 center=(targetSurface.get_width() // 2, 50))
             targetSurface.blit(text, text_rect)
-
-
 class World(object):
     def __init__(self, mapSurface, stopSize=30, cargoSize=10):
         self.stops = []

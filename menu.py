@@ -195,10 +195,7 @@ class StartMenu(Screen):
         # Resize the background image to the same size as the screen
         self.background_image = pygame.transform.scale(
             self.background_image, (self.screen_width, self.screen_height))
-        
-        #amain menu bgm
-        pygame.mixer.music.load("assets/audio/NOCTIS.mp3")
-        pygame.mixer.music.set_volume(0.5)
+
         self.music_playing = False  # Flag to keep track of whether the music is playing
 
     def run(self):
@@ -207,6 +204,8 @@ class StartMenu(Screen):
             # Handle events
             if not pygame.mixer.music.get_busy():
                 # Loop the music indefinitely if it's not already playing
+                pygame.mixer.music.load("assets/audio/NOCTIS.mp3")
+                pygame.mixer.music.set_volume(0.5)
                 pygame.mixer.music.play(-1)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -586,6 +585,8 @@ class StartMenu(Screen):
                                                 option[1], (option[2][0], option[2][1]))
 
                                     if window == "end" and not isScaling:
+                                        # stop music
+                                        pygame.mixer.music.stop()
                                         size = ubuntu70.size("Game Over")
                                         display.blit(ubuntu70.render("Game Over",
                                                                      1,

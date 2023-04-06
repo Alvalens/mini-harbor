@@ -12,7 +12,7 @@ jalur: Membuat jalur dilakukan dengan mengeklik di dekat perhentian, dan menyere
 
 Kapal: kapal memindahkan container dan barang, container mengikuti kapal dan menampung lebih banyak barang. Mereka dapat dipindahkan sebagaimana diuraikan di bagian gerakan. Memulai pergerakan di atas ikon di kanan bawah dan memasukkannya kedalam jalur akan menambahkan kapal. Maksimal ada 4 kapal per jalur dan 4 container per kapal. Jika kapal atau container yang sudah ada dipindahkan, maka harus menurunkan barangnya sebelum melakukan perpindahan.
 
-Cuaca: Terdapat tiga model cuaca yaitu Thunder storm (yang akan muncul selama 20 detik), Windy(yang akan muncul selama 30 detik), Rainy(yang akan muncul selama 25 detik) dan setiap cuaca akan muncul pada suatu area secara acak.
+Cuaca: Terdapat tiga model cuaca yaitu Thunder storm yang akan muncul pada lokasi acak, dan memiliki efek speed up (windy) dan slow down (Rainy dan Storm), terkhusus untuk strom akan mulai muncul ketika pemain melewati 1 menit pertama di game, ketiga cuaca akan berpindah tempat secara acak dengan kurun waktu 20-35 detik
 
 Tampilan antarmuka:
 Kiri atas: jumlah barang yang dipindahkan
