@@ -81,13 +81,12 @@ class Help(Screen):
 
 # button class
 class Button():
-    def __init__(self, x, y, w, h, text, font_size, font_color, rect_color, border_radius=0):
+    def __init__(self, x, y, w, h, text, font_size, font_color, rect_color):
         self.rect = pygame.Rect(x, y, w, h)
         self.text = text
         self.font = pygame.font.SysFont(None, font_size)
         self.font_color = font_color
         self.rect_color = rect_color
-        self.border_radius = border_radius
         self.click_sound = pygame.mixer.Sound("assets/audio/btn.mp3")  # Load the click sound
 
     def draw(self, surface):
@@ -100,26 +99,26 @@ class Button():
         return self.rect.collidepoint(pos)
     def on_click(self):
         self.click_sound.play()  # Play the click sound when the button is clicked
-
+        
 
 class StartButton(Button):
     def __init__(self, x, y):
-        super().__init__(x, y, 200, 50, "Mulai", 50, (255, 255, 255), (37, 150, 190), border_radius=10)
+        super().__init__(x, y, 200, 50, "Mulai", 50, (255, 255, 255), (37, 150, 190))
 
 
 class ExitButton(Button):
     def __init__(self, x, y):
-        super().__init__(x, y, 200, 50, "Keluar", 50, (255, 255, 255), (255, 0, 0), border_radius=10)
+        super().__init__(x, y, 200, 50, "Keluar", 50, (255, 255, 255), (255, 0, 0))
 
 
 class HelpButton(Button):
     def __init__(self, x, y):
-        super().__init__(x, y, 200, 50, "Help", 50, (255, 255, 255), (200, 200, 0), border_radius=10)
+        super().__init__(x, y, 200, 50, "Help", 50, (255, 255, 255), (200, 200, 0))
         
 
 class PlayAgain(Button):
     def __init__(self, x, y):
-        super().__init__(x, y, 200, 50, "Main Lagi", 50, (255, 255, 255), (37, 150, 190), border_radius=10)
+        super().__init__(x, y, 200, 50, "Main Lagi", 50, (255, 255, 255), (37, 150, 190))
 
     # override is_clicked method from Button class
     def is_clicked(self, pos): # check if the button is clicked

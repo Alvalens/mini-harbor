@@ -51,12 +51,13 @@ WATER_COLOURS = COLOURS.get("land")
 def _isValidSpawn(x, y, stops, mapSurface):
     # Returns True or False depending on whether or not the given
     # point (x, y) is a valid stop location on the given map
-    if tuple(mapSurface.get_at((x, y))[:3]) == COLOURS.get("land"):
+    pixel_color = tuple(mapSurface.get_at((x, y))[:3])
+    if pixel_color not in WATER_COLOURS:
         for stop in stops:
             if stop.withinRadius(x, y, STOP_DISTANCE):
                 return False
-        return False
-    return True
+        return True
+    return False
 
 def findDistance(point1, point2):
     """ ((num, num), (num, num)) -> float
