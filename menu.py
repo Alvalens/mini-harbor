@@ -289,12 +289,12 @@ class StartMenu(Screen):
                                 CARGO_ICON = pygame.image.load(
                                     "assets/icons/cargo.png").convert_alpha()
 
-                                LANDS = [pygame.image.load("assets/maps/land1.png").convert_alpha(),
+                                LANDS = [pygame.image.load("assets/maps/map1.png").convert_alpha(),
                                          pygame.image.load(
-                                    "assets/maps/land2.png").convert_alpha(),
+                                    "assets/maps/map2.png").convert_alpha(),
                                     pygame.image.load(
-                                    "assets/maps/land3.png").convert_alpha(),
-                                    pygame.image.load("assets/maps/land4.png").convert_alpha()]
+                                    "assets/maps/map3.png").convert_alpha(),
+                                    pygame.image.load("assets/maps/map4.png").convert_alpha()]
 
                                 ICONS = [pygame.image.load("assets/icons/container.png").convert_alpha(),
                                          pygame.image.load(
