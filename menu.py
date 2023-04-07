@@ -221,7 +221,7 @@ class StartMenu(Screen):
             # Handle events
             if not pygame.mixer.music.get_busy():
                 # Loop the music indefinitely if it's not already playing
-                pygame.mixer.music.load("assets/audio/NOCTIS.mp3")
+                pygame.mixer.music.load("assets/audio/soundtrack menu.mp3")
                 pygame.mixer.music.set_volume(0.5)
                 pygame.mixer.music.play()
             for event in pygame.event.get():
@@ -259,9 +259,9 @@ class StartMenu(Screen):
                                 ubuntu70 = pygame.font.Font(
                                     "assets/fonts/Ubuntu-Regular.ttf", 70)
 
-                                MUSIC = ["assets/audio/Mini Metro - 01 Keep the City Moving.ogg",
-                                         "assets/audio/Mini Metro - 02 One Week.ogg",
-                                         "assets/audio/Mini Metro - 03 Back to Work.ogg"]
+                                MUSIC = ["assets/audio/soundtrack 1.mp3",
+                                         "assets/audio/soundtrack 2.mp3",
+                                         "assets/audio/soundtrack 3.mp3"]
                                 pygame.mixer.music.set_endevent(
                                     pygame.USEREVENT)
                                 
@@ -771,7 +771,7 @@ class StartMenu(Screen):
                                                             world.resources[option[0]
                                                                             ] = world.resources[option[0]]+1
                                                             if option[0] == Game.TRUCK:
-                                                                world.totalTrucks = world.totalTrucks+1
+                                                                world.totalTrucks = world.totalTrucks+2 # 2 trucks per resource
                                                 # else try to create a new line
                                                 else:
                                                     clickedIcon = -1
@@ -1010,7 +1010,7 @@ class StartMenu(Screen):
                                         resource = random.choice(options)
                                         world.resources[resource] = world.resources[resource]+1
                                         if resource == Game.TRUCK:
-                                            world.totalTrucks = world.totalTrucks+1
+                                            world.totalTrucks = world.totalTrucks+2 # 2 trucks per resource
                                         pickingResource = True
                                         if world.resources[Game.LINE]+len(world.lines) > 6 and Game.LINE in options:
                                             options.remove(Game.LINE)

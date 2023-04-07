@@ -254,7 +254,7 @@ class World(object):
         self.validStopDistanceY = int(self.validStopDistanceX
                                       * (float(self.height)/self.width))
         # give the player some starting equipment
-        self.resources = [1, 2, 3, 93]
+        self.resources = [1, 2, 3, 6]
         self.totalTrucks = self.resources[TRUCK]
         self.iconHitboxes = [None]*4
         self.cargosMoved = 0
