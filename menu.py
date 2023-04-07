@@ -309,11 +309,11 @@ class StartMenu(Screen):
 
                                 LANDS = [pygame.image.load("assets/maps/maps.png").convert_alpha(),
                                          pygame.image.load(
-                                    "assets/maps/maps.png").convert_alpha(),
+                                    "assets/maps/mapr.png").convert_alpha(),
                                     pygame.image.load(
-                                    "assets/maps/maps.png").convert_alpha(),
+                                    "assets/maps/mapbaru.png").convert_alpha(),
                                     pygame.image.load(
-                                        "assets/maps/maps.png").convert_alpha()
+                                        "assets/maps/mapbaru.png").convert_alpha()
                                     ]
 
                                 ICONS = [pygame.image.load("assets/icons/container.png").convert_alpha(),

@@ -9,9 +9,8 @@ from datetime import datetime, timedelta
 pygame.init()
 
 COLOURS = {"background": (16, 51, 158),
-           "land": (69, 104, 80),  # asli = (155, 118, 83)
-        #    "land": (110, 83, 61),
-           "spawn": (115, 86, 59),
+           "land": (63, 104, 81),  # asli = (155, 118, 83)
+           #    "land": (110, 83, 61),
            "blackInside": (45, 45, 45),
            "whiteOutline": (255, 255, 255),
            "lines": ((9, 254, 25),
@@ -41,22 +40,21 @@ TRUCK = 3
 STOP_REMOVAL_DISTANCE = 10  # distance mouse must be to a stop to remove it from a line
 STOP_ADDITION_DISTANCE = 5  # distance mouse must be to a stop to add it to a line
 ENDPOINT_SEGMENT_DISTANCE = 60  # distance mouse must be to grab an endpoint segment
-STOP_DISTANCE = 50 # minimum spacing between any two given stops
+STOP_DISTANCE = 50  # minimum spacing between any two given stops
 
 LOSE_DURATION = 45  # amount of time stop has to overcrowd to cause the game to be over
 
 RESOURCE_GAIN_DELAY = 90  # time between each resource gain event
 
-LAND_COLOURS = COLOURS.get("land")
 
 def _isValidSpawn(x, y, stops, mapSurface):
     # Returns True or False depending on whether or not the given
     # point (x, y) is a valid stop location on the given map
     land_color = COLOURS.get("land")
     current_color = tuple(mapSurface.get_at((x, y))[:3])
-    if (land_color[0]-10 <= current_color[0] <= land_color[0]+10 and
-            land_color[1]-10 <= current_color[1] <= land_color[1]+10 and
-            land_color[2]-10 <= current_color[2] <= land_color[2]+10):
+    if (land_color[0]-5 <= current_color[0] <= land_color[0]+5 and
+            land_color[1]-5 <= current_color[1] <= land_color[1]+5 and
+            land_color[2]-5 <= current_color[2] <= land_color[2]+5):
         for stop in stops:
             if stop.withinRadius(x, y, STOP_DISTANCE):
                 return False
@@ -92,9 +90,11 @@ class Weather(ABC):
         self.radius = radius
         self.speed_radius = speed_radius
         self.spawn_interval = spawn_interval
+
     @abstractmethod
     def spawn(self):
         pass
+
 
 class Windy(Weather):
     def __init__(self, worldSurface, radius, speed_radius, spawn_interval):
@@ -113,15 +113,15 @@ class Windy(Weather):
         time_since_last_draw = now - self.last_draw_time
         # spawn a new circle if enough time has passed
         if time_since_last_draw >= self.spawn_interval:
-            # spawn 60% in the middle 
+            # spawn 60% in the middle
             if random.random() <= 0.6:
                 self.x = targetSurface.get_width() // 2
                 self.y = targetSurface.get_height() // 2
             else:
                 self.x = random.randint(
-                self.radius, min(800, targetSurface.get_width()) - self.radius)
+                    self.radius, min(800, targetSurface.get_width()) - self.radius)
                 self.y = random.randint(
-                self.radius, min(600, targetSurface.get_height()) - self.radius)
+                    self.radius, min(600, targetSurface.get_height()) - self.radius)
         # spawn a new circle if enough time has passed
         if time_since_last_draw >= self.spawn_interval:
             self.last_draw_time = now
@@ -135,6 +135,7 @@ class Windy(Weather):
         self.__windy_x = circleView[0] - self.__windy.get_width() // 2
         self.__windy_y = circleView[1] - self.__windy.get_height() // 2
         targetSurface.blit(self.__windy, (self.__windy_x, self.__windy_y))
+
 
 class Rainy(Weather):
     def __init__(self, worldSurface, radius, speed_radius, spawn_interval):
@@ -169,7 +170,9 @@ class Rainy(Weather):
         self.__rainy_y = circleView[1] - self.__rainy.get_height() // 2
         targetSurface.blit(self.__rainy, (self.__rainy_x, self.__rainy_y))
 
-#spawn after 1 minutes
+# spawn after 1 minutes
+
+
 class Storm(Rainy, Windy):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -186,7 +189,7 @@ class Storm(Rainy, Windy):
         self.warning_time = None
         self.game_start_time = datetime.now()
 
-    #override spawn method from Rainy and Windy
+    # override spawn method from Rainy and Windy
     def spawn(self, targetSurface, offset):
         now = datetime.now()
         if not self.first_minute_passed:
@@ -233,6 +236,8 @@ class Storm(Rainy, Windy):
             text_rect = text.get_rect(
                 center=(targetSurface.get_width() // 2, 50))
             targetSurface.blit(text, text_rect)
+
+
 class World(object):
     def __init__(self, mapSurface, stopSize=30, cargoSize=10):
         self.stops = []
@@ -249,7 +254,7 @@ class World(object):
         self.validStopDistanceY = int(self.validStopDistanceX
                                       * (float(self.height)/self.width))
         # give the player some starting equipment
-        self.resources = [1, 2, 3, 3]
+        self.resources = [1, 2, 3, 93]
         self.totalTrucks = self.resources[TRUCK]
         self.iconHitboxes = [None]*4
         self.cargosMoved = 0
@@ -276,7 +281,6 @@ class World(object):
                              ** 2 + (boat._y - circle.y)**2)
             if dist <= circle.speed_radius:
                 boat._speed = self.boatSpeed / speed
-        
 
     def addRandomStop(self, shape, stopSurfaces):
         """ (int, list) -> bool, bool
@@ -289,33 +293,33 @@ class World(object):
         # makes shape in random valid location
         count = 0
         x = random.randint(self.width/2-self.validStopDistanceX+self.cargoSize*6,
-                        self.width/2+self.validStopDistanceX-self.cargoSize*6)
+                           self.width/2+self.validStopDistanceX-self.cargoSize*6)
         y = random.randint(self.height/2-self.validStopDistanceY+self.stopSize*3,
-                        self.height/2+self.validStopDistanceY-self.stopSize*3)
+                           self.height/2+self.validStopDistanceY-self.stopSize*3)
         print(f"Trying to spawn stop at ({x}, {y})")
         # try 15 times to generate a valid stop
-        while (_isValidSpawn(x, y, self.stops, self._map)) and count < 15:
+        while (not _isValidSpawn(x, y, self.stops, self._map)) and count < 15:
             x = random.randint(self.width/2-self.validStopDistanceX+self.cargoSize*6,
-                            self.width/2+self.validStopDistanceX-self.cargoSize*6)
+                               self.width/2+self.validStopDistanceX-self.cargoSize*6)
             y = random.randint(self.height/2-self.validStopDistanceY+self.stopSize*3,
-                            self.height/2+self.validStopDistanceY-self.stopSize*3)
+                               self.height/2+self.validStopDistanceY-self.stopSize*3)
             print(f"Trying to spawn stop at ({x}, {y})")
             count = count+1
         if count < 15:
             timer = Time.Time(Time.MODE_STOPWATCH,
-                            Time.FORMAT_TOTAL_SECONDS, 0)
+                              Time.FORMAT_TOTAL_SECONDS, 0)
             self.stops.append(Stop(x, y, shape, stopSurfaces, timer))
             return False, False
         self.validStopDistanceX = self.validStopDistanceX+50
         if self.validStopDistanceX >= self.width/2:
             self.validStopDistanceX = self.width/2
             self.validStopDistanceY = int(self.validStopDistanceX
-                                        * (float(self.height)/self.width))
+                                          * (float(self.height)/self.width))
             return False, True
         self.validStopDistanceY = int(self.validStopDistanceX
-                                    * (float(self.height)/self.width))
+                                      * (float(self.height)/self.width))
         return True, False
-    
+
     def switchRandomStop(self, shapeRange, existingStops, worldSurface):
         """ (int) -> int
             Picks a random stop (circle, triangle, or square) and
@@ -462,7 +466,6 @@ class Stop(object):
         self.timer.toggleActive()
         self.boats = []  # boats stopped at the stop
         self.lines = []  # lines that pass through this stop
-        
 
     def __eq__(self, other):
         # overrided definition of Stop == Stop
@@ -1404,7 +1407,7 @@ class Boat(object):
         for container in self.containers:
             container.canMove = state
         return True
-    
+
     @staticmethod
     def rotatePoint(point, angle):
         # rotate point around the origin
