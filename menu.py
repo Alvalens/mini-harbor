@@ -137,7 +137,7 @@ class HelpButton(Button):
 
 class PlayAgain(Button):
     def __init__(self, x, y):
-        super().__init__(x, y, 200, 50, "Main Lagi", 50, (255, 255, 255), (37, 150, 190))
+        super().__init__(x, y, 200, 50, "Main Menu", 50, (255, 255, 255), (37, 150, 190))
 
     # override is_clicked method from Button class
     def is_clicked(self, pos): # check if the button is clicked
@@ -246,10 +246,10 @@ class StartMenu(Screen):
                                 
                                 clock = pygame.time.Clock()
                                 # create objects weather
-                                Storm1 = Storm(worldSurface=worldSurface, radius =50, speed_radius = 60, spawn_interval = 25000)
+                                Storm1 = Storm(worldSurface=worldSurface, radius =55, speed_radius = 65, spawn_interval = 25000)
                                 windy2 = Windy(worldSurface, 60, 70, 30000)
-                                windy1 = Windy(worldSurface, 60, 70, 35000)
-                                rainy1  = Rainy(worldSurface, 55, 65, 20000)
+                                windy1 = Windy(worldSurface, 70, 80, 35000)
+                                rainy1  = Rainy(worldSurface, 75, 85, 20000)
                                 # sunny = Sunny(display)
                                 # load resources
                                 ubuntuLight30 = pygame.font.Font(
@@ -599,7 +599,7 @@ class StartMenu(Screen):
                                         display.blit(
                                             background, (self.wWidth-background.get_width(), 0))
 
-                                        display.blit(ubuntuLight30.render("Received one:",
+                                        display.blit(ubuntuLight30.render("Mendapat:",
                                                                           1,
                                                                           Game.COLOURS.get("whiteOutline")),
                                                      (self.wWidth-size[0]-scaledIcons[resource].get_width(),
@@ -944,10 +944,10 @@ class StartMenu(Screen):
                                                 pygame.mixer.music.stop()
                                                 self.run()
                                     # change boats speed based on weather
-                                    world.boat_slow_storm(Storm1, 10)
-                                    world.boat_speed_windy(windy2, 2)
-                                    world.boat_speed_windy(windy1, 2)
-                                    world.boat_slow_rain(rainy1, 5)
+                                    world.boat_slow_storm(Storm1, 6)
+                                    world.boat_speed_windy(windy2, 3)
+                                    world.boat_speed_windy(windy1, 3)
+                                    world.boat_slow_rain(rainy1, 3)
                                     
                                     newStopTimer.tick()
                                     # if the timer to create a new stop has ended
