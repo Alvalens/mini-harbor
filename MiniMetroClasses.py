@@ -11,6 +11,7 @@ pygame.init()
 COLOURS = {"background": (16, 51, 158),
            "land": (69, 104, 80),  # asli = (155, 118, 83)
         #    "land": (110, 83, 61),
+           "spawn": (115, 86, 59),
            "blackInside": (45, 45, 45),
            "whiteOutline": (255, 255, 255),
            "lines": ((9, 254, 25),
@@ -46,6 +47,7 @@ LOSE_DURATION = 45  # amount of time stop has to overcrowd to cause the game to 
 
 RESOURCE_GAIN_DELAY = 90  # time between each resource gain event
 
+LAND_COLOURS = COLOURS.get("land")
 
 def _isValidSpawn(x, y, stops, mapSurface):
     # Returns True or False depending on whether or not the given
@@ -60,7 +62,6 @@ def _isValidSpawn(x, y, stops, mapSurface):
                 return False
         return True
     return False
-
 
 
 def findDistance(point1, point2):
@@ -293,7 +294,7 @@ class World(object):
                         self.height/2+self.validStopDistanceY-self.stopSize*3)
         print(f"Trying to spawn stop at ({x}, {y})")
         # try 15 times to generate a valid stop
-        while (not _isValidSpawn(x, y, self.stops, self._map)) and count < 15:
+        while (_isValidSpawn(x, y, self.stops, self._map)) and count < 15:
             x = random.randint(self.width/2-self.validStopDistanceX+self.cargoSize*6,
                             self.width/2+self.validStopDistanceX-self.cargoSize*6)
             y = random.randint(self.height/2-self.validStopDistanceY+self.stopSize*3,
