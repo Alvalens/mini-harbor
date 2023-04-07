@@ -2,14 +2,12 @@ from abc import ABC, abstractmethod
 import random
 import copy
 import sys
-from numpy import ones_like
 import pygame
 import pygame.gfxdraw
-import MiniMetroClasses as Game
+import mainClasses as Game
 import TimeClass as Time
-from MiniMetroClasses import Storm, Windy, Rainy
+from mainClasses import Storm, Windy, Rainy
 import sys
-gui_font = pygame.font.SysFont('Arial', 24)
 
 #initialize pygame
 pygame.init()
@@ -82,8 +80,6 @@ class Help(Screen):
                     scroll_offset = min(max_scroll_offset, scroll_offset - 30)
 
 # button class
-
-
 class Button():
     def __init__(self, x, y, w, h, text, font_size, font_color, rect_color, border_radius=15):
         self.rect = pygame.Rect(x, y, w, h)
@@ -118,7 +114,6 @@ class Button():
 
     def on_click(self):
         self.click_sound.play()  # Play the click sound when the button is clicked
-        
 
 class StartButton(Button):
     def __init__(self, x, y):
