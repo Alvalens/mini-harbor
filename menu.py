@@ -9,6 +9,7 @@ import MiniMetroClasses as Game
 import TimeClass as Time
 from MiniMetroClasses import Storm, Windy, Rainy
 import sys
+gui_font = pygame.font.SysFont('Arial', 24)
 
 #initialize pygame
 pygame.init()
@@ -81,23 +82,40 @@ class Help(Screen):
                     scroll_offset = min(max_scroll_offset, scroll_offset - 30)
 
 # button class
+
+
 class Button():
-    def __init__(self, x, y, w, h, text, font_size, font_color, rect_color):
+    def __init__(self, x, y, w, h, text, font_size, font_color, rect_color, border_radius=15):
         self.rect = pygame.Rect(x, y, w, h)
         self.text = text
         self.font = pygame.font.SysFont(None, font_size)
         self.font_color = font_color
         self.rect_color = rect_color
-        self.click_sound = pygame.mixer.Sound("assets/audio/btn.mp3")  # Load the click sound
+        self.border_radius = border_radius
+        self.click_sound = pygame.mixer.Sound(
+            "assets/audio/btn.mp3")  # Load the click sound
+
+        # Shadow attributes
+        self.shadow_offset = 5
+        self.shadow_rect = pygame.Rect(
+            x + self.shadow_offset, y + self.shadow_offset, w, h)
+        self.shadow_color = pygame.Color(20, 20, 20, 50)
 
     def draw(self, surface):
-        pygame.draw.rect(surface, self.rect_color, self.rect)
+        # Draw shadow
+        pygame.draw.rect(surface, self.shadow_color,
+                         self.shadow_rect, border_radius=self.border_radius)
+
+        # Draw button
+        pygame.draw.rect(surface, self.rect_color, self.rect,
+                         border_radius=self.border_radius)
         text_surface = self.font.render(self.text, True, self.font_color)
         text_rect = text_surface.get_rect(center=self.rect.center)
         surface.blit(text_surface, text_rect)
 
     def is_clicked(self, pos):
         return self.rect.collidepoint(pos)
+
     def on_click(self):
         self.click_sound.play()  # Play the click sound when the button is clicked
         
@@ -289,12 +307,14 @@ class StartMenu(Screen):
                                 CARGO_ICON = pygame.image.load(
                                     "assets/icons/cargo.png").convert_alpha()
 
-                                LANDS = [pygame.image.load("assets/maps/map1.png").convert_alpha(),
+                                LANDS = [pygame.image.load("assets/maps/maps.png").convert_alpha(),
                                          pygame.image.load(
-                                    "assets/maps/map2.png").convert_alpha(),
+                                    "assets/maps/maps.png").convert_alpha(),
                                     pygame.image.load(
-                                    "assets/maps/map3.png").convert_alpha(),
-                                    pygame.image.load("assets/maps/map4.png").convert_alpha()]
+                                    "assets/maps/maps.png").convert_alpha(),
+                                    pygame.image.load(
+                                        "assets/maps/maps.png").convert_alpha()
+                                    ]
 
                                 ICONS = [pygame.image.load("assets/icons/container.png").convert_alpha(),
                                          pygame.image.load(
@@ -455,6 +475,7 @@ class StartMenu(Screen):
                                         # display.blit(background, (0, 0))
                                         
                                     else:
+                                        None
                                         display.fill(
                                         Game.COLOURS.get("background"))
                                         # background = pygame.image.load("assets/sea.png")
@@ -692,6 +713,7 @@ class StartMenu(Screen):
                                             if event.key == pygame.K_SPACE and window != "end":
                                                 paused = togglePaused(
                                                     paused, timers, world)
+                                                window = 'game'
                                         elif event.type == pygame.MOUSEBUTTONDOWN:
                                             if event.button == 1:
                                                 movingLine = world.getClickedLine(
@@ -912,7 +934,8 @@ class StartMenu(Screen):
                                         elif event.type == pygame.USEREVENT:  # music is done
                                             pygame.mixer.music.load(MUSIC[random.randint(0, 2)])
                                             pygame.mixer.music.play()
-                                    if paused and window != "end" and window != "res":
+                                    #  add main menu btn to pause screen
+                                    if paused and window == 'game':
                                         back = PlayAgain(self.screen_width // 2 - 100, self.screen_height // 2 - 200,)
                                         back.draw(display)
                                         pos = pygame.mouse.get_pos()
@@ -922,12 +945,10 @@ class StartMenu(Screen):
                                                 self.run()
                                     # change boats speed based on weather
                                     world.boat_slow_storm(Storm1, 10)
-                                    world.boat_speed_windy(windy2, 5)
-                                    world.boat_speed_windy(windy1, 5)
+                                    world.boat_speed_windy(windy2, 2)
+                                    world.boat_speed_windy(windy1, 2)
                                     world.boat_slow_rain(rainy1, 5)
                                     
-                                    # world.update_boat_speedup(sunny)
-                                    # sunny.spawn()
                                     newStopTimer.tick()
                                     # if the timer to create a new stop has ended
                                     if newStopTimer.checkTimer(not doneScaling, getNewStopTime(world.cargosMoved)):
@@ -978,10 +999,11 @@ class StartMenu(Screen):
                                     # give the player a random resource and let them choose
                                     # another one between two valid options
                                     if gainResourcesTimer.checkTimer(True) and not pickingResource:
+                                        window = 'res'
                                         if not paused:
                                             paused = togglePaused(
                                                 paused, timers, world)
-                                            window = 'res'
+                                            
                                         options = [0, 1, 2, 3]
                                         if world.resources[Game.LINE]+len(world.lines) > 6:
                                             options.remove(Game.LINE)
@@ -1013,7 +1035,7 @@ class StartMenu(Screen):
                                             scaledIcons[options[1]].get_width(
                                                       ),
                                             scaledIcons[options[1]].get_height())]
-
+                                        window = ''
                                     newCargoTimer.tick()
                                     newCargoProbability = min(interpolateLinear(
                                         world.cargosMoved, 1200, 30, 50), 50)
