@@ -62,7 +62,6 @@ def _isValidSpawn(x, y, stops, mapSurface):
     return False
 
 
-
 def findDistance(point1, point2):
     """ ((num, num), (num, num)) -> float
         Returns the shortest distance between the two points
