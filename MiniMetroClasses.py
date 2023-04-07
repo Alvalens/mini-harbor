@@ -47,13 +47,13 @@ LOSE_DURATION = 45  # amount of time stop has to overcrowd to cause the game to 
 
 RESOURCE_GAIN_DELAY = 90  # time between each resource gain event
 
-WATER_COLOURS = COLOURS.get("land")
+LAND_COLOURS = COLOURS.get("land")
 
 def _isValidSpawn(x, y, stops, mapSurface):
     # Returns True or False depending on whether or not the given
     # point (x, y) is a valid stop location on the given map
     pixel_color = tuple(mapSurface.get_at((x, y))[:3])
-    if pixel_color not in WATER_COLOURS:
+    if pixel_color in LAND_COLOURS:
         for stop in stops:
             if stop.withinRadius(x, y, STOP_DISTANCE):
                 return False
@@ -288,7 +288,7 @@ class World(object):
         y = random.randint(self.height/2-self.validStopDistanceY+self.stopSize*3,
                            self.height/2+self.validStopDistanceY-self.stopSize*3)
         # try 15 times to generate a valid stop
-        while (not _isValidSpawn(x, y, self.stops, self._map)) and count < 15:
+        while (_isValidSpawn(x, y, self.stops, self._map)) and count < 15:
             x = random.randint(self.width/2-self.validStopDistanceX+self.cargoSize*6,
                                self.width/2+self.validStopDistanceX-self.cargoSize*6)
             y = random.randint(self.height/2-self.validStopDistanceY+self.stopSize*3,
