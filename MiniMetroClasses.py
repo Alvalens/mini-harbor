@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 pygame.init()
 
 COLOURS = {"background": (16, 51, 158),
-           "land": (155, 118, 83),  # asli = (155, 118, 83)
+           "land": (69, 104, 80),  # asli = (155, 118, 83)
         #    "land": (110, 83, 61),
            "blackInside": (45, 45, 45),
            "whiteOutline": (255, 255, 255),
@@ -40,7 +40,7 @@ TRUCK = 3
 STOP_REMOVAL_DISTANCE = 10  # distance mouse must be to a stop to remove it from a line
 STOP_ADDITION_DISTANCE = 5  # distance mouse must be to a stop to add it to a line
 ENDPOINT_SEGMENT_DISTANCE = 60  # distance mouse must be to grab an endpoint segment
-STOP_DISTANCE = 100  # minimum spacing between any two given stops
+STOP_DISTANCE = 50 # minimum spacing between any two given stops
 
 LOSE_DURATION = 45  # amount of time stop has to overcrowd to cause the game to be over
 
@@ -50,12 +50,17 @@ RESOURCE_GAIN_DELAY = 90  # time between each resource gain event
 def _isValidSpawn(x, y, stops, mapSurface):
     # Returns True or False depending on whether or not the given
     # point (x, y) is a valid stop location on the given map
-    if tuple(mapSurface.get_at((x, y))[:3]) == COLOURS.get("land"):
-        return False
-    for stop in stops:
-        if stop.withinRadius(x, y, STOP_DISTANCE):
-            return False
-    return True
+    land_color = COLOURS.get("land")
+    current_color = tuple(mapSurface.get_at((x, y))[:3])
+    if (land_color[0]-10 <= current_color[0] <= land_color[0]+10 and
+            land_color[1]-10 <= current_color[1] <= land_color[1]+10 and
+            land_color[2]-10 <= current_color[2] <= land_color[2]+10):
+        for stop in stops:
+            if stop.withinRadius(x, y, STOP_DISTANCE):
+                return False
+        return True
+    return False
+
 
 
 def findDistance(point1, point2):
@@ -93,7 +98,7 @@ class Weather(ABC):
 class Windy(Weather):
     def __init__(self, worldSurface, radius, speed_radius, spawn_interval):
         super().__init__(worldSurface, radius, speed_radius, spawn_interval)
-        self.color = (255, 255, 255)
+        self.color = (148, 149, 153)
         self.x = 0
         self.y = 0
         self.last_draw_time = 0
@@ -271,6 +276,7 @@ class World(object):
             if dist <= circle.speed_radius:
                 boat._speed = self.boatSpeed / speed
         
+
     def addRandomStop(self, shape, stopSurfaces):
         """ (int, list) -> bool, bool
             Creates a stop of the given shape at a random but valid
@@ -282,31 +288,33 @@ class World(object):
         # makes shape in random valid location
         count = 0
         x = random.randint(self.width/2-self.validStopDistanceX+self.cargoSize*6,
-                           self.width/2+self.validStopDistanceX-self.cargoSize*6)
+                        self.width/2+self.validStopDistanceX-self.cargoSize*6)
         y = random.randint(self.height/2-self.validStopDistanceY+self.stopSize*3,
-                           self.height/2+self.validStopDistanceY-self.stopSize*3)
+                        self.height/2+self.validStopDistanceY-self.stopSize*3)
+        print(f"Trying to spawn stop at ({x}, {y})")
         # try 15 times to generate a valid stop
         while (not _isValidSpawn(x, y, self.stops, self._map)) and count < 15:
             x = random.randint(self.width/2-self.validStopDistanceX+self.cargoSize*6,
-                               self.width/2+self.validStopDistanceX-self.cargoSize*6)
+                            self.width/2+self.validStopDistanceX-self.cargoSize*6)
             y = random.randint(self.height/2-self.validStopDistanceY+self.stopSize*3,
-                               self.height/2+self.validStopDistanceY-self.stopSize*3)
+                            self.height/2+self.validStopDistanceY-self.stopSize*3)
+            print(f"Trying to spawn stop at ({x}, {y})")
             count = count+1
         if count < 15:
             timer = Time.Time(Time.MODE_STOPWATCH,
-                              Time.FORMAT_TOTAL_SECONDS, 0)
+                            Time.FORMAT_TOTAL_SECONDS, 0)
             self.stops.append(Stop(x, y, shape, stopSurfaces, timer))
             return False, False
         self.validStopDistanceX = self.validStopDistanceX+50
         if self.validStopDistanceX >= self.width/2:
             self.validStopDistanceX = self.width/2
             self.validStopDistanceY = int(self.validStopDistanceX
-                                          * (float(self.height)/self.width))
+                                        * (float(self.height)/self.width))
             return False, True
         self.validStopDistanceY = int(self.validStopDistanceX
-                                      * (float(self.height)/self.width))
+                                    * (float(self.height)/self.width))
         return True, False
-
+    
     def switchRandomStop(self, shapeRange, existingStops, worldSurface):
         """ (int) -> int
             Picks a random stop (circle, triangle, or square) and
