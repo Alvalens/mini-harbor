@@ -76,7 +76,7 @@ class Help(Screen):
                     sys.exit()
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                     return
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
+                elif event.type == pygame.KEYUP and event.key == pygame.K_UP:
                     scroll_offset = max(0, scroll_offset + 30)
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
                     scroll_offset = min(max_scroll_offset, scroll_offset - 30)
@@ -118,7 +118,7 @@ class Button():
 
     def on_click(self):
         self.click_sound.play()  # Play the click sound when the button is clicked
-
+        
 
 class StartButton(Button):
     def __init__(self, x, y):
@@ -137,7 +137,7 @@ class HelpButton(Button):
 
 class PlayAgain(Button):
     def __init__(self, x, y):
-        super().__init__(x, y, 200, 50, "Main Menu", 50, (255, 255, 255), (37, 150, 190))
+        super().__init__(x, y, 200, 50, "Main Lagi", 50, (255, 255, 255), (37, 150, 190))
 
     # override is_clicked method from Button class
     def is_clicked(self, pos): # check if the button is clicked
@@ -321,7 +321,8 @@ class StartMenu(Screen):
                                     "assets/icons/line.png").convert_alpha(),
                                     pygame.image.load(
                                     "assets/icons/boat.png").convert_alpha(),
-                                    pygame.image.load("assets/icons/truck.png").convert_alpha()]
+                                    pygame.image.load(
+                                    "assets/icons/truck.png").convert_alpha()]
 
                                 # pick and place a map
                                 land = random.randint(0, 3)
@@ -350,19 +351,31 @@ class StartMenu(Screen):
 
                                 # point list for drawing boats and containers
                                 rectPoints = [[[-world.cargoSize*1.5, world.cargoSize],
-                                               [world.cargoSize*1.5,
-                                                world.cargoSize],
-                                               [world.cargoSize*1.5, -
-                                                world.cargoSize],
+                                               [world.cargoSize*1.5, world.cargoSize],
+                                               [world.cargoSize*1.5, - world.cargoSize],
                                                [-world.cargoSize*1.5, -world.cargoSize]],
+                                
                                               [[-world.cargoSize, world.cargoSize/2],
                                                [0, world.cargoSize/2],
-                                               [world.cargoSize,
-                                                  world.cargoSize/2],
-                                               [world.cargoSize, -
-                                                  world.cargoSize/2],
+                                               [world.cargoSize, world.cargoSize/2],
+                                               [world.cargoSize, - world.cargoSize/2],
                                                [0, -world.cargoSize/2],
                                                [-world.cargoSize, -world.cargoSize/2]]]
+                                
+                                # rectPoints = [[[world.cargoSize/2, world.cargoSize],
+                                #                 [world.cargoSize*1.5, 0],
+                                #                 [world.cargoSize/2, -world.cargoSize],
+                                #                 [-world.cargoSize*1.5, -world.cargoSize],
+                                #                 [-world.cargoSize*1.5, world.cargoSize],
+                                #                 [world.cargoSize/2, world.cargoSize]],
+                                                
+                                #                 # box
+                                #                 [[-world.cargoSize, world.cargoSize/2],
+                                #                 [0, world.cargoSize/2],
+                                #                 [world.cargoSize, world.cargoSize/2],
+                                #                 [world.cargoSize, - world.cargoSize/2],
+                                #                 [0, -world.cargoSize/2],
+                                #                 [-world.cargoSize, -world.cargoSize/2]]]
 
                                 def calculateCameraOffset(wWidth, wHeight, world):
                                     # calculate the scale and translation operations to move from
@@ -696,7 +709,7 @@ class StartMenu(Screen):
                                             running = False
                                             sys.exit()
                                         elif event.type == pygame.KEYDOWN:
-                                            # press space to pause the game
+                                            # press space to pause the 
                                             if event.key == pygame.K_SPACE and window != "end":
                                                 paused = togglePaused(
                                                     paused, timers, world)
