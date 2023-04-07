@@ -99,7 +99,7 @@ class Weather(ABC):
 class Windy(Weather):
     def __init__(self, worldSurface, radius, speed_radius, spawn_interval):
         super().__init__(worldSurface, radius, speed_radius, spawn_interval)
-        self.color = (148, 149, 153)
+        self.color = (255, 255, 255, 10)
         self.x = 0
         self.y = 0
         self.last_draw_time = 0
@@ -254,7 +254,7 @@ class World(object):
         self.validStopDistanceY = int(self.validStopDistanceX
                                       * (float(self.height)/self.width))
         # give the player some starting equipment
-        self.resources = [1, 2, 3, 6]
+        self.resources = [1, 2, 3, 10]
         self.totalTrucks = self.resources[TRUCK]
         self.iconHitboxes = [None]*4
         self.cargosMoved = 0
@@ -296,14 +296,12 @@ class World(object):
                            self.width/2+self.validStopDistanceX-self.cargoSize*6)
         y = random.randint(self.height/2-self.validStopDistanceY+self.stopSize*3,
                            self.height/2+self.validStopDistanceY-self.stopSize*3)
-        print(f"Trying to spawn stop at ({x}, {y})")
         # try 15 times to generate a valid stop
         while (not _isValidSpawn(x, y, self.stops, self._map)) and count < 15:
             x = random.randint(self.width/2-self.validStopDistanceX+self.cargoSize*6,
                                self.width/2+self.validStopDistanceX-self.cargoSize*6)
             y = random.randint(self.height/2-self.validStopDistanceY+self.stopSize*3,
                                self.height/2+self.validStopDistanceY-self.stopSize*3)
-            print(f"Trying to spawn stop at ({x}, {y})")
             count = count+1
         if count < 15:
             timer = Time.Time(Time.MODE_STOPWATCH,

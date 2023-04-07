@@ -588,7 +588,7 @@ class StartMenu(Screen):
 
                                     if pickingResource:
                                         size = ubuntuLight30.size(
-                                            "Received one:  ")
+                                            "Mendapat:  ") 
                                         width = ubuntuLight30.size(
                                             "Pilih resource: ")[0]
 
@@ -771,7 +771,7 @@ class StartMenu(Screen):
                                                             world.resources[option[0]
                                                                             ] = world.resources[option[0]]+1
                                                             if option[0] == Game.TRUCK:
-                                                                world.totalTrucks = world.totalTrucks+2 # 2 trucks per resource
+                                                                world.totalTrucks = world.totalTrucks+3 # 2 trucks per resource
                                                 # else try to create a new line
                                                 else:
                                                     clickedIcon = -1
@@ -1010,7 +1010,7 @@ class StartMenu(Screen):
                                         resource = random.choice(options)
                                         world.resources[resource] = world.resources[resource]+1
                                         if resource == Game.TRUCK:
-                                            world.totalTrucks = world.totalTrucks+2 # 2 trucks per resource
+                                            world.totalTrucks = world.totalTrucks+3 # 2 trucks per resource
                                         pickingResource = True
                                         if world.resources[Game.LINE]+len(world.lines) > 6 and Game.LINE in options:
                                             options.remove(Game.LINE)
