@@ -241,7 +241,7 @@ class StartMenu(Screen):
                                 
                                 clock = pygame.time.Clock()
                                 # create objects weather
-                                Storm1 = Storm(worldSurface=worldSurface, radius =55, speed_radius = 65, spawn_interval = 25000, first_minutes=1)
+                                Storm1 = Storm(worldSurface=worldSurface, radius =60, speed_radius = 70, spawn_interval = 30000, first_minutes=1)
                                 Storm2 = Storm(worldSurface=worldSurface, radius =70, speed_radius = 80, spawn_interval = 35000, first_minutes=5)
                                 windy2 = Windy(worldSurface, 60, 70, 30000)
                                 windy1 = Windy(worldSurface, 70, 80, 35000)
@@ -940,11 +940,10 @@ class StartMenu(Screen):
                                                 pygame.mixer.music.stop()
                                                 self.run()
                                     # change boats speed based on weather
-                                    world.boat_slow_storm(Storm1)
-                                    world.boat_slow_storm(Storm2)
-                                    world.boat_speed_windy(windy1)
-                                    world.boat_speed_windy(windy2)
+                                    world.boat_slow_storms(([Storm1, Storm2]))
+                                    world.boat_speed_windys(([windy1, windy2]))
                                     world.boat_slow_rain(rainy1)
+                                    
                                     
                                     newStopTimer.tick()
                                     # if the timer to create a new stop has ended

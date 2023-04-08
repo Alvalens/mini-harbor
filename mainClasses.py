@@ -44,7 +44,7 @@ STOP_DISTANCE = 50  # minimum spacing between any two given stops
 
 LOSE_DURATION = 45  # amount of time stop has to overcrowd to cause the game to be over
 
-RESOURCE_GAIN_DELAY = 80  # time between each resource gain event
+RESOURCE_GAIN_DELAY = 90  # time between each resource gain event
 
 
 def _isValidSpawn(x, y, stops, mapSurface):
@@ -174,7 +174,7 @@ class Rainy(Weather):
 
 
 class Storm(Rainy, Windy):
-    def __init__(self, first_minutes=1, **kwargs):
+    def __init__(self, first_minutes, **kwargs):
         super().__init__(**kwargs)
         self.color = (148, 149, 153)
         self.x = 0
@@ -211,9 +211,9 @@ class Storm(Rainy, Windy):
                 self.y = targetSurface.get_height() // 2
             else:
                 self.x = random.randint(
-                    self.radius, targetSurface.get_width() - self.radius)
+                    self.radius, min(800, targetSurface.get_width()) - self.radius)
                 self.y = random.randint(
-                    self.radius, targetSurface.get_height() - self.radius)
+                    self.radius, min(600, targetSurface.get_height()) - self.radius)
 
             self.last_draw_time = now
 
@@ -233,7 +233,7 @@ class Storm(Rainy, Windy):
         if self.warning_time is not None and now <= self.warning_time:
             font = pygame.font.SysFont(None, 40)
             text = font.render(
-                "Warning: Bad weather ahead!", True, (255, 0, 0))
+                "Warning: Badai Mendakat!", True, (255, 0, 0))
             text_rect = text.get_rect(
                 center=(targetSurface.get_width() // 2, 50))
             targetSurface.blit(text, text_rect)
@@ -261,27 +261,29 @@ class World(object):
         self.iconHitboxes = [None]*4
         self.cargosMoved = 0
 
-    def boat_slow_storm(self, circle):
-        for boat in self.boats:
-            dist = math.sqrt((boat._x - circle.x)**2 + (boat._y - circle.y)**2)
-            if dist <= circle.speed_radius:
-                boat._speed = self.boatSpeed / 6  # reduce the speed 
-            else:
-                boat._speed = self.boatSpeed  # restore the original speed
-            # update the boat's speed
 
-    def boat_speed_windy(self, circle):
+    def boat_slow_storms(self, storms):
         for boat in self.boats:
-            dist = math.sqrt((boat._x - circle.x)
-                             ** 2 + (boat._y - circle.y)**2)
-            if dist <= circle.speed_radius:
-                boat._speed = self.boatSpeed * 3
+            speed_reduction = self.boatSpeed
+            for storm in storms:
+                dist = math.sqrt((boat._x - storm.x)**2 + (boat._y - storm.y)**2)
+                if dist <= storm.speed_radius:
+                    speed_reduction = min(speed_reduction, self.boatSpeed / 6)
+            boat._speed = speed_reduction  # update the boat's speed
+
+    def boat_speed_windys(self, windys):
+        for boat in self.boats:
+            for windy in windys:
+                dist = math.sqrt((boat._x - windy.x) ** 2 +
+                                (boat._y - windy.y) ** 2)
+                if dist <= windy.speed_radius and boat._speed < self.boatSpeed * 3:
+                    boat._speed = self.boatSpeed * 3
 
     def boat_slow_rain(self, circle):
         for boat in self.boats:
             dist = math.sqrt((boat._x - circle.x)
                              ** 2 + (boat._y - circle.y)**2)
-            if dist <= circle.speed_radius:
+            if dist <= circle.speed_radius and boat._speed > self.boatSpeed / 3:
                 boat._speed = self.boatSpeed / 3
 
     def addRandomStop(self, shape, stopSurfaces):
