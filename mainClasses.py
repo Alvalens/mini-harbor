@@ -99,7 +99,7 @@ class Weather(ABC):
 class Windy(Weather):
     def __init__(self, worldSurface, radius, speed_radius, spawn_interval):
         super().__init__(worldSurface, radius, speed_radius, spawn_interval)
-        self.color = (148, 149, 153)
+        self.color = (255, 255, 255, 10)
         self.x = 0
         self.y = 0
         self.last_draw_time = 0
@@ -174,7 +174,7 @@ class Rainy(Weather):
 
 
 class Storm(Rainy, Windy):
-    def __init__(self, **kwargs):
+    def __init__(self, first_minutes, **kwargs):
         super().__init__(**kwargs)
         self.color = (148, 149, 153)
         self.x = 0
@@ -184,6 +184,7 @@ class Storm(Rainy, Windy):
         self.__strom = pygame.transform.scale(self.__strom, (100, 100))
         self.__strom_x = 0
         self.__strom_y = 0
+        self.first_minutes = first_minutes
         self.first_minute_passed = False
         self.warning_displayed = False
         self.warning_time = None
@@ -193,8 +194,8 @@ class Storm(Rainy, Windy):
     def spawn(self, targetSurface, offset):
         now = datetime.now()
         if not self.first_minute_passed:
-            # spawn after first minute has passed
-            if now - self.game_start_time >= timedelta(seconds=60):
+            # spawn after first minutes have passed
+            if now - self.game_start_time >= timedelta(minutes=self.first_minutes):
                 self.first_minute_passed = True
                 self.warning_displayed = False
                 self.warning_time = None
@@ -210,9 +211,9 @@ class Storm(Rainy, Windy):
                 self.y = targetSurface.get_height() // 2
             else:
                 self.x = random.randint(
-                    self.radius, targetSurface.get_width() - self.radius)
+                    self.radius, min(800, targetSurface.get_width()) - self.radius)
                 self.y = random.randint(
-                    self.radius, targetSurface.get_height() - self.radius)
+                    self.radius, min(600, targetSurface.get_height()) - self.radius)
 
             self.last_draw_time = now
 
@@ -225,17 +226,18 @@ class Storm(Rainy, Windy):
         targetSurface.blit(self.__strom, (self.__strom_x, self.__strom_y))
 
         # display warning message for 5 seconds
-        if not self.warning_displayed and now - self.game_start_time >= timedelta(seconds=60):
+        if not self.warning_displayed and now - self.game_start_time >= timedelta(minutes=self.first_minutes):
             self.warning_displayed = True
             self.warning_time = now + timedelta(seconds=5)
 
         if self.warning_time is not None and now <= self.warning_time:
             font = pygame.font.SysFont(None, 40)
             text = font.render(
-                "Warning: Bad weather ahead!", True, (255, 0, 0))
+                "Warning: Badai Mendakat!", True, (255, 0, 0))
             text_rect = text.get_rect(
                 center=(targetSurface.get_width() // 2, 50))
             targetSurface.blit(text, text_rect)
+
 
 
 class World(object):
@@ -254,33 +256,35 @@ class World(object):
         self.validStopDistanceY = int(self.validStopDistanceX
                                       * (float(self.height)/self.width))
         # give the player some starting equipment
-        self.resources = [1, 2, 3, 93]
+        self.resources = [1, 2, 3, 10]
         self.totalTrucks = self.resources[TRUCK]
         self.iconHitboxes = [None]*4
         self.cargosMoved = 0
 
-    def boat_slow_storm(self, circle, speed):
-        for boat in self.boats:
-            dist = math.sqrt((boat._x - circle.x)**2 + (boat._y - circle.y)**2)
-            if dist <= circle.speed_radius:
-                boat._speed = self.boatSpeed / speed  # reduce the speed by half
-            else:
-                boat._speed = self.boatSpeed  # restore the original speed
-            # update the boat's speed
 
-    def boat_speed_windy(self, circle, speed):
+    def boat_slow_storms(self, storms):
+        for boat in self.boats:
+            speed_reduction = self.boatSpeed
+            for storm in storms:
+                dist = math.sqrt((boat._x - storm.x)**2 + (boat._y - storm.y)**2)
+                if dist <= storm.speed_radius:
+                    speed_reduction = min(speed_reduction, self.boatSpeed / 6)
+            boat._speed = speed_reduction  # update the boat's speed
+
+    def boat_speed_windys(self, windys):
+        for boat in self.boats:
+            for windy in windys:
+                dist = math.sqrt((boat._x - windy.x) ** 2 +
+                                (boat._y - windy.y) ** 2)
+                if dist <= windy.speed_radius and boat._speed < self.boatSpeed * 3:
+                    boat._speed = self.boatSpeed * 3
+
+    def boat_slow_rain(self, circle):
         for boat in self.boats:
             dist = math.sqrt((boat._x - circle.x)
                              ** 2 + (boat._y - circle.y)**2)
-            if dist <= circle.speed_radius:
-                boat._speed = self.boatSpeed * speed
-
-    def boat_slow_rain(self, circle, speed):
-        for boat in self.boats:
-            dist = math.sqrt((boat._x - circle.x)
-                             ** 2 + (boat._y - circle.y)**2)
-            if dist <= circle.speed_radius:
-                boat._speed = self.boatSpeed / speed
+            if dist <= circle.speed_radius and boat._speed > self.boatSpeed / 3:
+                boat._speed = self.boatSpeed / 3
 
     def addRandomStop(self, shape, stopSurfaces):
         """ (int, list) -> bool, bool
@@ -296,14 +300,12 @@ class World(object):
                            self.width/2+self.validStopDistanceX-self.cargoSize*6)
         y = random.randint(self.height/2-self.validStopDistanceY+self.stopSize*3,
                            self.height/2+self.validStopDistanceY-self.stopSize*3)
-        print(f"Trying to spawn stop at ({x}, {y})")
         # try 15 times to generate a valid stop
         while (not _isValidSpawn(x, y, self.stops, self._map)) and count < 15:
             x = random.randint(self.width/2-self.validStopDistanceX+self.cargoSize*6,
                                self.width/2+self.validStopDistanceX-self.cargoSize*6)
             y = random.randint(self.height/2-self.validStopDistanceY+self.stopSize*3,
                                self.height/2+self.validStopDistanceY-self.stopSize*3)
-            print(f"Trying to spawn stop at ({x}, {y})")
             count = count+1
         if count < 15:
             timer = Time.Time(Time.MODE_STOPWATCH,

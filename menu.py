@@ -2,14 +2,12 @@ from abc import ABC, abstractmethod
 import random
 import copy
 import sys
-from numpy import ones_like
 import pygame
 import pygame.gfxdraw
-import MiniMetroClasses as Game
+import mainClasses as Game
 import TimeClass as Time
-from MiniMetroClasses import Storm, Windy, Rainy
+from mainClasses import Storm, Windy, Rainy
 import sys
-gui_font = pygame.font.SysFont('Arial', 24)
 
 #initialize pygame
 pygame.init()
@@ -82,8 +80,6 @@ class Help(Screen):
                     scroll_offset = min(max_scroll_offset, scroll_offset - 30)
 
 # button class
-
-
 class Button():
     def __init__(self, x, y, w, h, text, font_size, font_color, rect_color, border_radius=15):
         self.rect = pygame.Rect(x, y, w, h)
@@ -118,7 +114,6 @@ class Button():
 
     def on_click(self):
         self.click_sound.play()  # Play the click sound when the button is clicked
-        
 
 class StartButton(Button):
     def __init__(self, x, y):
@@ -137,7 +132,7 @@ class HelpButton(Button):
 
 class PlayAgain(Button):
     def __init__(self, x, y):
-        super().__init__(x, y, 200, 50, "Main Lagi", 50, (255, 255, 255), (37, 150, 190))
+        super().__init__(x, y, 200, 50, "Main Menu", 50, (255, 255, 255), (37, 150, 190))
 
     # override is_clicked method from Button class
     def is_clicked(self, pos): # check if the button is clicked
@@ -221,7 +216,7 @@ class StartMenu(Screen):
             # Handle events
             if not pygame.mixer.music.get_busy():
                 # Loop the music indefinitely if it's not already playing
-                pygame.mixer.music.load("assets/audio/NOCTIS.mp3")
+                pygame.mixer.music.load("assets/audio/soundtrack menu.mp3")
                 pygame.mixer.music.set_volume(0.5)
                 pygame.mixer.music.play()
             for event in pygame.event.get():
@@ -246,10 +241,11 @@ class StartMenu(Screen):
                                 
                                 clock = pygame.time.Clock()
                                 # create objects weather
-                                Storm1 = Storm(worldSurface=worldSurface, radius =50, speed_radius = 60, spawn_interval = 25000)
+                                Storm1 = Storm(worldSurface=worldSurface, radius =60, speed_radius = 70, spawn_interval = 30000, first_minutes=1)
+                                Storm2 = Storm(worldSurface=worldSurface, radius =70, speed_radius = 80, spawn_interval = 35000, first_minutes=5)
                                 windy2 = Windy(worldSurface, 60, 70, 30000)
-                                windy1 = Windy(worldSurface, 60, 70, 35000)
-                                rainy1  = Rainy(worldSurface, 55, 65, 20000)
+                                windy1 = Windy(worldSurface, 70, 80, 35000)
+                                rainy1  = Rainy(worldSurface, 75, 85, 20000)
                                 # sunny = Sunny(display)
                                 # load resources
                                 ubuntuLight30 = pygame.font.Font(
@@ -259,9 +255,9 @@ class StartMenu(Screen):
                                 ubuntu70 = pygame.font.Font(
                                     "assets/fonts/Ubuntu-Regular.ttf", 70)
 
-                                MUSIC = ["assets/audio/Mini Metro - 01 Keep the City Moving.ogg",
-                                         "assets/audio/Mini Metro - 02 One Week.ogg",
-                                         "assets/audio/Mini Metro - 03 Back to Work.ogg"]
+                                MUSIC = ["assets/audio/soundtrack 1.mp3",
+                                         "assets/audio/soundtrack 2.mp3",
+                                         "assets/audio/soundtrack 3.mp3"]
                                 pygame.mixer.music.set_endevent(
                                     pygame.USEREVENT)
                                 
@@ -307,11 +303,11 @@ class StartMenu(Screen):
                                 CARGO_ICON = pygame.image.load(
                                     "assets/icons/cargo.png").convert_alpha()
 
-                                LANDS = [pygame.image.load("assets/maps/maps.png").convert_alpha(),
+                                LANDS = [pygame.image.load("assets/maps/mapbaru.png").convert_alpha(),
                                          pygame.image.load(
                                     "assets/maps/mapr.png").convert_alpha(),
                                     pygame.image.load(
-                                    "assets/maps/mapbaru.png").convert_alpha(),
+                                    "assets/maps/mapr.png").convert_alpha(),
                                     pygame.image.load(
                                         "assets/maps/mapbaru.png").convert_alpha()
                                     ]
@@ -488,7 +484,7 @@ class StartMenu(Screen):
                                                  None,
                                                  pygame.BLEND_MAX)
                                     # draw the weather
-                                    weatherl = [Storm1, windy1, rainy1, windy2]
+                                    weatherl = [Storm1, Storm2, windy1, windy2, rainy1]
                                     for weather in weatherl:
                                         weather.spawn(display, cameraOffset)
                                         
@@ -588,7 +584,7 @@ class StartMenu(Screen):
 
                                     if pickingResource:
                                         size = ubuntuLight30.size(
-                                            "Received one:  ")
+                                            "Mendapat:  ") 
                                         width = ubuntuLight30.size(
                                             "Pilih resource: ")[0]
 
@@ -599,7 +595,7 @@ class StartMenu(Screen):
                                         display.blit(
                                             background, (self.wWidth-background.get_width(), 0))
 
-                                        display.blit(ubuntuLight30.render("Received one:",
+                                        display.blit(ubuntuLight30.render("Mendapat:",
                                                                           1,
                                                                           Game.COLOURS.get("whiteOutline")),
                                                      (self.wWidth-size[0]-scaledIcons[resource].get_width(),
@@ -771,7 +767,7 @@ class StartMenu(Screen):
                                                             world.resources[option[0]
                                                                             ] = world.resources[option[0]]+1
                                                             if option[0] == Game.TRUCK:
-                                                                world.totalTrucks = world.totalTrucks+1
+                                                                world.totalTrucks = world.totalTrucks+3 # 2 trucks per resource
                                                 # else try to create a new line
                                                 else:
                                                     clickedIcon = -1
@@ -944,10 +940,10 @@ class StartMenu(Screen):
                                                 pygame.mixer.music.stop()
                                                 self.run()
                                     # change boats speed based on weather
-                                    world.boat_slow_storm(Storm1, 10)
-                                    world.boat_speed_windy(windy2, 2)
-                                    world.boat_speed_windy(windy1, 2)
-                                    world.boat_slow_rain(rainy1, 5)
+                                    world.boat_slow_storms(([Storm1, Storm2]))
+                                    world.boat_speed_windys(([windy1, windy2]))
+                                    world.boat_slow_rain(rainy1)
+                                    
                                     
                                     newStopTimer.tick()
                                     # if the timer to create a new stop has ended
@@ -1010,7 +1006,7 @@ class StartMenu(Screen):
                                         resource = random.choice(options)
                                         world.resources[resource] = world.resources[resource]+1
                                         if resource == Game.TRUCK:
-                                            world.totalTrucks = world.totalTrucks+1
+                                            world.totalTrucks = world.totalTrucks+3 # 2 trucks per resource
                                         pickingResource = True
                                         if world.resources[Game.LINE]+len(world.lines) > 6 and Game.LINE in options:
                                             options.remove(Game.LINE)
