@@ -484,7 +484,7 @@ class StartMenu(Screen):
                                                  None,
                                                  pygame.BLEND_MAX)
                                     # draw the weather
-                                    weatherl = [windy1, rainy1, windy2, Storm1, Storm2]
+                                    weatherl = [Storm1, Storm2, windy1, windy2, rainy1]
                                     for weather in weatherl:
                                         weather.spawn(display, cameraOffset)
                                         
@@ -945,6 +945,7 @@ class StartMenu(Screen):
                                     world.boat_speed_windy(windy1)
                                     world.boat_speed_windy(windy2)
                                     world.boat_slow_rain(rainy1)
+
                                     
                                     newStopTimer.tick()
                                     # if the timer to create a new stop has ended
