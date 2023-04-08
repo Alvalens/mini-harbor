@@ -11,7 +11,7 @@ pygame.init()
 pygame.font.init()
 
 #header icon
-pygame.display.set_icon(pygame.image.load('assets/harbor_icon.png'))
+pygame.display.set_icon(pygame.image.load('assets/harbor.ico'))
 #header title
 pygame.display.set_caption('Mini harbor')
 

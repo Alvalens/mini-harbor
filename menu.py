@@ -7,7 +7,6 @@ import pygame.gfxdraw
 import mainClasses as Game
 import TimeClass as Time
 from mainClasses import Storm, Windy, Rainy
-import sys
 
 #initialize pygame
 pygame.init()
@@ -686,6 +685,10 @@ class StartMenu(Screen):
                                 drawOverlay()
 
                                 while running:
+                                    if world.cargosMoved >= 1000:
+                                        world.boatSpeed = 0.5
+                                    elif world.cargosMoved >= 5000:
+                                        window = "end"
                                     drawBase()
                                     for event in pygame.event.get():
                                         # if the window's X button is clicked

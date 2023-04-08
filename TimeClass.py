@@ -11,7 +11,6 @@ MODE_CURRENT_TIME = 0
 MODE_STOPWATCH = 1
 MODE_TIMER = 2
 
-
 class Time():
     def __init__(self,
                  timeMode=MODE_CURRENT_TIME,
