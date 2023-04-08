@@ -175,18 +175,6 @@ class StartMenu(Screen):
         super(StartMenu, self).__init__(screen)
         self.wHeight = self.screen_height
         self.wWidth = self.screen_width
-
-        # Load the font and create a title surface
-        title_font = pygame.font.Font(None, 72)
-        title_font.set_underline(True)
-        title_font.set_bold(True)
-        title_font.set_italic(True)
-        
-        # set title
-        self.title_font = pygame.font.Font(None, 72)
-        self.title_surface = self.title_font.render(
-            "Mini Harbor", True, (255, 255, 255))
-
         # Create the buttons for the start menu
         self.buttons = []
         self.buttons.append(StartButton(
@@ -1231,10 +1219,6 @@ class StartMenu(Screen):
 
             # Draw the background
             self.screen.blit(self.background_image, (0, 0))
-            # Draw the title
-            title_x = self.screen_width // 2 - self.title_surface.get_width() // 2
-            title_y = self.screen_height // 4 - self.title_surface.get_height() // 2
-            self.screen.blit(self.title_surface, (title_x, title_y))
             # Draw the buttons
             for button in self.buttons:
                 button.draw(self.screen)
