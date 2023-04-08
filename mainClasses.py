@@ -180,10 +180,10 @@ class Storm(Rainy, Windy):
         self.x = 0
         self.y = 0
         self.last_draw_time = datetime.min
-        self.__strom = pygame.image.load("assets/weather/strom.png")
-        self.__strom = pygame.transform.scale(self.__strom, (100, 100))
-        self.__strom_x = 0
-        self.__strom_y = 0
+        self.__storm = pygame.image.load("assets/weather/strom.png")
+        self.__storm = pygame.transform.scale(self.__storm, (100, 100))
+        self.__storm_x = 0
+        self.__storm_y = 0
         self.first_minutes = first_minutes
         self.first_minute_passed = False
         self.warning_displayed = False
@@ -221,9 +221,9 @@ class Storm(Rainy, Windy):
         pygame.draw.circle(targetSurface, self.color,
                            circleView, self.radius)
 
-        self.__strom_x = circleView[0] - 50
-        self.__strom_y = circleView[1] - 50
-        targetSurface.blit(self.__strom, (self.__strom_x, self.__strom_y))
+        self.__storm_x = circleView[0] - 50
+        self.__storm_y = circleView[1] - 50
+        targetSurface.blit(self.__storm, (self.__storm_x, self.__storm_y))
 
         # display warning message for 5 seconds
         if not self.warning_displayed and now - self.game_start_time >= timedelta(minutes=self.first_minutes):
@@ -670,14 +670,14 @@ class Stop(object):
 
 class Cargo(object):
     def __init__(self, shape, surfaces):
-        self._CARGO_SURFACES = surfaces
+        self.__CARGO_SURFACES = surfaces
         self.SHAPE = shape
         self.path = []
 
     def draw(self, targetSurface, size, x, y):
         centerX = x - size/2
         centerY = y - size/2
-        targetSurface.blit(self._CARGO_SURFACES[self.SHAPE],
+        targetSurface.blit(self.__CARGO_SURFACES[self.SHAPE],
                            (centerX, centerY))
 
 
@@ -1212,8 +1212,8 @@ class Boat(object):
         self.cargos = []
         self.containers = []
         self.head = None
-        self._x = x
-        self._y = y
+        self.__x = x
+        self.__y= y
         self.direction = 1  # -1 or 1
         self._colour = COLOURS.get("whiteOutline")
         self._angle = 0
@@ -1226,11 +1226,11 @@ class Boat(object):
         self.movingClone = None
 
     def getPosition(self):
-        return self._x, self._y
+        return self.__x, self._y
 
     def updateMouse(self, mouseObject):
         self.canMove = False
-        self._x, self._y = mouseObject.getWorld()
+        self.__x, self.__y= mouseObject.getWorld()
 
     def startMouseMove(self):
         # when the boat is already on a line and being moved
@@ -1278,16 +1278,16 @@ class Boat(object):
         segment = self.line.segments[segmentNum]
         # clamp x coordinates to be within the domain of the segment
         if segment.firstPoint.X <= segment.lastPoint.X:
-            self._x = max(segment.firstPoint.X, min(
-                self._x, segment.lastPoint.X))
+            self.__x = max(segment.firstPoint.X, min(
+                self.__x, segment.lastPoint.X))
         else:
-            self._x = max(segment.lastPoint.X, min(
-                self._x, segment.firstPoint.X))
+            self.__x = max(segment.lastPoint.X, min(
+                self.__x, segment.firstPoint.X))
         # y = tan(theta)*(x-h)+k
         # eq-n of the line of the segment with a starting point of (h, k)
         # snap the y to be on the line at the correct coordinates
-        self._y = (math.tan(self._angle)
-                   * (self._x-segment.firstPoint.X)
+        self.__y= (math.tan(self._angle)
+                   * (self.__x-segment.firstPoint.X)
                    + segment.firstPoint.Y)
         if self not in self.line.boats:
             self.line.boats.append(self)
@@ -1311,17 +1311,17 @@ class Boat(object):
         self._colour = self.line.BRIGHTER_COLOUR
         distanceFromFirstPoint = findDistance((self.line.segments[self.segmentNum]
                                                .firstPoint.getPosition()),
-                                              (self._x, self._y))
+                                              (self.__x, self._y))
         distanceFromLastPoint = findDistance((self.line.segments[self.segmentNum]
                                               .lastPoint.getPosition()),
-                                             (self._x, self._y))
+                                             (self.__x, self._y))
         if distanceFromFirstPoint <= distanceFromLastPoint:
             self.direction = -1
-            self._segmentDistance = distanceFromLastPoint
+            self.__segmentDistance = distanceFromLastPoint
             self._angle = self.line.segments[self.segmentNum].angle
         else:
             self.direction = 1
-            self._segmentDistance = distanceFromFirstPoint
+            self.__segmentDistance = distanceFromFirstPoint
             self._angle = self.line.segments[self.segmentNum].reverseAngle
 
     def moveToParentLine(self):
@@ -1364,9 +1364,9 @@ class Boat(object):
     def move(self, offset, cargoSize):
         # if the boat has moved past the segment, move it to the next segment or attach
         # it to the stop it is at
-        if self._segmentDistance >= self.line.segments[self.segmentNum].length:
+        if self.__segmentDistance >= self.line.segments[self.segmentNum].length:
             self.segmentNum = self.segmentNum+self.direction
-            self._segmentDistance = 0
+            self.__segmentDistance = 0
             if self.line.isAbandoned:
                 self.moveToParentLine()
 
@@ -1387,9 +1387,9 @@ class Boat(object):
                 self.stop.boats.append(self)
                 self.setMoving(False)
 
-        self._x = self._x + -self._speed*math.cos(self._angle)
-        self._y = self._y + -self._speed*math.sin(self._angle)
-        self._segmentDistance = self._segmentDistance+self._speed
+        self.__x = self.__x + -self._speed*math.cos(self._angle)
+        self.__y= self.__y+ -self._speed*math.sin(self._angle)
+        self.__segmentDistance = self.__segmentDistance+self._speed
         for container in self.containers:
             if container.canMove:
                 container.move(offset, cargoSize)
@@ -1433,7 +1433,7 @@ class Boat(object):
         # cargos would be drawn at if the boat was centered
         # around the origin, so rotate and translate the points
         viewRect = copy.deepcopy(rect[1])
-        centerView = getViewCoords(self._x, self._y, offset)
+        centerView = getViewCoords(self.__x, self._y, offset)
         for i in range(len(viewRect)):
             viewRect[i] = self.rotatePoint(viewRect[i], self._angle)
             viewRect[i][0] = viewRect[i][0]+centerView[0]
@@ -1461,7 +1461,7 @@ class Boat(object):
         # centered around the origin, so rotate and translate it to the
         # orientation we want
         rect = copy.deepcopy(rect[0])
-        centerView = getViewCoords(self._x, self._y, offset)
+        centerView = getViewCoords(self.__x, self._y, offset)
         for i in range(len(rect)):
             rect[i] = self.rotatePoint(rect[i], self._angle)
             rect[i][0] = rect[i][0]+centerView[0]
@@ -1478,7 +1478,7 @@ class Container(Boat):
         # container - follows a boat/container and can be followed by a container
         # holds people, adds capacity to a parent boat
         self.tail = None  # the container that follows this
-        self._segmentDistance = 0
+        self.__segmentDistance = 0
 
     def attachToNearestBoat(self):
         # find the closest boat on the line the
@@ -1546,54 +1546,54 @@ class Container(Boat):
         if self.head.line != self.line:
             return
         containerDistance = cargoSize*3
-        self._x = (containerDistance/offset[0][0]) * \
+        self.__x = (containerDistance/offset[0][0]) * \
             math.cos(self._angle)+self.head._x
-        self._y = (containerDistance/offset[0][1]) * \
+        self.__y= (containerDistance/offset[0][1]) * \
             math.sin(self._angle)+self.head._y
         containerDistance = findDistance(
-            (self._x, self._y), (self.head._x, self.head._y))
-        self._segmentDistance = self.head._segmentDistance-containerDistance
+            (self.__x, self._y), (self.head._x, self.head._y))
+        self.__segmentDistance = self.head.__segmentDistance-containerDistance
         self.direction = self.head.direction
         self.segmentNum = self.head.segmentNum
 
         # if the container is off the segment its head is on, the container should be
         # on the previous segment, so find that segment and correctly calculate
         # angle, x, y, and segment distance
-        if self._segmentDistance < 0:
+        if self.__segmentDistance < 0:
             self.segmentNum = self.segmentNum-self.direction
             if self.segmentNum < 0 or self.segmentNum > len(self.line.segments)-1:
                 self.segmentNum = min(
                     len(self.line.segments)-1, max(0, self.segmentNum))
                 self.direction = -self.direction
-            self._segmentDistance = self.line.segments[self.segmentNum].length + \
-                self._segmentDistance
+            self.__segmentDistance = self.line.segments[self.segmentNum].length + \
+                self.__segmentDistance
             if self.direction == 1:
                 self._angle = self.line.segments[self.segmentNum].reverseAngle
-                self._x = (self.line.segments[self.segmentNum].firstPoint.X
-                           - (self._segmentDistance*math.cos(self._angle)))
-                self._y = (self.line.segments[self.segmentNum].firstPoint.Y
-                           - (self._segmentDistance*math.sin(self._angle)))
-                self._segmentDistance = findDistance((self.line.segments[self.segmentNum]
+                self.__x = (self.line.segments[self.segmentNum].firstPoint.X
+                           - (self.__segmentDistance*math.cos(self._angle)))
+                self.__y= (self.line.segments[self.segmentNum].firstPoint.Y
+                           - (self.__segmentDistance*math.sin(self._angle)))
+                self.__segmentDistance = findDistance((self.line.segments[self.segmentNum]
                                                       .firstPoint.getPosition()),
-                                                     (self._x, self._y))
+                                                     (self.__x, self._y))
             elif self.direction == -1:
                 self._angle = self.line.segments[self.segmentNum].angle
-                self._x = (self.line.segments[self.segmentNum].lastPoint.X
-                           - (self._segmentDistance*math.cos(self._angle)))
-                self._y = (self.line.segments[self.segmentNum].lastPoint.Y
-                           - (self._segmentDistance*math.sin(self._angle)))
-                self._segmentDistance = findDistance((self.line.segments[self.segmentNum]
+                self.__x = (self.line.segments[self.segmentNum].lastPoint.X
+                           - (self.__segmentDistance*math.cos(self._angle)))
+                self.__y= (self.line.segments[self.segmentNum].lastPoint.Y
+                           - (self.__segmentDistance*math.sin(self._angle)))
+                self.__segmentDistance = findDistance((self.line.segments[self.segmentNum]
                                                       .lastPoint.getPosition()),
-                                                     (self._x, self._y))
+                                                     (self.__x, self._y))
 
     def move(self, offset, cargoSize):
-        if self._segmentDistance >= self.line.segments[self.segmentNum].length:
+        if self.__segmentDistance >= self.line.segments[self.segmentNum].length:
             self.line = self.head.line
             self.segmentNum = self.head.segmentNum
             self.direction = self.head.direction
             self._angle = self.head._angle
-            self._segmentDistance = 0
+            self.__segmentDistance = 0
         self.fixPosition(offset, cargoSize)
-        self._x = self._x + -self._speed*math.cos(self._angle)
-        self._y = self._y + -self._speed*math.sin(self._angle)
-        self._segmentDistance = self._segmentDistance+self._speed
+        self.__x = self.__x + -self._speed*math.cos(self._angle)
+        self.__y= self.__y+ -self._speed*math.sin(self._angle)
+        self.__segmentDistance = self.__segmentDistance+self._speed
