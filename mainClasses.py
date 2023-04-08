@@ -233,11 +233,10 @@ class Storm(Rainy, Windy):
         if self.warning_time is not None and now <= self.warning_time:
             font = pygame.font.SysFont(None, 40)
             text = font.render(
-                "Warning: Badai Mendakat!", True, (255, 0, 0))
+                "Warning: Badai Mendekat!", True, (255, 0, 0))
             text_rect = text.get_rect(
                 center=(targetSurface.get_width() // 2, 50))
             targetSurface.blit(text, text_rect)
-
 
 
 class World(object):
@@ -255,10 +254,11 @@ class World(object):
         self.validStopDistanceX = 250
         self.validStopDistanceY = int(self.validStopDistanceX
                                       * (float(self.height)/self.width))
+        
         # give the player some starting equipment
         self.resources = [1, 2, 3, 10]
         self.totalTrucks = self.resources[TRUCK]
-        self.iconHitboxes = [None]*4
+        self.iconHitboxes = [None] * 4
         self.cargosMoved = 0
 
 
@@ -266,7 +266,8 @@ class World(object):
         for boat in self.boats:
             speed_reduction = self.boatSpeed
             for storm in storms:
-                dist = math.sqrt((boat._x - storm.x)**2 + (boat._y - storm.y)**2)
+                dist = math.sqrt((boat._x - storm.x)**2 +
+                                 (boat._y - storm.y)**2)
                 if dist <= storm.speed_radius:
                     speed_reduction = min(speed_reduction, self.boatSpeed / 6)
             boat._speed = speed_reduction  # update the boat's speed
@@ -275,14 +276,14 @@ class World(object):
         for boat in self.boats:
             for windy in windys:
                 dist = math.sqrt((boat._x - windy.x) ** 2 +
-                                (boat._y - windy.y) ** 2)
+                                 (boat._y - windy.y) ** 2)
                 if dist <= windy.speed_radius and boat._speed < self.boatSpeed * 3:
                     boat._speed = self.boatSpeed * 3
 
     def boat_slow_rain(self, circle):
         for boat in self.boats:
-            dist = math.sqrt((boat._x - circle.x)
-                             ** 2 + (boat._y - circle.y)**2)
+            dist = math.sqrt((boat._x - circle.x)** 2 +
+                             (boat._y - circle.y)**2)
             if dist <= circle.speed_radius and boat._speed > self.boatSpeed / 3:
                 boat._speed = self.boatSpeed / 3
 
