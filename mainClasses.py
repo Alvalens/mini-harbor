@@ -44,7 +44,7 @@ STOP_DISTANCE = 50  # minimum spacing between any two given stops
 
 LOSE_DURATION = 45  # amount of time stop has to overcrowd to cause the game to be over
 
-RESOURCE_GAIN_DELAY = 90  # time between each resource gain event
+RESOURCE_GAIN_DELAY = 80  # time between each resource gain event
 
 
 def _isValidSpawn(x, y, stops, mapSurface):
@@ -174,7 +174,7 @@ class Rainy(Weather):
 
 
 class Storm(Rainy, Windy):
-    def __init__(self, **kwargs):
+    def __init__(self, first_minutes=1, **kwargs):
         super().__init__(**kwargs)
         self.color = (148, 149, 153)
         self.x = 0
@@ -184,6 +184,7 @@ class Storm(Rainy, Windy):
         self.__strom = pygame.transform.scale(self.__strom, (100, 100))
         self.__strom_x = 0
         self.__strom_y = 0
+        self.first_minutes = first_minutes
         self.first_minute_passed = False
         self.warning_displayed = False
         self.warning_time = None
@@ -193,8 +194,8 @@ class Storm(Rainy, Windy):
     def spawn(self, targetSurface, offset):
         now = datetime.now()
         if not self.first_minute_passed:
-            # spawn after first minute has passed
-            if now - self.game_start_time >= timedelta(seconds=60):
+            # spawn after first minutes have passed
+            if now - self.game_start_time >= timedelta(minutes=self.first_minutes):
                 self.first_minute_passed = True
                 self.warning_displayed = False
                 self.warning_time = None
@@ -225,7 +226,7 @@ class Storm(Rainy, Windy):
         targetSurface.blit(self.__strom, (self.__strom_x, self.__strom_y))
 
         # display warning message for 5 seconds
-        if not self.warning_displayed and now - self.game_start_time >= timedelta(seconds=60):
+        if not self.warning_displayed and now - self.game_start_time >= timedelta(minutes=self.first_minutes):
             self.warning_displayed = True
             self.warning_time = now + timedelta(seconds=5)
 
@@ -236,6 +237,7 @@ class Storm(Rainy, Windy):
             text_rect = text.get_rect(
                 center=(targetSurface.get_width() // 2, 50))
             targetSurface.blit(text, text_rect)
+
 
 
 class World(object):
@@ -259,28 +261,28 @@ class World(object):
         self.iconHitboxes = [None]*4
         self.cargosMoved = 0
 
-    def boat_slow_storm(self, circle, speed):
+    def boat_slow_storm(self, circle):
         for boat in self.boats:
             dist = math.sqrt((boat._x - circle.x)**2 + (boat._y - circle.y)**2)
             if dist <= circle.speed_radius:
-                boat._speed = self.boatSpeed / speed  # reduce the speed by half
+                boat._speed = self.boatSpeed / 6  # reduce the speed 
             else:
                 boat._speed = self.boatSpeed  # restore the original speed
             # update the boat's speed
 
-    def boat_speed_windy(self, circle, speed):
+    def boat_speed_windy(self, circle):
         for boat in self.boats:
             dist = math.sqrt((boat._x - circle.x)
                              ** 2 + (boat._y - circle.y)**2)
             if dist <= circle.speed_radius:
-                boat._speed = self.boatSpeed * speed
+                boat._speed = self.boatSpeed * 3
 
-    def boat_slow_rain(self, circle, speed):
+    def boat_slow_rain(self, circle):
         for boat in self.boats:
             dist = math.sqrt((boat._x - circle.x)
                              ** 2 + (boat._y - circle.y)**2)
             if dist <= circle.speed_radius:
-                boat._speed = self.boatSpeed / speed
+                boat._speed = self.boatSpeed / 3
 
     def addRandomStop(self, shape, stopSurfaces):
         """ (int, list) -> bool, bool

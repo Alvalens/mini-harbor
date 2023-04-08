@@ -241,7 +241,8 @@ class StartMenu(Screen):
                                 
                                 clock = pygame.time.Clock()
                                 # create objects weather
-                                Storm1 = Storm(worldSurface=worldSurface, radius =55, speed_radius = 65, spawn_interval = 25000)
+                                Storm1 = Storm(worldSurface=worldSurface, radius =55, speed_radius = 65, spawn_interval = 25000, first_minutes=1)
+                                Storm2 = Storm(worldSurface=worldSurface, radius =70, speed_radius = 80, spawn_interval = 35000, first_minutes=1.1)
                                 windy2 = Windy(worldSurface, 60, 70, 30000)
                                 windy1 = Windy(worldSurface, 70, 80, 35000)
                                 rainy1  = Rainy(worldSurface, 75, 85, 20000)
@@ -302,11 +303,11 @@ class StartMenu(Screen):
                                 CARGO_ICON = pygame.image.load(
                                     "assets/icons/cargo.png").convert_alpha()
 
-                                LANDS = [pygame.image.load("assets/maps/maps.png").convert_alpha(),
+                                LANDS = [pygame.image.load("assets/maps/mapbaru.png").convert_alpha(),
                                          pygame.image.load(
                                     "assets/maps/mapr.png").convert_alpha(),
                                     pygame.image.load(
-                                    "assets/maps/mapbaru.png").convert_alpha(),
+                                    "assets/maps/mapr.png").convert_alpha(),
                                     pygame.image.load(
                                         "assets/maps/mapbaru.png").convert_alpha()
                                     ]
@@ -483,7 +484,7 @@ class StartMenu(Screen):
                                                  None,
                                                  pygame.BLEND_MAX)
                                     # draw the weather
-                                    weatherl = [Storm1, windy1, rainy1, windy2]
+                                    weatherl = [windy1, rainy1, windy2, Storm1, Storm2]
                                     for weather in weatherl:
                                         weather.spawn(display, cameraOffset)
                                         
@@ -939,10 +940,11 @@ class StartMenu(Screen):
                                                 pygame.mixer.music.stop()
                                                 self.run()
                                     # change boats speed based on weather
-                                    world.boat_slow_storm(Storm1, 6)
-                                    world.boat_speed_windy(windy2, 3)
-                                    world.boat_speed_windy(windy1, 3)
-                                    world.boat_slow_rain(rainy1, 3)
+                                    world.boat_slow_storm(Storm1)
+                                    world.boat_slow_storm(Storm2)
+                                    world.boat_speed_windy(windy1)
+                                    world.boat_speed_windy(windy2)
+                                    world.boat_slow_rain(rainy1)
                                     
                                     newStopTimer.tick()
                                     # if the timer to create a new stop has ended
