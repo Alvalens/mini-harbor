@@ -74,7 +74,7 @@ class Help(Screen):
                     sys.exit()
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                     return
-                elif event.type == pygame.KEYUP and event.key == pygame.K_UP:
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
                     scroll_offset = max(0, scroll_offset + 30)
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
                     scroll_offset = min(max_scroll_offset, scroll_offset - 30)
@@ -128,7 +128,7 @@ class ExitButton(Button):
 class HelpButton(Button):
     def __init__(self, x, y):
         super().__init__(x, y, 200, 50, "Help", 50, (255, 255, 255), (255, 217, 61))
-        
+       
 
 class PlayAgain(Button):
     def __init__(self, x, y):
@@ -234,7 +234,7 @@ class StartMenu(Screen):
                                 windy2 = Windy(worldSurface, 60, 70, 30000)
                                 windy1 = Windy(worldSurface, 70, 80, 35000)
                                 rainy1  = Rainy(worldSurface, 75, 85, 20000)
-                                # sunny = Sunny(display)
+                                
                                 # load resources
                                 ubuntuLight30 = pygame.font.Font(
                                     "assets/fonts/Ubuntu-Light.ttf", 30)
@@ -248,45 +248,21 @@ class StartMenu(Screen):
                                          "assets/audio/soundtrack 3.mp3"]
                                 pygame.mixer.music.set_endevent(
                                     pygame.USEREVENT)
-                                
                                 pygame.mixer.music.load(
                                     MUSIC[random.randint(0, 2)])
-                                
                                 pygame.mixer.music.play()
 
                                 STOP_POLYGONS = [pygame.image.load("assets/stops/circle_dark.png").convert_alpha(),
                                                  pygame.image.load(
                                     "assets/stops/triangle_dark.png").convert_alpha(),
                                     pygame.image.load(
-                                    "assets/stops/square_dark.png").convert_alpha(),
-                                    pygame.image.load(
-                                    "assets/stops/diamond_dark.png").convert_alpha(),
-                                    pygame.image.load(
-                                    "assets/stops/trapezoid_dark.png").convert_alpha(),
-                                    pygame.image.load(
-                                    "assets/stops/parallelogram_dark.png").convert_alpha(),
-                                    pygame.image.load(
-                                    "assets/stops/pentagon_dark.png").convert_alpha(),
-                                    pygame.image.load(
-                                    "assets/stops/hexagon_dark.png").convert_alpha(),
-                                    pygame.image.load("assets/stops/star_dark.png").convert_alpha()]
+                                    "assets/stops/square_dark.png").convert_alpha()]
 
                                 CARGO_POLYGONS = [pygame.image.load("assets/cargos/circle_light.png").convert_alpha(),
                                                   pygame.image.load(
                                     "assets/cargos/triangle_light.png").convert_alpha(),
                                     pygame.image.load(
-                                    "assets/cargos/square_light.png").convert_alpha(),
-                                    pygame.image.load(
-                                    "assets/cargos/diamond_light.png").convert_alpha(),
-                                    pygame.image.load(
-                                    "assets/cargos/trapezoid_light.png").convert_alpha(),
-                                    pygame.image.load(
-                                    "assets/cargos/parallelogram_light.png").convert_alpha(),
-                                    pygame.image.load(
-                                    "assets/cargos/pentagon_light.png").convert_alpha(),
-                                    pygame.image.load(
-                                    "assets/cargos/hexagon_light.png").convert_alpha(),
-                                    pygame.image.load("assets/cargos/star_light.png").convert_alpha()]
+                                    "assets/cargos/square_light.png").convert_alpha()]
                                 
                                 CARGO_ICON = pygame.image.load(
                                     "assets/icons/cargo.png").convert_alpha()
@@ -297,8 +273,7 @@ class StartMenu(Screen):
                                     pygame.image.load(
                                     "assets/maps/mapr.png").convert_alpha(),
                                     pygame.image.load(
-                                        "assets/maps/mapbaru.png").convert_alpha()
-                                    ]
+                                    "assets/maps/mapbaru.png").convert_alpha()]
 
                                 ICONS = [pygame.image.load("assets/icons/container.png").convert_alpha(),
                                          pygame.image.load(
@@ -319,7 +294,6 @@ class StartMenu(Screen):
                                 world = Game.World(scaled_map)
                                 validStops = [Game.CIRCLE, Game.TRIANGLE, Game.SQUARE]
                                 
-
                                 # scale images
                                 scaledCargoPolygons = []
                                 for polygon in CARGO_POLYGONS:
@@ -346,20 +320,6 @@ class StartMenu(Screen):
                                                [0, -world.cargoSize/2],
                                                [-world.cargoSize, -world.cargoSize/2]]]
                                 
-                                # rectPoints = [[[world.cargoSize/2, world.cargoSize],
-                                #                 [world.cargoSize*1.5, 0],
-                                #                 [world.cargoSize/2, -world.cargoSize],
-                                #                 [-world.cargoSize*1.5, -world.cargoSize],
-                                #                 [-world.cargoSize*1.5, world.cargoSize],
-                                #                 [world.cargoSize/2, world.cargoSize]],
-                                                
-                                #                 # box
-                                #                 [[-world.cargoSize, world.cargoSize/2],
-                                #                 [0, world.cargoSize/2],
-                                #                 [world.cargoSize, world.cargoSize/2],
-                                #                 [world.cargoSize, - world.cargoSize/2],
-                                #                 [0, -world.cargoSize/2],
-                                #                 [-world.cargoSize, -world.cargoSize/2]]]
 
                                 def calculateCameraOffset(wWidth, wHeight, world):
                                     # calculate the scale and translation operations to move from
@@ -454,17 +414,10 @@ class StartMenu(Screen):
                                     # detection
                                     if paused:
                                         display.fill((25, 25, 25))
-                                        # background = pygame.image.load("assets/sea_pause.png")
-                                        # background = pygame.transform.scale(background, (display.get_width(), display.get_height()))
-                                        # display.blit(background, (0, 0))
-                                        
                                     else:
                                         None
                                         display.fill(
                                         Game.COLOURS.get("background"))
-                                        # background = pygame.image.load("assets/sea.png")
-                                        # background = pygame.transform.scale(background, (display.get_width(), display.get_height()))
-                                        # display.blit(background, (0, 0))
                                         
                                     display.blit(scaledWorldSurface,
                                                  (-cameraOffset[1][0]*cameraOffset[0][0],
@@ -500,7 +453,6 @@ class StartMenu(Screen):
                                             display, rectPoints, world.cargoSize, cameraOffset)
 
                                 def drawOverlay():
-                                    
                                     # draw all superimposed elements to the screen
                                     for boat in world.boats:
                                         boat.drawAllCargos(display, rectPoints,
@@ -547,11 +499,11 @@ class StartMenu(Screen):
                                                           # 20 px of space between each icon
                                                           - (i*20)
                                                           - item.get_width()/2),    # center shape at that point
-
                                                       int(self.wHeight                             # start from bottom edge
                                                           # one icon height away from edge
                                                           - item.get_height()
                                                           - item.get_height()/2))   # center shape at that point
+                                        
                                         world.iconHitboxes[i] = pygame.Rect(iconCoords,
                                                                             (item.get_width(),
                                                                              item.get_height()))
@@ -664,8 +616,8 @@ class StartMenu(Screen):
                                     world.stopSize*((cameraOffset[0][0]+cameraOffset[0][1])/2.0))
                                 for i in range(len(scaledStopPolygons)):
                                     scaledStopPolygons[i] = pygame.transform.smoothscale(STOP_POLYGONS[i],
-                                                                                         (stopView,
-                                                                                         stopView))
+                                                                                         (stopView, 
+                                                                                          stopView))
                                 scaledWorldSurface = pygame.transform.scale(worldSurface,
                                                                             (int(wWidth*cameraOffset[0][0]),
                                                                              int(wHeight*cameraOffset[0][1])))
@@ -677,16 +629,20 @@ class StartMenu(Screen):
                                 pickingResource = False  # if the player is choosing a resource
                                 movingLine = -1          # line being edited
                                 clickedIcon = -1         # resource being added
-                                movingBoat = -1         # boat/container being moved
+                                movingBoat = -1          # boat/container being moved
+                                
                                 # holding list for boats/containers until they can be legally moved
                                 boatsToMove = []
                                 paused = False
+                                
                                 # some hitboxes get generated upon drawing,
                                 # so let them generate before they are used
                                 drawOverlay()
 
                                 while running:
                                     drawBase()
+                                    if world.cargosMoved >= 1000:
+                                        world.boatSpeed = 0.5
                                     for event in pygame.event.get():
                                         # if the window's X button is clicked
                                         if event.type == pygame.QUIT:
@@ -740,7 +696,7 @@ class StartMenu(Screen):
                                                 # if the boat icon was clicked to create a new container
                                                 elif clickedIcon == Game.BOAT and world.resources[Game.BOAT] > 0:
                                                     mouseWorld = mouseObject.getWorld()
-                                                    world.boats.append(Game.Boat(*mouseWorld,
+                                                    world.boats.append(Game.Boat(*mouseWorld, 
                                                                                  speed=world.boatSpeed))
                                                     world.resources[Game.BOAT] = world.resources[Game.BOAT]-1
                                                 # if the new resource selection is showing
@@ -802,7 +758,7 @@ class StartMenu(Screen):
                                                             0]
                                                         mouseObject.updateWithWorld(
                                                             point)
-
+                                                        
                                                     if point == event.pos:
                                                         world.lines[movingLine].processMouseSegments(world.stops,
                                                                                                      mouseObject,
@@ -813,6 +769,7 @@ class StartMenu(Screen):
                                                                                                  mouseObject,
                                                                                                  cameraOffset,
                                                                                                  worldSurface)
+                                                    
                                             # if the a boat is being clicked and moved, see if it can be
                                             # attached to a line
                                             elif movingBoat != -1:
@@ -836,6 +793,7 @@ class StartMenu(Screen):
                                                 else:
                                                     movingBoat[0].movingClone.unsnapFromLine(
                                                     )
+                                                    
                                             # see if a newly created container can go to a line
                                             elif clickedIcon == Game.CONTAINER:
                                                 mouseObject.updateWithView(
@@ -850,6 +808,7 @@ class StartMenu(Screen):
                                                         world.lines[line])
                                                 else:
                                                     world.containers[-1].unsnapFromLine()
+                                                    
                                             # see if a newly created boat can go to a line
                                             elif clickedIcon == Game.BOAT:
                                                 mouseObject.updateWithView(
@@ -866,6 +825,7 @@ class StartMenu(Screen):
                                                                                segment[1])
                                                 else:
                                                     world.boats[-1].unsnapFromLine()
+                                                    
                                         elif event.type == pygame.MOUSEBUTTONUP:
                                             if event.button == 1:
                                                 # commit changes made by the line being edited
@@ -915,9 +875,11 @@ class StartMenu(Screen):
                                                         world.boats.pop()
                                                         world.resources[Game.BOAT] = world.resources[Game.BOAT]+1
                                                     clickedIcon = -1
+                                                    
                                         elif event.type == pygame.USEREVENT:  # music is done
                                             pygame.mixer.music.load(MUSIC[random.randint(0, 2)])
                                             pygame.mixer.music.play()
+                                            
                                     #  add main menu btn to pause screen
                                     if paused and window == 'game':
                                         back = PlayAgain(self.screen_width // 2 - 100, self.screen_height // 2 - 50)
@@ -932,7 +894,7 @@ class StartMenu(Screen):
                                     world.boat_speed_windys(([windy1, windy2]))
                                     world.boat_slow_rain(rainy1)
                                     
-                                    
+                        
                                     newStopTimer.tick()
                                     # if the timer to create a new stop has ended
                                     if newStopTimer.checkTimer(not doneScaling, getNewStopTime(world.cargosMoved)):
@@ -1080,7 +1042,7 @@ class StartMenu(Screen):
                                                                    [stopPosition[0]-75,
                                                                     stopPosition[1]-75]]
                                                 window = "end"
-                                                smoothScaleTimer.restart()                                       
+                                                smoothScaleTimer.restart()
 
                                     gameTimer.tick()
                                     timeElapsed = gameTimer.time
@@ -1203,7 +1165,6 @@ class StartMenu(Screen):
                                                                                                  stopView))
                                         if smoothScaleTimer.checkTimer(True):
                                             isScaling = False
-                                            
                                             
                                     clock.tick(60)
                                     drawOverlay()
