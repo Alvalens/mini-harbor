@@ -117,7 +117,7 @@ class Button():
 
 class StartButton(Button):
     def __init__(self, x, y):
-        super().__init__(x, y, 200, 50, "Mulai", 50, (255, 255, 255), (37, 150, 190))
+        super().__init__(x, y, 200, 50, "Mulai", 50, (255, 255, 255), (83, 160, 101))
 
 
 class ExitButton(Button):
@@ -127,7 +127,7 @@ class ExitButton(Button):
 
 class HelpButton(Button):
     def __init__(self, x, y):
-        super().__init__(x, y, 200, 50, "Help", 50, (255, 255, 255), (200, 200, 0))
+        super().__init__(x, y, 200, 50, "Help", 50, (255, 255, 255), (255, 217, 61))
         
 
 class PlayAgain(Button):
@@ -190,7 +190,7 @@ class StartMenu(Screen):
             self.screen_height // 2 + 30
         ))
         # Load the background image
-        self.background_image = pygame.image.load("assets/bg.jpg").convert()
+        self.background_image = pygame.image.load("assets/newbg.png").convert()
 
         # Resize the background image to the same size as the screen
         self.background_image = pygame.transform.scale(
@@ -920,7 +920,7 @@ class StartMenu(Screen):
                                             pygame.mixer.music.play()
                                     #  add main menu btn to pause screen
                                     if paused and window == 'game':
-                                        back = PlayAgain(self.screen_width // 2 - 100, self.screen_height // 2 - 200,)
+                                        back = PlayAgain(self.screen_width // 2 - 100, self.screen_height // 2 - 50)
                                         back.draw(display)
                                         pos = pygame.mouse.get_pos()
                                         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
