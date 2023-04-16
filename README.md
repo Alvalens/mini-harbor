@@ -1,10 +1,10 @@
 # Mini Harbor Game
 
-Welcome to the Mini Harbor Game! In this game, you are the captain of a cargo ship and your goal is to transport cargo to different stops on the map. You must navigate your ship through rough waters and weather. This game was inspired by Mini Metro gameplay.
+Welcome to the Mini Harbor Game! In this game, you are the captain of a cargo ship and your goal is to transport cargo to different stops on the map. You must navigate your ship through rough waters and weather. This game was inspired by Mini Metro gameplay
 
 ## How to Play
 
-In Mini Harbor Game, you start off with 3 harbor that will spawn gradually over time. You will recive random resources over time and your goal is to manage the harbor to not overloaded with cargo.
+In Mini Harbor Game, you start off with 3 harbor that will spawn gradually over time. You will recive random resources over time and your goal is to manage the harbor to not overloaded with cargo
 
 ## Features
 
